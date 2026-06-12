@@ -1,21 +1,51 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
-import PageHero from '../../components/ui/PageHero.astro'
 import { CatalogueFilter } from '../../components/catalogue/CatalogueFilter'
 import { loadDatasets } from '../../utils/loadDatasets'
 
 const datasets = await loadDatasets()
 const base = import.meta.env.BASE_URL
+
+const totalDatasets = datasets.length
+const landscapes = [...new Set(datasets.map((d) => d.living_landscape))].length
+const countries   = [...new Set(datasets.map((d) => d.country))].length
 ---
 
-<BaseLayout title="Dataset Catalogue" description="Browse and filter geospatial datasets from CGIAR centres across MFL Living Landscapes.">
-  <PageHero
-    title="Dataset Catalogue"
-    subtitle={`${datasets.length} datasets from across Living Landscapes in Kenya, Ethiopia, India, and beyond.`}
-  />
+<BaseLayout
+  title="Dataset Catalogue"
+  description="Browse and filter geospatial datasets from CGIAR centres across MFL Living Landscapes."
+>
+  <div class="catalogue-page">
 
-  <div class="container">
+    <!-- ── Hero ──────────────────────────────────────────────── -->
+    <section class="catalogue-hero">
+      <div class="catalogue-hero-inner">
+        <div class="catalogue-hero-text">
+          <h1 class="catalogue-hero-title">Dataset Catalogue</h1>
+          <p class="catalogue-hero-subtitle">
+            Discover, assess, and contribute geospatial datasets from CGIAR centres working across MFL Living Landscapes.
+          </p>
+        </div>
+        <div class="catalogue-hero-metrics" role="list" aria-label="Catalogue statistics">
+          <div class="metric-card" role="listitem">
+            <span class="metric-card-value">{totalDatasets}</span>
+            <span class="metric-card-label">Datasets</span>
+          </div>
+          <div class="metric-card" role="listitem">
+            <span class="metric-card-value">{landscapes}</span>
+            <span class="metric-card-label">Landscapes</span>
+          </div>
+          <div class="metric-card" role="listitem">
+            <span class="metric-card-value">{countries}</span>
+            <span class="metric-card-label">Countries</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Filter + Results ──────────────────────────────────── -->
     <CatalogueFilter client:load datasets={datasets} base={base} />
+
   </div>
 </BaseLayout>
 
