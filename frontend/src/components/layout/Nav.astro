@@ -1,34 +1,121 @@
 ---
 const base = import.meta.env.BASE_URL
+const currentPath = Astro.url.pathname
+
 const navLinks = [
   { href: `${base}/catalogue`, label: 'Catalogue' },
   { href: `${base}/landscapes`, label: 'Landscapes' },
   { href: `${base}/about`, label: 'About' },
   { href: `${base}/contact`, label: 'Contact' },
 ]
+
 const contributeLinks = [
   { href: `${base}/contribute`, label: 'Upload Guidelines' },
   { href: `${base}/contribute/metadata-guide`, label: 'Metadata Guide' },
   { href: `${base}/contribute/qc-workflow`, label: 'QC Workflow' },
   { href: `${base}/contribute/governance`, label: 'Governance & Access' },
 ]
+
+function isActive(href: string) {
+  return currentPath === href || currentPath.startsWith(href + '/')
+}
 ---
 
-<nav aria-label="Main navigation">
-  <ul style="list-style: none; display: flex; gap: var(--space-6); align-items: center;">
+<!-- Skip-to-content link (renderizado aquí, posicionado por CSS en BaseLayout) -->
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<!-- Desktop nav -->
+<nav aria-label="Main navigation" class="main-nav">
+  <ul class="nav-list">
     {navLinks.map(link => (
       <li>
-        <a href={link.href} style="color: var(--color-white); text-decoration: none; font-size: var(--text-sm); font-weight: 500; opacity: 0.9; transition: opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">{link.label}</a>
+        <a
+          href={link.href}
+          class="nav-link"
+          aria-current={isActive(link.href) ? 'page' : undefined}
+        >{link.label}</a>
       </li>
     ))}
-    <li style="position: relative;">
-      <span style="color: var(--color-white); font-size: var(--text-sm); font-weight: 500; cursor: default; opacity: 0.9;">
-        Contribute &#9660;
-      </span>
-      <ul style="display: none; position: absolute; top: 100%; right: 0; background-color: var(--color-white); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); box-shadow: var(--shadow-md); list-style: none; min-width: 200px; z-index: 10; padding: var(--space-2) 0;" class="contribute-dropdown">
+
+    <!-- Contribute dropdown -->
+    <li class="dropdown-wrapper">
+      <button
+        type="button"
+        class="nav-link dropdown-trigger"
+        aria-haspopup="true"
+        aria-expanded="false"
+        id="contribute-btn"
+        aria-controls="contribute-menu"
+      >
+        Contribute
+        <svg aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <ul
+        class="dropdown-menu"
+        id="contribute-menu"
+        role="menu"
+        aria-labelledby="contribute-btn"
+        hidden
+      >
+        {contributeLinks.map(link => (
+          <li role="none">
+            <a
+              href={link.href}
+              class="dropdown-item"
+              role="menuitem"
+              aria-current={isActive(link.href) ? 'page' : undefined}
+            >{link.label}</a>
+          </li>
+        ))}
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<!-- Mobile hamburger -->
+<button
+  type="button"
+  class="hamburger"
+  aria-label="Open navigation menu"
+  aria-expanded="false"
+  aria-controls="mobile-menu"
+  id="hamburger-btn"
+>
+  <svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none">
+    <path class="hamburger-open" d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path class="hamburger-close" d="M6 6l12 12M6 18L18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"/>
+  </svg>
+</button>
+
+<!-- Mobile menu panel -->
+<nav
+  class="mobile-menu"
+  id="mobile-menu"
+  aria-label="Mobile navigation"
+  hidden
+>
+  <ul class="mobile-nav-list">
+    {navLinks.map(link => (
+      <li>
+        <a
+          href={link.href}
+          class="mobile-nav-link"
+          aria-current={isActive(link.href) ? 'page' : undefined}
+        >{link.label}</a>
+      </li>
+    ))}
+    <li>
+      <p class="mobile-nav-section-label">Contribute</p>
+      <ul class="mobile-subnav-list">
         {contributeLinks.map(link => (
           <li>
-            <a href={link.href} style="display: block; padding: var(--space-2) var(--space-4); font-size: var(--text-sm); color: var(--color-gray-800); text-decoration: none;" onmouseover="this.style.backgroundColor='var(--color-green-light)'" onmouseout="this.style.backgroundColor=''">{link.label}</a>
+            <a
+              href={link.href}
+              class="mobile-nav-link mobile-nav-link--sub"
+              aria-current={isActive(link.href) ? 'page' : undefined}
+            >{link.label}</a>
           </li>
         ))}
       </ul>
@@ -37,7 +124,256 @@ const contributeLinks = [
 </nav>
 
 <style>
-  li:has(.contribute-dropdown):hover .contribute-dropdown {
-    display: block !important;
+  /* ── Skip link ─────────────────────────────────────── */
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: var(--space-4);
+    background: var(--color-white);
+    color: var(--color-green-dark);
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    z-index: 9999;
+    text-decoration: none;
+    transition: top 0.1s;
+  }
+  .skip-link:focus {
+    top: var(--space-2);
+  }
+
+  /* ── Desktop nav ────────────────────────────────────── */
+  .main-nav { display: flex; }
+
+  .nav-list {
+    list-style: none;
+    display: flex;
+    gap: var(--space-6);
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-link {
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: var(--space-2) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.15s, opacity 0.15s;
+    opacity: 0.9;
+    min-height: 44px;
+  }
+
+  .nav-link:hover,
+  .nav-link:focus-visible {
+    opacity: 1;
+    outline: none;
+  }
+
+  .nav-link[aria-current="page"] {
+    border-bottom-color: var(--color-green-moss);
+    opacity: 1;
+  }
+
+  /* ── Dropdown ───────────────────────────────────────── */
+  .dropdown-wrapper { position: relative; }
+
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-200);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    list-style: none;
+    min-width: 210px;
+    z-index: 100;
+    padding: var(--space-2) 0;
+    margin: 0;
+  }
+
+  .dropdown-menu[hidden] { display: none; }
+
+  .dropdown-item {
+    display: block;
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--color-gray-800);
+    text-decoration: none;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.1s;
+  }
+
+  .dropdown-item:hover,
+  .dropdown-item:focus-visible {
+    background-color: var(--color-green-light);
+    outline: none;
+  }
+
+  .dropdown-item[aria-current="page"] {
+    color: var(--color-green-dark);
+    font-weight: 600;
+  }
+
+  /* ── Hamburger (hidden on desktop) ─────────────────── */
+  .hamburger {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-white);
+    padding: var(--space-2);
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+  }
+
+  .hamburger:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 2px;
+  }
+
+  /* ── Mobile menu panel ──────────────────────────────── */
+  .mobile-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--color-green-dark);
+    z-index: 200;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding: var(--space-4) 0 var(--space-6);
+  }
+
+  .mobile-menu[hidden] { display: none; }
+
+  .mobile-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mobile-nav-link {
+    display: block;
+    padding: var(--space-3) var(--space-6);
+    color: var(--color-white);
+    text-decoration: none;
+    font-size: var(--text-base);
+    font-weight: 500;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    opacity: 0.9;
+    transition: background-color 0.1s, opacity 0.1s;
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link:focus-visible {
+    background-color: rgba(255,255,255,0.1);
+    opacity: 1;
+    outline: none;
+  }
+
+  .mobile-nav-link[aria-current="page"] {
+    opacity: 1;
+    border-left: 3px solid var(--color-green-moss);
+    padding-left: calc(var(--space-6) - 3px);
+  }
+
+  .mobile-nav-link--sub {
+    font-size: var(--text-sm);
+    padding-left: var(--space-8);
+    opacity: 0.8;
+  }
+
+  .mobile-nav-section-label {
+    padding: var(--space-3) var(--space-6) var(--space-1);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-green-moss);
+    margin: 0;
+  }
+
+  .mobile-subnav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── Responsive: show hamburger, hide desktop nav ──── */
+  @media (max-width: 767px) {
+    .main-nav { display: none; }
+    .hamburger { display: flex; }
   }
 </style>
+
+<script>
+  // Dropdown: toggle on click, close on Escape / outside click
+  const btn = document.getElementById('contribute-btn')
+  const menu = document.getElementById('contribute-menu')
+
+  if (btn && menu) {
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true'
+      btn.setAttribute('aria-expanded', String(!open))
+      menu.hidden = open
+    })
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+        btn.setAttribute('aria-expanded', 'false')
+        menu.hidden = true
+        btn.focus()
+      }
+    })
+
+    document.addEventListener('click', (e) => {
+      if (!btn.contains(e.target as Node) && !menu.contains(e.target as Node)) {
+        btn.setAttribute('aria-expanded', 'false')
+        menu.hidden = true
+      }
+    })
+  }
+
+  // Hamburger: toggle mobile menu
+  const hamburger = document.getElementById('hamburger-btn')
+  const mobileMenu = document.getElementById('mobile-menu')
+
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => {
+      const open = hamburger.getAttribute('aria-expanded') === 'true'
+      hamburger.setAttribute('aria-expanded', String(!open))
+      hamburger.setAttribute('aria-label', open ? 'Open navigation menu' : 'Close navigation menu')
+      mobileMenu.hidden = open
+      // swap icon paths
+      const openPaths = hamburger.querySelectorAll('.hamburger-open')
+      const closePaths = hamburger.querySelectorAll('.hamburger-close')
+      openPaths.forEach(p => ((p as HTMLElement).style.display = open ? '' : 'none'))
+      closePaths.forEach(p => ((p as HTMLElement).style.display = open ? 'none' : ''))
+    })
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && hamburger.getAttribute('aria-expanded') === 'true') {
+        hamburger.setAttribute('aria-expanded', 'false')
+        mobileMenu.hidden = true
+        hamburger.focus()
+      }
+    })
+  }
+</script>

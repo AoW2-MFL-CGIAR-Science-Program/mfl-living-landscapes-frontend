@@ -139,3 +139,28 @@ img {
 .data-table tr:hover td {
   background-color: var(--color-gray-50);
 }
+
+/* ── Focus-visible: WCAG 2.4.11 (AA) ─────────────────────────────────── */
+
+:focus-visible {
+  outline: 2px solid var(--color-accent, #1E6F8E);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* Reset outline for mouse users that don't need it */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* High-contrast focus on dark backgrounds (nav, hero) */
+header :focus-visible,
+.page-hero :focus-visible,
+.mobile-menu :focus-visible {
+  outline-color: var(--color-white);
+}
+
+code, pre, kbd {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
