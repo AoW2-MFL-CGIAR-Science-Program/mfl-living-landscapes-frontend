@@ -7,9 +7,31 @@ interface Props {
 const { title, subtitle } = Astro.props
 ---
 
-<section style="background-color: var(--color-green-dark); color: var(--color-white); padding: var(--space-12) 0;">
+<section class="page-hero">
   <div class="container">
-    <h1 style="color: var(--color-white); margin-bottom: subtitle ? var(--space-3) : 0;">{title}</h1>
-    {subtitle && <p style="color: var(--color-green-moss); font-size: var(--text-lg); max-width: 640px;">{subtitle}</p>}
+    <h1 class="page-hero-title">{title}</h1>
+    {subtitle && <p class="page-hero-subtitle">{subtitle}</p>}
   </div>
 </section>
+
+<style>
+  .page-hero {
+    background-color: var(--color-green-dark);
+    color: var(--color-white);
+    padding: var(--space-12) 0;
+  }
+
+  .page-hero-title {
+    color: var(--color-white);
+    margin-bottom: var(--space-3);
+  }
+
+  /* FIX CONTRASTE P1: verde claro (E8F0E0) sobre verde oscuro (2C5F2D) = ~9:1 */
+  .page-hero-subtitle {
+    color: var(--color-green-light);
+    font-size: var(--text-lg);
+    max-width: 640px;
+    line-height: 1.6;
+    margin: 0;
+  }
+</style>

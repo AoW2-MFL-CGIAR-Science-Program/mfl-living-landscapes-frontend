@@ -20,8 +20,13 @@ interface Props {
 }
 
 export function DatasetCard({ dataset, base }: Props) {
+  const detailUrl = `${base}/catalogue/${dataset.id}`
   return (
-    <article className="dataset-card">
+    <article
+      className="dataset-card dataset-card--clickable"
+      onClick={() => { window.location.href = detailUrl }}
+      style={{ cursor: 'pointer' }}
+    >
       <div className="dataset-card-badges">
         <span className={`badge ${STATUS_CLASS[dataset.readiness_status] ?? ''}`}>
           {dataset.readiness_status}

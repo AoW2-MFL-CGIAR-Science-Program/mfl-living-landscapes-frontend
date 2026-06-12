@@ -1,0 +1,79 @@
+---
+interface Crumb {
+  label: string
+  href?: string
+}
+
+interface Props {
+  crumbs: Crumb[]
+}
+
+const { crumbs } = Astro.props
+---
+
+<nav aria-label="Breadcrumb" class="breadcrumb">
+  <ol class="breadcrumb-list">
+    {crumbs.map((crumb, i) => (
+      <li class="breadcrumb-item">
+        {crumb.href && i < crumbs.length - 1
+          ? <a href={crumb.href} class="breadcrumb-link">{crumb.label}</a>
+          : <span aria-current="page" class="breadcrumb-current">{crumb.label}</span>
+        }
+        {i < crumbs.length - 1 && (
+          <svg aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 12 12" fill="none" class="breadcrumb-sep">
+            <path d="M4.5 2.5 7.5 6l-3 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        )}
+      </li>
+    ))}
+  </ol>
+</nav>
+
+<style>
+  .breadcrumb {
+    padding: var(--space-3) 0;
+    margin-bottom: var(--space-4);
+  }
+
+  .breadcrumb-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+  }
+
+  .breadcrumb-link {
+    font-size: var(--text-sm);
+    color: var(--color-green-dark);
+    text-decoration: none;
+  }
+
+  .breadcrumb-link:hover {
+    text-decoration: underline;
+  }
+
+  .breadcrumb-link:focus-visible {
+    outline: 2px solid var(--color-accent, #1E6F8E);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  .breadcrumb-current {
+    font-size: var(--text-sm);
+    color: var(--color-gray-600);
+  }
+
+  .breadcrumb-sep {
+    color: var(--color-gray-400);
+    flex-shrink: 0;
+  }
+</style>

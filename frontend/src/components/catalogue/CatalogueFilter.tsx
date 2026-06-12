@@ -29,10 +29,35 @@ function getOptions(datasets: Dataset[], key: FilterKey): string[] {
 }
 
 export function CatalogueFilter({ datasets, base }: Props) {
-  const [filters, setFilters] = useState<FilterState>(emptyFilters())
+  // Leer filtros desde URL params al cargar (ej: ?landscape=KEN-LV)
+  const [filters, setFilters] = useState<FilterState>(() => {
+    const initial = emptyFilters()
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const landscape = params.get('landscape')
+      if (landscape) initial.living_landscape = [landscape]
+      const country = params.get('country')
+      if (country) initial.country = [country]
+      const theme = params.get('theme')
+      if (theme) initial.mfl_theme = [theme]
+      const status = params.get('status')
+      if (status) initial.readiness_status = [status]
+    }
+    return initial
+  })
   const [expanded, setExpanded] = useState(false)
+  const [searchText, setSearchText] = useState('')
 
-  const filtered = filterDatasets(datasets, filters)
+  const filtered = filterDatasets(datasets, filters).filter((d) => {
+    if (!searchText.trim()) return true
+    const q = searchText.toLowerCase()
+    return (
+      d.title.toLowerCase().includes(q) ||
+      d.description?.toLowerCase().includes(q) ||
+      d.source?.toLowerCase().includes(q) ||
+      d.mfl_theme.toLowerCase().includes(q)
+    )
+  })
 
   const activeChips: { key: FilterKey; value: string }[] = Object.entries(filters).flatMap(
     ([key, values]) => (values as string[]).map((value) => ({ key: key as FilterKey, value }))
@@ -68,28 +93,42 @@ export function CatalogueFilter({ datasets, base }: Props) {
       {/* Filter panel */}
       <aside className="filter-panel">
         <h2>Filters</h2>
+        <div className="filter-search-wrapper">
+          <label htmlFor="dataset-search" className="sr-only">Search datasets</label>
+          <input
+            type="search"
+            id="dataset-search"
+            className="filter-search-input"
+            placeholder="Search by title, theme, source…"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            aria-label="Search datasets by title, theme or source"
+          />
+        </div>
 
         {visibleFilters.map((key) => {
           const options = getOptions(datasets, key)
           if (options.length === 0) return null
           return (
-            <div key={key} className="filter-group">
-              <p className="filter-group-label">{FILTER_LABELS[key]}</p>
+            <fieldset key={key} className="filter-group">
+              <legend className="filter-group-label">{FILTER_LABELS[key]}</legend>
               <ul className="filter-checkbox-list">
-                {options.map((opt) => (
-                  <li key={opt} className="filter-checkbox-item">
-                    <label>
+                {options.map((opt) => {
+                  const inputId = `filter-${key}-${opt.replace(/\s+/g, '-').toLowerCase()}`
+                  return (
+                    <li key={opt} className="filter-checkbox-item">
                       <input
                         type="checkbox"
+                        id={inputId}
                         checked={(filters[key] as string[]).includes(opt)}
                         onChange={() => toggle(key, opt)}
                       />
-                      {opt}
-                    </label>
-                  </li>
-                ))}
+                      <label htmlFor={inputId}>{opt}</label>
+                    </li>
+                  )
+                })}
               </ul>
-            </div>
+            </fieldset>
           )
         })}
 

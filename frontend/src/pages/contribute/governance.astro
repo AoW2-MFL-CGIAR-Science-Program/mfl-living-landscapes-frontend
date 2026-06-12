@@ -1,11 +1,19 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import PageHero from '../../components/ui/PageHero.astro'
+import Breadcrumb from '../../components/ui/Breadcrumb.astro'
 const base = import.meta.env.BASE_URL
 ---
 
 <BaseLayout title="Governance & Access" description="Access tier definitions, contributor eligibility, and governance rules for the MFL Living Landscapes Data Hub.">
   <PageHero title="Governance & Access" subtitle="Who can contribute, how access decisions are made, and who is responsible for what." />
+  <div class="container">
+    <Breadcrumb crumbs={[
+      { label: 'Home', href: `${base}/` },
+      { label: 'Contribute', href: `${base}/contribute` },
+      { label: 'Governance & Access' },
+    ]} />
+  </div>
 
   <div class="container" style="padding-top: var(--space-12); padding-bottom: var(--space-16); max-width: 800px;">
 

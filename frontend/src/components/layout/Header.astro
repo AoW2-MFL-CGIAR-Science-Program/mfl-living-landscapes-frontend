@@ -3,12 +3,102 @@ import Nav from './Nav.astro'
 const base = import.meta.env.BASE_URL
 ---
 
-<header style="background-color: var(--color-green-dark); color: var(--color-white);">
-  <div class="container" style="display: flex; align-items: center; justify-content: space-between; padding-top: var(--space-4); padding-bottom: var(--space-4);">
-    <a href={base} style="text-decoration: none; color: var(--color-white);">
-      <span style="font-family: var(--font-title); font-size: var(--text-xl); font-weight: bold;">MFL Living Landscapes</span>
-      <span style="display: block; font-size: var(--text-xs); opacity: 0.8; letter-spacing: 0.05em; text-transform: uppercase;">Geospatial Data Hub</span>
+<header class="site-header">
+  <div class="container site-header-inner">
+    <!-- Logotipo + lockup -->
+    <a href={base} class="site-logo" aria-label="MFL Living Landscapes Data Hub — home">
+      <!-- Ícono SVG: hoja + nodo de datos — identidad geoespacial y ecológica -->
+      <svg
+        class="site-logo-icon"
+        aria-hidden="true"
+        focusable="false"
+        width="36"
+        height="36"
+        viewBox="0 0 36 36"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!-- Hoja estilizada -->
+        <path
+          d="M18 4C11 4 5 10 5 18c0 4 1.5 7.5 4 10l9-9V8l9 9c.5-1.5.8-3 .8-4.5C27.8 9.7 23.5 4 18 4z"
+          fill="#97BC62"
+          opacity="0.9"
+        />
+        <!-- Nodo central -->
+        <circle cx="18" cy="19" r="3" fill="white"/>
+        <!-- Líneas de conexión (datos) -->
+        <line x1="18" y1="16" x2="18" y2="10" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="18" y1="22" x2="18" y2="28" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="18" cy="28" r="2" fill="#97BC62"/>
+      </svg>
+
+      <div class="site-logo-text">
+        <span class="site-logo-name">MFL Living Landscapes</span>
+        <span class="site-logo-tagline">Geospatial Data Hub</span>
+      </div>
     </a>
+
     <Nav />
   </div>
 </header>
+
+<style>
+  .site-header {
+    background-color: var(--color-green-dark);
+    color: var(--color-white);
+    position: relative;
+  }
+
+  .site-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: var(--space-4);
+    padding-bottom: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .site-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    text-decoration: none;
+    color: var(--color-white);
+    flex-shrink: 0;
+  }
+
+  .site-logo:focus-visible {
+    outline: 2px solid var(--color-white);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  .site-logo-icon {
+    flex-shrink: 0;
+  }
+
+  .site-logo-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  .site-logo-name {
+    font-family: var(--font-title);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .site-logo-tagline {
+    font-size: var(--text-xs);
+    opacity: 0.75;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  @media (max-width: 400px) {
+    .site-logo-text { display: none; }
+  }
+</style>
