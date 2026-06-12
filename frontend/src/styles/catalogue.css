@@ -248,3 +248,41 @@ fieldset.filter-group legend {
 fieldset.filter-group legend + * {
   clear: both;
 }
+
+/* Tarjeta clicable */
+.dataset-card--clickable {
+  cursor: pointer;
+}
+
+.dataset-card--clickable:focus-within {
+  box-shadow: var(--shadow-md);
+  outline: 2px solid var(--color-accent, #1E6F8E);
+  outline-offset: 2px;
+}
+
+/* Search field in filter panel */
+.filter-search-wrapper {
+  margin-bottom: var(--space-6);
+}
+
+.filter-search-input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-gray-800);
+  background-color: var(--color-white);
+  transition: border-color 0.15s;
+}
+
+.filter-search-input:focus-visible {
+  outline: 2px solid var(--color-accent, #1E6F8E);
+  outline-offset: 2px;
+  border-color: var(--color-accent, #1E6F8E);
+}
+
+.filter-search-input::placeholder {
+  color: var(--color-gray-400);
+}

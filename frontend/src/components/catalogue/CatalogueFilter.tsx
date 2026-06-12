@@ -46,8 +46,18 @@ export function CatalogueFilter({ datasets, base }: Props) {
     return initial
   })
   const [expanded, setExpanded] = useState(false)
+  const [searchText, setSearchText] = useState('')
 
-  const filtered = filterDatasets(datasets, filters)
+  const filtered = filterDatasets(datasets, filters).filter((d) => {
+    if (!searchText.trim()) return true
+    const q = searchText.toLowerCase()
+    return (
+      d.title.toLowerCase().includes(q) ||
+      d.description?.toLowerCase().includes(q) ||
+      d.source?.toLowerCase().includes(q) ||
+      d.mfl_theme.toLowerCase().includes(q)
+    )
+  })
 
   const activeChips: { key: FilterKey; value: string }[] = Object.entries(filters).flatMap(
     ([key, values]) => (values as string[]).map((value) => ({ key: key as FilterKey, value }))
@@ -83,6 +93,18 @@ export function CatalogueFilter({ datasets, base }: Props) {
       {/* Filter panel */}
       <aside className="filter-panel">
         <h2>Filters</h2>
+        <div className="filter-search-wrapper">
+          <label htmlFor="dataset-search" className="sr-only">Search datasets</label>
+          <input
+            type="search"
+            id="dataset-search"
+            className="filter-search-input"
+            placeholder="Search by title, theme, source…"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            aria-label="Search datasets by title, theme or source"
+          />
+        </div>
 
         {visibleFilters.map((key) => {
           const options = getOptions(datasets, key)

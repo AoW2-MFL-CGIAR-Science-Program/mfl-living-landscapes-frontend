@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
+import Icon from '../components/ui/Icon.astro'
 import datasets from '../../data/datasets.json'
 
 const base = import.meta.env.BASE_URL
@@ -37,17 +38,26 @@ const STATUS_CLASS: Record<string, string> = {
   <!-- Stats bar -->
   <section style="background-color: var(--color-green-light); padding: var(--space-6) 0;">
     <div class="container" style="display: flex; gap: var(--space-12); flex-wrap: wrap;">
-      <div>
-        <p style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-green-dark); font-family: var(--font-title);">{totalDatasets}</p>
-        <p style="font-size: var(--text-sm); color: var(--color-gray-600);">Datasets catalogued</p>
+      <div style="display:flex; align-items:center; gap:var(--space-3);">
+        <Icon name="database" size={28} aria-hidden="true" class="stat-icon" />
+        <div>
+          <p style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-green-dark); font-family: var(--font-title); line-height:1;">{totalDatasets}</p>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600);">Datasets catalogued</p>
+        </div>
       </div>
-      <div>
-        <p style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-green-dark); font-family: var(--font-title);">{landscapes}</p>
-        <p style="font-size: var(--text-sm); color: var(--color-gray-600);">Living Landscapes</p>
+      <div style="display:flex; align-items:center; gap:var(--space-3);">
+        <Icon name="mountains" size={28} aria-hidden="true" class="stat-icon" />
+        <div>
+          <p style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-green-dark); font-family: var(--font-title); line-height:1;">{landscapes}</p>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600);">Living Landscapes</p>
+        </div>
       </div>
-      <div>
-        <p style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-green-dark); font-family: var(--font-title);">{countries}</p>
-        <p style="font-size: var(--text-sm); color: var(--color-gray-600);">Countries</p>
+      <div style="display:flex; align-items:center; gap:var(--space-3);">
+        <Icon name="globe" size={28} aria-hidden="true" class="stat-icon" />
+        <div>
+          <p style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-green-dark); font-family: var(--font-title); line-height:1;">{countries}</p>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600);">Countries</p>
+        </div>
       </div>
     </div>
   </section>
@@ -84,17 +94,26 @@ const STATUS_CLASS: Record<string, string> = {
       <h2 style="margin-bottom: var(--space-8);">How it works</h2>
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--space-8);">
         <div>
-          <p style="font-size: var(--text-3xl); font-family: var(--font-title); color: var(--color-green-dark); font-weight: 700; margin-bottom: var(--space-3);">01</p>
+          <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-3);">
+            <Icon name="search" size={32} aria-hidden="true" style="color:var(--color-green-dark);" />
+            <span style="font-size:var(--text-sm); font-weight:700; color:var(--color-green-mid);">01</span>
+          </div>
           <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-2);">Browse the catalogue</h3>
           <p>Filter datasets by country, landscape, theme, and readiness status. Each entry shows what data exists and how to access it.</p>
         </div>
         <div>
-          <p style="font-size: var(--text-3xl); font-family: var(--font-title); color: var(--color-green-dark); font-weight: 700; margin-bottom: var(--space-3);">02</p>
+          <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-3);">
+            <Icon name="download" size={32} aria-hidden="true" style="color:var(--color-green-dark);" />
+            <span style="font-size:var(--text-sm); font-weight:700; color:var(--color-green-mid);">02</span>
+          </div>
           <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-2);">Access or request data</h3>
           <p>Open datasets are linked directly for download. Restricted datasets show a contact path for access requests.</p>
         </div>
         <div>
-          <p style="font-size: var(--text-3xl); font-family: var(--font-title); color: var(--color-green-dark); font-weight: 700; margin-bottom: var(--space-3);">03</p>
+          <div style="display:flex; align-items:center; gap:var(--space-3); margin-bottom:var(--space-3);">
+            <Icon name="upload" size={32} aria-hidden="true" style="color:var(--color-green-dark);" />
+            <span style="font-size:var(--text-sm); font-weight:700; color:var(--color-green-mid);">03</span>
+          </div>
           <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-2);">Contribute your data</h3>
           <p>CGIAR staff and partners can register and submit datasets through a five-step guided process with metadata support.</p>
         </div>
@@ -127,4 +146,9 @@ const STATUS_CLASS: Record<string, string> = {
 
 <style>
   @import '../styles/catalogue.css';
+
+  .stat-icon {
+    color: var(--color-green-mid);
+    flex-shrink: 0;
+  }
 </style>
