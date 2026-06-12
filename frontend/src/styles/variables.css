@@ -80,6 +80,20 @@
   --color-gray-800:     #1F2937;
   --color-gray-900:     #111827;
 
+  /* Catalogue design system */
+  --color-primary:       #0B4F3A;
+  --color-primary-light: #E6F2EC;
+  --color-secondary:     #0D6E6E;
+  --color-bg:            #F7FAF8;
+  --color-surface:       #FFFFFF;
+  --color-border:        #E2E8E4;
+  --color-text:          #10201A;
+  --color-muted:         #64746B;
+  --shadow-card:         0 10px 30px rgba(16, 32, 26, 0.08);
+  --shadow-card-hover:   0 16px 40px rgba(16, 32, 26, 0.14);
+  --radius-card:         1rem;
+  --sidebar-width-new:   280px;
+
   /* Status badge colours */
   --status-registered:  #6B7280;
   --status-review:      #D97706;
