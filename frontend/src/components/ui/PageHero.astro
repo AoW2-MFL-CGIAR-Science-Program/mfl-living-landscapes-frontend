@@ -1,0 +1,15 @@
+---
+interface Props {
+  title: string
+  subtitle?: string
+}
+
+const { title, subtitle } = Astro.props
+---
+
+<section style="background-color: var(--color-green-dark); color: var(--color-white); padding: var(--space-12) 0;">
+  <div class="container">
+    <h1 style="color: var(--color-white); margin-bottom: subtitle ? var(--space-3) : 0;">{title}</h1>
+    {subtitle && <p style="color: var(--color-green-moss); font-size: var(--text-lg); max-width: 640px;">{subtitle}</p>}
+  </div>
+</section>

@@ -1,0 +1,43 @@
+---
+const base = import.meta.env.BASE_URL
+const navLinks = [
+  { href: `${base}/catalogue`, label: 'Catalogue' },
+  { href: `${base}/landscapes`, label: 'Landscapes' },
+  { href: `${base}/about`, label: 'About' },
+  { href: `${base}/contact`, label: 'Contact' },
+]
+const contributeLinks = [
+  { href: `${base}/contribute`, label: 'Upload Guidelines' },
+  { href: `${base}/contribute/metadata-guide`, label: 'Metadata Guide' },
+  { href: `${base}/contribute/qc-workflow`, label: 'QC Workflow' },
+  { href: `${base}/contribute/governance`, label: 'Governance & Access' },
+]
+---
+
+<nav aria-label="Main navigation">
+  <ul style="list-style: none; display: flex; gap: var(--space-6); align-items: center;">
+    {navLinks.map(link => (
+      <li>
+        <a href={link.href} style="color: var(--color-white); text-decoration: none; font-size: var(--text-sm); font-weight: 500; opacity: 0.9; transition: opacity 0.15s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.9'">{link.label}</a>
+      </li>
+    ))}
+    <li style="position: relative;">
+      <span style="color: var(--color-white); font-size: var(--text-sm); font-weight: 500; cursor: default; opacity: 0.9;">
+        Contribute &#9660;
+      </span>
+      <ul style="display: none; position: absolute; top: 100%; right: 0; background-color: var(--color-white); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); box-shadow: var(--shadow-md); list-style: none; min-width: 200px; z-index: 10; padding: var(--space-2) 0;" class="contribute-dropdown">
+        {contributeLinks.map(link => (
+          <li>
+            <a href={link.href} style="display: block; padding: var(--space-2) var(--space-4); font-size: var(--text-sm); color: var(--color-gray-800); text-decoration: none;" onmouseover="this.style.backgroundColor='var(--color-green-light)'" onmouseout="this.style.backgroundColor=''">{link.label}</a>
+          </li>
+        ))}
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  li:has(.contribute-dropdown):hover .contribute-dropdown {
+    display: block !important;
+  }
+</style>

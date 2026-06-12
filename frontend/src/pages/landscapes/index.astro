@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import PageHero from '../../components/ui/PageHero.astro'
+import landscapes from '../../../data/landscapes.json'
+import datasets from '../../../data/datasets.json'
+
+const base = import.meta.env.BASE_URL
+
+const landscapesWithCounts = landscapes.map((l) => ({
+  ...l,
+  count: datasets.filter((d) => d.living_landscape === l.code).length,
+}))
+---
+
+<BaseLayout title="Living Landscapes" description="Overview of the MFL Living Landscapes — the nine flagship landscapes where CGIAR centres work together.">
+  <PageHero title="Living Landscapes" subtitle="Nine flagship landscapes where CGIAR centres are working together to restore, sustain, and monitor multifunctional landscapes." />
+
+  <div class="container" style="padding-top: var(--space-12); padding-bottom: var(--space-16);">
+
+    <p style="max-width: 720px; margin-bottom: var(--space-12); font-size: var(--text-lg); color: var(--color-gray-600);">
+      Living Landscapes are the geographies where the MFL Science Programme focuses its work. Each landscape is a real place — a watershed, a highland, a valley — where multiple CGIAR centres are active and where the programme aims to achieve measurable outcomes for people and nature.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-6);">
+      {landscapesWithCounts.map((l) => (
+        <article style="background-color: var(--color-white); border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); padding: var(--space-6); box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-3);">
+            <code style="font-size: var(--text-xs); background-color: var(--color-green-light); color: var(--color-green-dark); padding: 2px var(--space-2); border-radius: var(--radius-sm); font-weight: 600;">{l.code}</code>
+            <span style="font-size: var(--text-xs); color: var(--color-gray-400);">{l.count} dataset{l.count !== 1 ? 's' : ''}</span>
+          </div>
+          <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-2);">{l.name}</h3>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin-bottom: var(--space-4);">{l.country}</p>
+          <a href={`${base}/catalogue?landscape=${l.code}`} style="font-size: var(--text-sm); font-weight: 600; color: var(--color-green-dark); text-decoration: none;">
+            Browse datasets &rarr;
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <div style="margin-top: var(--space-12); padding: var(--space-6); background-color: var(--color-cream); border-radius: var(--radius-lg);">
+      <h2 style="margin-bottom: var(--space-3);">No interactive map in this release</h2>
+      <p style="color: var(--color-gray-600); max-width: 680px;">
+        A spatial map showing all Living Landscapes is planned for a future release. For now, use the landscape codes above to filter the dataset catalogue.
+      </p>
+    </div>
+
+  </div>
+</BaseLayout>

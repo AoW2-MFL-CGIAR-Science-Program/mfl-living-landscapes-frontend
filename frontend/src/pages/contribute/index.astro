@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import PageHero from '../../components/ui/PageHero.astro'
+const base = import.meta.env.BASE_URL
+---
+
+<BaseLayout title="Contribute Data" description="How to register and contribute a geospatial dataset to the MFL Living Landscapes Data Hub.">
+  <PageHero title="Contribute Data" subtitle="Add your geospatial dataset to the catalogue in five steps." />
+
+  <div class="container" style="padding-top: var(--space-12); padding-bottom: var(--space-16); max-width: 800px;">
+
+    <!-- Before you start -->
+    <section style="margin-bottom: var(--space-12); padding: var(--space-6); background-color: var(--color-green-light); border-radius: var(--radius-lg);">
+      <h2 style="margin-bottom: var(--space-4);">Before you start — checklist</h2>
+      <p style="margin-bottom: var(--space-4); color: var(--color-gray-600);">To register a dataset you will need:</p>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: var(--space-3);">
+        {[
+          'A dataset that is related to a Living Landscape (see landscape codes)',
+          'A dataset title and short description (1–3 sentences)',
+          'The country, Living Landscape code, MFL theme, and data type',
+          'An access level decision (Open, Restricted, or Internal)',
+          'A license for the dataset (e.g. CC BY 4.0)',
+          'For Open datasets: a download URL',
+          'A contact email for access requests (Restricted or Internal datasets)',
+        ].map((item) => (
+          <li style="display: flex; gap: var(--space-3); align-items: flex-start; font-size: var(--text-sm); color: var(--color-gray-700);">
+            <span style="color: var(--color-green-dark); font-weight: 700; flex-shrink: 0;">&#10003;</span>
+            {item}
+          </li>
+        ))}
+      </ul>
+      <p style="margin-top: var(--space-4); font-size: var(--text-sm); color: var(--color-gray-600);">
+        See the <a href={`${base}/contribute/metadata-guide`}>Metadata Guide</a> for full descriptions of all fields.
+      </p>
+    </section>
+
+    <!-- Five steps -->
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-8);">The contribution process</h2>
+
+      {[
+        {
+          step: '01',
+          title: 'Register',
+          desc: 'Open a Dataset Catalogue Update issue on GitHub using the provided template. Fill in the required fields: title, country, landscape, theme, data type, access level, and license. You do not need a GitHub account — contact the hub team and they will register the dataset for you.',
+        },
+        {
+          step: '02',
+          title: 'Submit metadata',
+          desc: 'The hub team will prepare a draft entry in datasets.json using your registration information. You will be asked to review and complete any missing optional fields (description, spatial resolution, temporal coverage, download URL).',
+        },
+        {
+          step: '03',
+          title: 'Review',
+          desc: 'The hub team will review your metadata entry for completeness, accuracy, and consistency with the controlled vocabularies. This typically takes 5–10 working days. You may be contacted to clarify or correct specific fields.',
+        },
+        {
+          step: '04',
+          title: 'Accept',
+          desc: 'Once metadata passes review, the entry is merged into the catalogue with status Accepted. The dataset is now visible in the catalogue and can be browsed and filtered.',
+        },
+        {
+          step: '05',
+          title: 'Publish and validate',
+          desc: 'If you have open data available for download, the hub team will verify the download URL and run spatial QC checks. Datasets that pass QC are promoted to Validated or Analytics-ready status.',
+        },
+      ].map((s) => (
+        <div style="display: grid; grid-template-columns: 60px 1fr; gap: var(--space-6); margin-bottom: var(--space-8); padding-bottom: var(--space-8); border-bottom: 1px solid var(--color-gray-200);">
+          <div style="font-size: var(--text-3xl); font-family: var(--font-title); font-weight: 700; color: var(--color-green-dark);">{s.step}</div>
+          <div>
+            <h3 style="margin-bottom: var(--space-2);">{s.title}</h3>
+            <p style="color: var(--color-gray-600);">{s.desc}</p>
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <!-- FAQ -->
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-6);">Frequently asked questions</h2>
+      {[
+        {
+          q: 'Do I need to upload my data files to GitHub?',
+          a: 'No. The hub is a catalogue, not a file repository. Your data files stay wherever they are hosted (e.g. a CGIAR data portal, Google Drive, institutional server). You only need to provide a link to where the data can be accessed.',
+        },
+        {
+          q: 'Can I register a dataset before the data is publicly available?',
+          a: 'Yes. You can register a dataset with Internal or Restricted access. This makes the dataset discoverable in the catalogue while access is managed through your centre\'s normal procedures.',
+        },
+        {
+          q: 'What if my dataset doesn\'t fit the controlled vocabulary?',
+          a: 'Contact the hub team via the Contact page. The controlled vocabularies are reviewed periodically and new values can be proposed.',
+        },
+        {
+          q: 'How long does the review process take?',
+          a: 'Metadata review typically takes 5–10 working days. Spatial QC (for Validated status) may take longer depending on the dataset and the QC team\'s capacity.',
+        },
+        {
+          q: 'Can I update a dataset entry after it is published?',
+          a: 'Yes. Open a Dataset Catalogue Update issue on GitHub and describe what needs to change. The hub team will prepare a pull request and ask you to review it before it goes live.',
+        },
+      ].map((item) => (
+        <details style="margin-bottom: var(--space-4); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); padding: var(--space-4);">
+          <summary style="cursor: pointer; font-weight: 600; color: var(--color-gray-800);">{item.q}</summary>
+          <p style="margin-top: var(--space-3); color: var(--color-gray-600);">{item.a}</p>
+        </details>
+      ))}
+    </section>
+
+    <!-- CTA -->
+    <section style="text-align: center; padding: var(--space-8); background-color: var(--color-green-dark); border-radius: var(--radius-lg);">
+      <h2 style="color: var(--color-white); margin-bottom: var(--space-3);">Ready to contribute?</h2>
+      <p style="color: var(--color-green-moss); margin-bottom: var(--space-6);">Open a GitHub Issue to register your dataset. It takes about 30 minutes.</p>
+      <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=dataset_update.yml" class="btn btn-primary" style="background-color: var(--color-white); color: var(--color-green-dark);">Register a dataset</a>
+    </section>
+
+  </div>
+</BaseLayout>

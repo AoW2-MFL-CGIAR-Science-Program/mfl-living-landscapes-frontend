@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import PageHero from '../components/ui/PageHero.astro'
+const base = import.meta.env.BASE_URL
+---
+
+<BaseLayout title="About" description="About the MFL Living Landscapes Geospatial Data Hub — what it is, who it serves, and what it is not.">
+  <PageHero title="About the Hub" subtitle="What this hub is, who it serves, and what we are building together." />
+
+  <div class="container" style="padding-top: var(--space-12); padding-bottom: var(--space-16); max-width: 800px;">
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">What this hub is</h2>
+      <p style="margin-bottom: var(--space-4);">
+        The MFL Living Landscapes Geospatial Data Hub is a publicly accessible catalogue of spatial datasets produced and curated by CGIAR centres working across the Multifunctional Landscapes Science Programme. It is the data discovery and contribution layer for Area of Work 2 — Landscape Optimization &amp; Inclusive Planning.
+      </p>
+      <p style="margin-bottom: var(--space-4);">
+        The hub makes it possible to find out what geospatial data exists across the programme, who produced it, at what resolution and time period, and how to access it. Each dataset entry carries a readiness status that tells you how far along the quality control process it is — from first registration through to analytics-ready.
+      </p>
+      <p>
+        The hub is a catalogue, not a file repository. Data files remain hosted by the contributing CGIAR centre and are linked from the catalogue entry. This keeps data ownership and maintenance with the people who know the data best.
+      </p>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">Who it serves</h2>
+      <p style="margin-bottom: var(--space-4);">The hub is designed for two main groups:</p>
+      <ul style="list-style: disc; padding-left: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); color: var(--color-gray-600);">
+        <li><strong>Data users</strong> — MFL scientists, GIS analysts, programme managers, national stakeholders, and partners who need to know what geospatial data exists for a Living Landscape, whether it is available, and how to get it.</li>
+        <li><strong>Data contributors</strong> — CGIAR data stewards and centre focal points who produce geospatial datasets for Living Landscapes and want to make them findable, properly documented, and accessible to the programme.</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">What it is not</h2>
+      <p style="margin-bottom: var(--space-4);">To keep the hub focused and maintainable, the following are intentionally out of scope for the current release:</p>
+      <ul style="list-style: disc; padding-left: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); color: var(--color-gray-600);">
+        <li><strong>An interactive map.</strong> Spatial browsing on a map interface is planned for a future release.</li>
+        <li><strong>A file upload system.</strong> Datasets are hosted by contributing centres; the hub links to them.</li>
+        <li><strong>A centralised data repository.</strong> Data remains with the centres that produced it.</li>
+        <li><strong>A real-time data feed.</strong> The catalogue is updated by pull request and rebuilt on every merge.</li>
+        <li><strong>User accounts or login.</strong> The hub is fully public and read-only for visitors.</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">Programme context</h2>
+      <p style="margin-bottom: var(--space-4);">
+        The CGIAR Multifunctional Landscapes (MFL) Science Programme works to restore and sustain landscapes that are simultaneously productive, biodiverse, and resilient. The programme covers nine flagship Living Landscapes in Kenya, Ethiopia, India, Colombia, and the Mekong region, with a broader network of strategic landscapes.
+      </p>
+      <p style="margin-bottom: var(--space-4);">
+        Area of Work 2 (Landscape Optimization &amp; Inclusive Planning) develops spatially informed approaches to characterize ecosystem condition, identify landscape stress, and support the prioritization of action. The hub is the data infrastructure that connects this work across centres.
+      </p>
+      <a href={`${base}/landscapes`} class="btn btn-secondary">View Living Landscapes</a>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">Geospatial Community of Practice</h2>
+      <p>
+        The hub is maintained by the MFL Geospatial Community of Practice, a network of over 230 geospatial specialists and data stewards across CGIAR centres. Focal points in each centre are responsible for registering and validating datasets for their landscapes. If you are a centre focal point and want to contribute data, start at the <a href={`${base}/contribute`}>Upload Guidelines</a> page.
+      </p>
+    </section>
+
+    <section>
+      <h2 style="margin-bottom: var(--space-4);">Questions or feedback</h2>
+      <p style="margin-bottom: var(--space-4);">
+        If you have a question about the hub, want to report an error, or are interested in contributing data, use the <a href={`${base}/contact`}>Contact</a> page or open an issue directly on GitHub.
+      </p>
+      <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new/choose" class="btn btn-primary">Open a GitHub Issue</a>
+    </section>
+
+  </div>
+</BaseLayout>

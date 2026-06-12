@@ -1,0 +1,36 @@
+name: Dataset catalogue update
+description: Add a new dataset or update an existing catalogue entry
+labels: ["data"]
+body:
+  - type: dropdown
+    id: action
+    attributes:
+      label: Action
+      options: ["Add new dataset", "Update existing dataset", "Remove dataset"]
+    validations:
+      required: true
+  - type: input
+    id: dataset_id
+    attributes:
+      label: Dataset ID
+      placeholder: "e.g. KEN-LV_LC_2023_ILRI_v1"
+  - type: input
+    id: title
+    attributes:
+      label: Dataset title
+    validations:
+      required: true
+  - type: input
+    id: country
+    attributes:
+      label: Country
+  - type: input
+    id: landscape
+    attributes:
+      label: Living Landscape code
+  - type: textarea
+    id: changes
+    attributes:
+      label: What needs to change?
+    validations:
+      required: true

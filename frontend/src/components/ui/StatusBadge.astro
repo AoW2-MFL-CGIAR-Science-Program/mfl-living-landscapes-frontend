@@ -1,0 +1,19 @@
+---
+import type { ReadinessStatus } from '../../utils/types'
+
+interface Props {
+  status: ReadinessStatus
+}
+
+const { status } = Astro.props
+
+const classMap: Record<ReadinessStatus, string> = {
+  'Registered only': 'badge-registered',
+  'Under review': 'badge-review',
+  'Accepted': 'badge-accepted',
+  'Validated': 'badge-validated',
+  'Analytics-ready': 'badge-analytics',
+}
+---
+
+<span class={`badge ${classMap[status]}`}>{status}</span>

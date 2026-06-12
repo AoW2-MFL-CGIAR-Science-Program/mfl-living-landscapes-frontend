@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import datasets from '../../data/datasets.json'
+
+const base = import.meta.env.BASE_URL
+const totalDatasets = datasets.length
+const countries = [...new Set(datasets.map((d) => d.country))].length
+const landscapes = [...new Set(datasets.map((d) => d.living_landscape))].length
+const featured = datasets.slice(0, 3)
+
+const STATUS_CLASS: Record<string, string> = {
+  'Registered only': 'badge-registered',
+  'Under review': 'badge-review',
+  'Accepted': 'badge-accepted',
+  'Validated': 'badge-validated',
+  'Analytics-ready': 'badge-analytics',
+}
+---
+
+<BaseLayout title="Home">
+  <!-- Hero -->
+  <section style="background-color: var(--color-green-dark); color: var(--color-white); padding: var(--space-16) 0;">
+    <div class="container">
+      <h1 style="color: var(--color-white); font-size: var(--text-4xl); max-width: 700px; margin-bottom: var(--space-4);">
+        Geospatial datasets for Living Landscapes
+      </h1>
+      <p style="color: var(--color-green-moss); font-size: var(--text-xl); max-width: 600px; margin-bottom: var(--space-8);">
+        Discover, assess, and contribute spatial data from CGIAR centres working across the MFL Science Programme Living Landscapes.
+      </p>
+      <div style="display: flex; gap: var(--space-4); flex-wrap: wrap;">
+        <a href={`${base}/catalogue`} class="btn btn-primary" style="background-color: var(--color-white); color: var(--color-green-dark);">Browse datasets</a>
+        <a href={`${base}/contribute`} class="btn btn-secondary" style="border-color: var(--color-white); color: var(--color-white);">Contribute data</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats bar -->
+  <section style="background-color: var(--color-green-light); padding: var(--space-6) 0;">
+    <div class="container" style="display: flex; gap: var(--space-12); flex-wrap: wrap;">
+      <div>
+        <p style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-green-dark); font-family: var(--font-title);">{totalDatasets}</p>
+        <p style="font-size: var(--text-sm); color: var(--color-gray-600);">Datasets catalogued</p>
+      </div>
+      <div>
+        <p style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-green-dark); font-family: var(--font-title);">{landscapes}</p>
+        <p style="font-size: var(--text-sm); color: var(--color-gray-600);">Living Landscapes</p>
+      </div>
+      <div>
+        <p style="font-size: var(--text-3xl); font-weight: 700; color: var(--color-green-dark); font-family: var(--font-title);">{countries}</p>
+        <p style="font-size: var(--text-sm); color: var(--color-gray-600);">Countries</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured datasets -->
+  <section style="padding: var(--space-16) 0;">
+    <div class="container">
+      <h2 style="margin-bottom: var(--space-8);">Featured datasets</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-6);">
+        {featured.map((d) => (
+          <article class="dataset-card">
+            <div class="dataset-card-badges">
+              <span class={`badge ${STATUS_CLASS[d.readiness_status] ?? ''}`}>{d.readiness_status}</span>
+              <span class={`badge badge-${d.access_level.toLowerCase()}`}>{d.access_level}</span>
+            </div>
+            <h3 class="dataset-card-title">{d.title}</h3>
+            <div class="dataset-card-meta">
+              <span><strong>Country:</strong> {d.country}</span>
+              <span><strong>Theme:</strong> {d.mfl_theme}</span>
+            </div>
+            <a href={`${base}/catalogue/${d.id}`} class="dataset-card-link">View details &rarr;</a>
+          </article>
+        ))}
+      </div>
+      <div style="margin-top: var(--space-8); text-align: center;">
+        <a href={`${base}/catalogue`} class="btn btn-primary">View all datasets</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section style="background-color: var(--color-cream); padding: var(--space-16) 0;">
+    <div class="container">
+      <h2 style="margin-bottom: var(--space-8);">How it works</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: var(--space-8);">
+        <div>
+          <p style="font-size: var(--text-3xl); font-family: var(--font-title); color: var(--color-green-dark); font-weight: 700; margin-bottom: var(--space-3);">01</p>
+          <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-2);">Browse the catalogue</h3>
+          <p>Filter datasets by country, landscape, theme, and readiness status. Each entry shows what data exists and how to access it.</p>
+        </div>
+        <div>
+          <p style="font-size: var(--text-3xl); font-family: var(--font-title); color: var(--color-green-dark); font-weight: 700; margin-bottom: var(--space-3);">02</p>
+          <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-2);">Access or request data</h3>
+          <p>Open datasets are linked directly for download. Restricted datasets show a contact path for access requests.</p>
+        </div>
+        <div>
+          <p style="font-size: var(--text-3xl); font-family: var(--font-title); color: var(--color-green-dark); font-weight: 700; margin-bottom: var(--space-3);">03</p>
+          <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-2);">Contribute your data</h3>
+          <p>CGIAR staff and partners can register and submit datasets through a five-step guided process with metadata support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contribute CTA -->
+  <section style="background-color: var(--color-green-dark); color: var(--color-white); padding: var(--space-16) 0; text-align: center;">
+    <div class="container">
+      <h2 style="color: var(--color-white); margin-bottom: var(--space-4);">Have data to share?</h2>
+      <p style="color: var(--color-green-moss); max-width: 560px; margin: 0 auto var(--space-8);">
+        If you work on geospatial data for a Living Landscape, we want to hear from you. Adding your dataset takes about 30 minutes.
+      </p>
+      <a href={`${base}/contribute`} class="btn btn-primary" style="background-color: var(--color-white); color: var(--color-green-dark);">Start contributing</a>
+    </div>
+  </section>
+
+  <!-- About section -->
+  <section style="padding: var(--space-12) 0;">
+    <div class="container" style="max-width: 720px;">
+      <h2 style="margin-bottom: var(--space-4);">About the MFL Science Programme</h2>
+      <p style="margin-bottom: var(--space-4);">
+        The CGIAR Multifunctional Landscapes (MFL) Science Programme works to restore and sustain landscapes that are productive, biodiverse, and resilient. Area of Work 2 focuses on landscape optimization and inclusive planning across nine flagship Living Landscapes in Kenya, Ethiopia, India, Colombia, and the Mekong region.
+      </p>
+      <a href={`${base}/about`} class="btn btn-secondary">Learn more about the hub</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  @import '../styles/catalogue.css';
+</style>

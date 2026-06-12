@@ -1,0 +1,17 @@
+---
+import type { AccessLevel } from '../../utils/types'
+
+interface Props {
+  access: AccessLevel
+}
+
+const { access } = Astro.props
+
+const classMap: Record<AccessLevel, string> = {
+  'Open': 'badge-open',
+  'Restricted': 'badge-restricted',
+  'Internal': 'badge-internal',
+}
+---
+
+<span class={`badge ${classMap[access]}`}>{access}</span>

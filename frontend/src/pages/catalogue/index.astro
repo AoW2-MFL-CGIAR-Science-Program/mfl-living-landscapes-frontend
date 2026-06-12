@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import PageHero from '../../components/ui/PageHero.astro'
+import { CatalogueFilter } from '../../components/catalogue/CatalogueFilter'
+import { loadDatasets } from '../../utils/loadDatasets'
+
+const datasets = await loadDatasets()
+const base = import.meta.env.BASE_URL
+---
+
+<BaseLayout title="Dataset Catalogue" description="Browse and filter geospatial datasets from CGIAR centres across MFL Living Landscapes.">
+  <PageHero
+    title="Dataset Catalogue"
+    subtitle={`${datasets.length} datasets from across Living Landscapes in Kenya, Ethiopia, India, and beyond.`}
+  />
+
+  <div class="container">
+    <CatalogueFilter client:load datasets={datasets} base={base} />
+  </div>
+</BaseLayout>
+
+<style>
+  @import '../../styles/catalogue.css';
+</style>

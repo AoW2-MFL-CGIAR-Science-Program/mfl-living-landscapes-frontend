@@ -1,0 +1,21 @@
+name: Content or documentation fix
+description: Correct text, update a guidance page, or fix a broken link
+labels: ["content"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page or section
+      placeholder: "e.g. Upload Guidelines > Step 2"
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What is wrong?
+    validations:
+      required: true
+  - type: textarea
+    id: fix
+    attributes:
+      label: Suggested correction (optional)

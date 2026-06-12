@@ -1,0 +1,211 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import PageHero from '../../components/ui/PageHero.astro'
+---
+
+<BaseLayout title="Metadata Guide" description="Complete guide to all metadata fields required for the MFL Living Landscapes Data Hub.">
+  <PageHero title="Metadata Guide" subtitle="Every field explained — what it means, what values are accepted, and what a good entry looks like." />
+
+  <div class="container" style="padding-top: var(--space-12); padding-bottom: var(--space-16); max-width: 900px;">
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-6);">Required fields</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>id</code></td>
+            <td>String</td>
+            <td>Unique identifier. Format: LANDSCAPE_THEME-CODE_YEAR_SOURCE_VERSION</td>
+            <td><code>KEN-LV_LC_2023_ILRI_v1</code></td>
+          </tr>
+          <tr>
+            <td><code>title</code></td>
+            <td>String</td>
+            <td>Human-readable dataset name</td>
+            <td>Lake Victoria Basin Land Cover 2023</td>
+          </tr>
+          <tr>
+            <td><code>country</code></td>
+            <td>Controlled vocabulary</td>
+            <td>Country where the landscape is located</td>
+            <td>Kenya</td>
+          </tr>
+          <tr>
+            <td><code>living_landscape</code></td>
+            <td>Controlled vocabulary</td>
+            <td>Living Landscape code</td>
+            <td>KEN-LV</td>
+          </tr>
+          <tr>
+            <td><code>mfl_theme</code></td>
+            <td>Controlled vocabulary</td>
+            <td>The MFL minimum spatial package theme this dataset addresses</td>
+            <td>Land cover / land use</td>
+          </tr>
+          <tr>
+            <td><code>data_type</code></td>
+            <td>Controlled vocabulary</td>
+            <td>Technical format of the dataset</td>
+            <td>Raster</td>
+          </tr>
+          <tr>
+            <td><code>access_level</code></td>
+            <td>Controlled vocabulary</td>
+            <td>Who can access this dataset</td>
+            <td>Open</td>
+          </tr>
+          <tr>
+            <td><code>license</code></td>
+            <td>String</td>
+            <td>License under which the dataset is shared. Must not be empty.</td>
+            <td>CC BY 4.0</td>
+          </tr>
+          <tr>
+            <td><code>readiness_status</code></td>
+            <td>Controlled vocabulary</td>
+            <td>How far along the QC process this dataset is</td>
+            <td>Validated</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-6);">Optional fields</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Notes</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>description</code></td>
+            <td>String</td>
+            <td>1–3 sentence plain-language summary of what the dataset contains</td>
+            <td>Land cover classification for the Kenya portion of the Lake Victoria Basin...</td>
+          </tr>
+          <tr>
+            <td><code>source</code></td>
+            <td>String</td>
+            <td>Contributing CGIAR centre or organisation</td>
+            <td>ILRI</td>
+          </tr>
+          <tr>
+            <td><code>contact</code></td>
+            <td>Email</td>
+            <td>Contact email for access requests or questions</td>
+            <td>a.paliwal@cgiar.org</td>
+          </tr>
+          <tr>
+            <td><code>spatial_resolution</code></td>
+            <td>String</td>
+            <td>Pixel size or feature resolution</td>
+            <td>10 m</td>
+          </tr>
+          <tr>
+            <td><code>temporal_coverage</code></td>
+            <td>String</td>
+            <td>Year or date range the dataset covers</td>
+            <td>2023 or 2020–2023</td>
+          </tr>
+          <tr>
+            <td><code>download_url</code></td>
+            <td>URL</td>
+            <td>Required when access_level is Open. Direct link to download or data portal.</td>
+            <td>https://data.ilri.org/portal/dataset/ken-lv-lc-2023</td>
+          </tr>
+          <tr>
+            <td><code>metadata_url</code></td>
+            <td>URL</td>
+            <td>Link to full metadata record (GeoNetwork, CKAN, institutional portal)</td>
+            <td>https://data.ilri.org/portal/dataset/ken-lv-lc-2023</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-6);">Controlled vocabulary tables</h2>
+
+      <h3 style="margin-bottom: var(--space-3);">Country</h3>
+      <p style="color: var(--color-gray-600); margin-bottom: var(--space-3); font-size: var(--text-sm);">Priority countries for 2026: Kenya, Ethiopia, India.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-8);">
+        {['Kenya', 'Ethiopia', 'India', 'Colombia', 'Myanmar', 'Vietnam', 'Laos', 'Cambodia', 'Thailand'].map((v) => (
+          <code style="background-color: var(--color-gray-100); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">{v}</code>
+        ))}
+      </div>
+
+      <h3 style="margin-bottom: var(--space-3);">Living Landscape</h3>
+      <table class="data-table" style="margin-bottom: var(--space-8);">
+        <thead><tr><th>Code</th><th>Landscape Name</th><th>Country</th></tr></thead>
+        <tbody>
+          {[
+            ['KEN-LV', 'Lake Victoria Basin', 'Kenya'],
+            ['KEN-MT', 'Mount Kenya Landscape', 'Kenya'],
+            ['ETH-GT', 'Ethiopian Great Rift Valley', 'Ethiopia'],
+            ['ETH-BL', 'Blue Nile Highlands', 'Ethiopia'],
+            ['IND-WG', 'Western Ghats', 'India'],
+            ['IND-EP', 'Eastern Plains', 'India'],
+            ['COL-AM', 'Amazon-Andean Corridor', 'Colombia'],
+            ['MEK-LM', 'Lower Mekong', 'Multi-country'],
+          ].map(([code, name, country]) => (
+            <tr><td><code>{code}</code></td><td>{name}</td><td>{country}</td></tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h3 style="margin-bottom: var(--space-3);">MFL Theme</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-8);">
+        {['Boundaries / admin units','Land cover / land use','Ecosystem condition','Degradation / land health','Water / hydrology','Biodiversity / ecosystems','Pressures / drivers','Ecosystem services','Hotspots / leverage points','Scenarios / future risks','Decision-support outputs','Agrobiodiversity / crops','Socio-economic / livelihoods'].map((v) => (
+          <code style="background-color: var(--color-gray-100); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">{v}</code>
+        ))}
+      </div>
+
+      <h3 style="margin-bottom: var(--space-3);">Data Type</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-8);">
+        {['Raster','Vector','Tabular','Time series','Model output','Survey data'].map((v) => (
+          <code style="background-color: var(--color-gray-100); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">{v}</code>
+        ))}
+      </div>
+
+      <h3 style="margin-bottom: var(--space-3);">Access Level</h3>
+      <table class="data-table" style="margin-bottom: var(--space-8);">
+        <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>Open</code></td><td>Freely downloadable. A download_url is required.</td></tr>
+          <tr><td><code>Restricted</code></td><td>Available on request. Contact information is shown on the dataset detail page.</td></tr>
+          <tr><td><code>Internal</code></td><td>For CGIAR internal use only. Visible in catalogue but not accessible to external users.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-bottom: var(--space-3);">Readiness Status</h3>
+      <table class="data-table">
+        <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>Registered only</code></td><td>Dataset registered; metadata may be incomplete. Not yet reviewed.</td></tr>
+          <tr><td><code>Under review</code></td><td>Metadata submitted; hub team is reviewing.</td></tr>
+          <tr><td><code>Accepted</code></td><td>Metadata reviewed and approved. Reliable for reference use.</td></tr>
+          <tr><td><code>Validated</code></td><td>Passed spatial QC. Suitable for analysis.</td></tr>
+          <tr><td><code>Analytics-ready</code></td><td>Fully harmonized and validated. Ready for landscape analytics and modelling.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  @import '../../styles/catalogue.css';
+</style>

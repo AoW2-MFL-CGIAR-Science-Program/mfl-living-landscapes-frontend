@@ -1,0 +1,14 @@
+---
+import Nav from './Nav.astro'
+const base = import.meta.env.BASE_URL
+---
+
+<header style="background-color: var(--color-green-dark); color: var(--color-white);">
+  <div class="container" style="display: flex; align-items: center; justify-content: space-between; padding-top: var(--space-4); padding-bottom: var(--space-4);">
+    <a href={base} style="text-decoration: none; color: var(--color-white);">
+      <span style="font-family: var(--font-title); font-size: var(--text-xl); font-weight: bold;">MFL Living Landscapes</span>
+      <span style="display: block; font-size: var(--text-xs); opacity: 0.8; letter-spacing: 0.05em; text-transform: uppercase;">Geospatial Data Hub</span>
+    </a>
+    <Nav />
+  </div>
+</header>

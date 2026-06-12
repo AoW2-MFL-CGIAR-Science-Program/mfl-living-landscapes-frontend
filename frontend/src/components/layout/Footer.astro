@@ -1,0 +1,37 @@
+---
+const base = import.meta.env.BASE_URL
+const year = new Date().getFullYear()
+---
+
+<footer style="background-color: var(--color-gray-900); color: var(--color-gray-400); margin-top: auto;">
+  <div class="container" style="padding-top: var(--space-8); padding-bottom: var(--space-8);">
+    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-8); margin-bottom: var(--space-8);">
+      <div>
+        <p style="color: var(--color-white); font-family: var(--font-title); font-size: var(--text-lg); margin-bottom: var(--space-3);">MFL Living Landscapes Data Hub</p>
+        <p style="font-size: var(--text-sm); line-height: 1.7; color: var(--color-gray-400);">
+          A geospatial dataset catalogue for the CGIAR Multifunctional Landscapes Science Programme, Area of Work 2 — Landscape Optimization &amp; Inclusive Planning.
+        </p>
+      </div>
+      <div>
+        <p style="color: var(--color-white); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-3);">Explore</p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: var(--space-2);">
+          <li><a href={`${base}/catalogue`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">Dataset Catalogue</a></li>
+          <li><a href={`${base}/landscapes`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">Living Landscapes</a></li>
+          <li><a href={`${base}/about`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">About the Hub</a></li>
+        </ul>
+      </div>
+      <div>
+        <p style="color: var(--color-white); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-3);">Contribute</p>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: var(--space-2);">
+          <li><a href={`${base}/contribute`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">Upload Guidelines</a></li>
+          <li><a href={`${base}/contribute/metadata-guide`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">Metadata Guide</a></li>
+          <li><a href={`${base}/contact`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top: 1px solid var(--color-gray-800); padding-top: var(--space-6); display: flex; justify-content: space-between; align-items: center; font-size: var(--text-xs);">
+      <p>&copy; {year} CGIAR MFL Science Programme. Content licensed under CC BY 4.0 unless otherwise stated.</p>
+      <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend" style="color: var(--color-gray-400); text-decoration: none; font-size: var(--text-xs);">GitHub</a>
+    </div>
+  </div>
+</footer>

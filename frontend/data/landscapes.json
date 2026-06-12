@@ -1,0 +1,10 @@
+[
+  { "code": "KEN-LV", "name": "Lake Victoria Basin", "country": "Kenya" },
+  { "code": "KEN-MT", "name": "Mount Kenya Landscape", "country": "Kenya" },
+  { "code": "ETH-GT", "name": "Ethiopian Great Rift Valley", "country": "Ethiopia" },
+  { "code": "ETH-BL", "name": "Blue Nile Highlands", "country": "Ethiopia" },
+  { "code": "IND-WG", "name": "Western Ghats", "country": "India" },
+  { "code": "IND-EP", "name": "Eastern Plains", "country": "India" },
+  { "code": "COL-AM", "name": "Amazon-Andean Corridor", "country": "Colombia" },
+  { "code": "MEK-LM", "name": "Lower Mekong", "country": "Multi-country" }
+]

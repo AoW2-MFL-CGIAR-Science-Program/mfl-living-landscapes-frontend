@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import PageHero from '../components/ui/PageHero.astro'
+---
+
+<BaseLayout title="Contact" description="Get in touch with the MFL Living Landscapes Data Hub team.">
+  <PageHero title="Contact" subtitle="Questions, corrections, or contributions — we want to hear from you." />
+
+  <div class="container" style="padding-top: var(--space-12); padding-bottom: var(--space-16); max-width: 680px;">
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">Report an issue or request a feature</h2>
+      <p style="margin-bottom: var(--space-6);">
+        The fastest way to reach the hub team is through GitHub Issues. Use the appropriate template:
+      </p>
+      <ul style="list-style: none; display: flex; flex-direction: column; gap: var(--space-3);">
+        <li>
+          <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=bug_report.yml" class="btn btn-secondary" style="width: 100%; justify-content: flex-start;">
+            Report a broken page or incorrect data
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=dataset_update.yml" class="btn btn-secondary" style="width: 100%; justify-content: flex-start;">
+            Request a dataset update or correction
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=content_fix.yml" class="btn btn-secondary" style="width: 100%; justify-content: flex-start;">
+            Suggest a content or documentation fix
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=feature_request.yml" class="btn btn-secondary" style="width: 100%; justify-content: flex-start;">
+            Propose a new feature or improvement
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">Contribute a dataset</h2>
+      <p style="margin-bottom: var(--space-4);">
+        If you are a CGIAR data steward or focal point with a dataset to register, start at the Upload Guidelines page. It walks you through what you need and what to expect.
+      </p>
+      <a href="/contribute" class="btn btn-primary">Go to Upload Guidelines</a>
+    </section>
+
+    <section>
+      <h2 style="margin-bottom: var(--space-4);">Direct contact</h2>
+      <p style="margin-bottom: var(--space-2);">
+        For enquiries that do not fit the above, contact the hub coordinator:
+      </p>
+      <p>
+        <strong>Lizeth Llanos</strong> — MFL AoW2 Geospatial Coordinator<br />
+        Alliance of Bioversity International and CIAT<br />
+        CGIAR MFL Science Programme
+      </p>
+    </section>
+
+  </div>
+</BaseLayout>
