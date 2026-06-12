@@ -1,3 +1,61 @@
+/* ── Web fonts — self-hosted, OFL license ──────────────────────────────── */
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/mfl-living-landscapes-frontend/fonts/SpaceGrotesk-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/mfl-living-landscapes-frontend/fonts/SpaceGrotesk-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/mfl-living-landscapes-frontend/fonts/SpaceGrotesk-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/mfl-living-landscapes-frontend/fonts/SpaceGrotesk-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url('/mfl-living-landscapes-frontend/fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/mfl-living-landscapes-frontend/fonts/IBMPlexMono-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/mfl-living-landscapes-frontend/fonts/IBMPlexMono-Medium.woff2') format('woff2');
+}
+
 :root {
   /* Colour palette — MFL green */
   --color-green-dark:   #2C5F2D;
@@ -5,6 +63,12 @@
   --color-green-moss:   #97BC62;
   --color-green-light:  #E8F0E0;
   --color-cream:        #F5F5F0;
+
+  /* Accent colours */
+  --color-accent:       #1E6F8E;   /* azul agua — datos, acciones */
+  --color-accent-light: #D0EBF5;   /* fondo claro del acento */
+  --color-earth:        #B08552;   /* terracota — iconografía de suelo/paisaje */
+  --color-earth-light:  #F5ECD9;   /* fondo claro del earth */
 
   /* Neutrals */
   --color-white:        #FFFFFF;
@@ -28,9 +92,10 @@
   --access-restricted:  #B45309;
   --access-internal:    #6B7280;
 
-  /* Typography */
-  --font-title:  Georgia, 'Times New Roman', serif;
-  --font-body:   Calibri, 'Segoe UI', Arial, sans-serif;
+  /* Typography — web fonts (Space Grotesk + Inter + IBM Plex Mono) */
+  --font-title:  'Space Grotesk', system-ui, sans-serif;
+  --font-body:   'Inter', system-ui, sans-serif;
+  --font-mono:   'IBM Plex Mono', 'Courier New', monospace;
 
   --text-xs:    0.75rem;
   --text-sm:    0.875rem;

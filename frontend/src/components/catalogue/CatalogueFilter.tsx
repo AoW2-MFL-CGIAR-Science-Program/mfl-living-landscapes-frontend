@@ -29,7 +29,22 @@ function getOptions(datasets: Dataset[], key: FilterKey): string[] {
 }
 
 export function CatalogueFilter({ datasets, base }: Props) {
-  const [filters, setFilters] = useState<FilterState>(emptyFilters())
+  // Leer filtros desde URL params al cargar (ej: ?landscape=KEN-LV)
+  const [filters, setFilters] = useState<FilterState>(() => {
+    const initial = emptyFilters()
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search)
+      const landscape = params.get('landscape')
+      if (landscape) initial.living_landscape = [landscape]
+      const country = params.get('country')
+      if (country) initial.country = [country]
+      const theme = params.get('theme')
+      if (theme) initial.mfl_theme = [theme]
+      const status = params.get('status')
+      if (status) initial.readiness_status = [status]
+    }
+    return initial
+  })
   const [expanded, setExpanded] = useState(false)
 
   const filtered = filterDatasets(datasets, filters)
@@ -73,23 +88,25 @@ export function CatalogueFilter({ datasets, base }: Props) {
           const options = getOptions(datasets, key)
           if (options.length === 0) return null
           return (
-            <div key={key} className="filter-group">
-              <p className="filter-group-label">{FILTER_LABELS[key]}</p>
+            <fieldset key={key} className="filter-group">
+              <legend className="filter-group-label">{FILTER_LABELS[key]}</legend>
               <ul className="filter-checkbox-list">
-                {options.map((opt) => (
-                  <li key={opt} className="filter-checkbox-item">
-                    <label>
+                {options.map((opt) => {
+                  const inputId = `filter-${key}-${opt.replace(/\s+/g, '-').toLowerCase()}`
+                  return (
+                    <li key={opt} className="filter-checkbox-item">
                       <input
                         type="checkbox"
+                        id={inputId}
                         checked={(filters[key] as string[]).includes(opt)}
                         onChange={() => toggle(key, opt)}
                       />
-                      {opt}
-                    </label>
-                  </li>
-                ))}
+                      <label htmlFor={inputId}>{opt}</label>
+                    </li>
+                  )
+                })}
               </ul>
-            </div>
+            </fieldset>
           )
         })}
 
