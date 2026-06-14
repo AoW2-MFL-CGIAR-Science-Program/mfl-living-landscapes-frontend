@@ -65,6 +65,7 @@ export interface Dataset {
 
   // Optional fields
   description?: string
+  formats?: string[]
   source?: string
   contact?: string
   spatial_resolution?: string

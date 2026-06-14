@@ -7,20 +7,18 @@ interface Props {
   viewMode?: 'card' | 'list'
 }
 
-export function DatasetGrid({ datasets, base, viewMode = 'card' }: Props) {
+export function DatasetGrid({ datasets, base, viewMode = 'list' }: Props) {
   if (datasets.length === 0) {
     return (
-      <div className="dataset-grid">
-        <div className="empty-state">
-          <h3>No datasets match your filters</h3>
-          <p>Try removing some filters or clearing all filters to see all available datasets.</p>
-        </div>
+      <div className="empty-state">
+        <h3>No datasets match your filters</h3>
+        <p>Try removing some filters or clearing all filters to see all available datasets.</p>
       </div>
     )
   }
 
   return (
-    <div className={`dataset-grid${viewMode === 'list' ? ' list-view' : ''}`}>
+    <div className={`ds-results ${viewMode === 'card' ? 'ds-results--grid' : 'ds-results--list'}`}>
       {datasets.map((d) => (
         <DatasetCard key={d.id} dataset={d} base={base} />
       ))}
