@@ -64,9 +64,14 @@
   --color-green-light:  #E8F0E0;
   --color-cream:        #F5F5F0;
 
+  /* CGIAR brand teal */
+  --color-cgiar-teal:       #009CA6;
+  --color-cgiar-teal-dark:  #007A8A;
+  --color-cgiar-teal-light: #E0F5F7;
+
   /* Accent colours */
-  --color-accent:       #1E6F8E;   /* azul agua — datos, acciones */
-  --color-accent-light: #D0EBF5;   /* fondo claro del acento */
+  --color-accent:       #009CA6;   /* CGIAR teal — datos, acciones */
+  --color-accent-light: #E0F5F7;   /* fondo claro del acento */
   --color-earth:        #B08552;   /* terracota — iconografía de suelo/paisaje */
   --color-earth-light:  #F5ECD9;   /* fondo claro del earth */
 
