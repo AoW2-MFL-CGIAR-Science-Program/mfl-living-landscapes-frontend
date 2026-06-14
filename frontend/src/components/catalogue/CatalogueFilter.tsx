@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, type ReactNode } from 'react'
 import type { Dataset } from '../../utils/types'
 import { filterDatasets, emptyFilters, type FilterState } from '../../utils/filterDatasets'
 import { DatasetGrid } from './DatasetGrid'
@@ -9,7 +9,7 @@ interface Props {
 }
 
 type FilterKey = keyof FilterState
-type SortKey = 'default' | 'az' | 'za' | 'status'
+type SortKey = 'recent' | 'oldest' | 'az' | 'za' | 'status'
 type ViewMode = 'card' | 'list'
 
 const FILTER_LABELS: Record<FilterKey, string> = {
@@ -22,16 +22,68 @@ const FILTER_LABELS: Record<FilterKey, string> = {
   license:          'License',
 }
 
-const VISIBLE_FILTERS: FilterKey[] = ['country', 'living_landscape', 'mfl_theme', 'readiness_status', 'data_type', 'access_level']
+const PRIMARY_FILTERS: FilterKey[] = ['country', 'living_landscape', 'mfl_theme', 'readiness_status']
+const MORE_FILTERS: FilterKey[] = ['data_type', 'access_level', 'license']
+
+// ── Filter group icons ──────────────────────────────────────────────
+const FILTER_ICON: Record<FilterKey, ReactNode> = {
+  country: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" />
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+    </svg>
+  ),
+  living_landscape: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+      <line x1="8" y1="2" x2="8" y2="18" /><line x1="16" y1="6" x2="16" y2="22" />
+    </svg>
+  ),
+  mfl_theme: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z" />
+      <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" />
+    </svg>
+  ),
+  readiness_status: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" /><polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  ),
+  data_type: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" />
+    </svg>
+  ),
+  access_level: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+    </svg>
+  ),
+  license: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" />
+    </svg>
+  ),
+}
+
+const PER_PAGE_OPTIONS = [10, 25, 50]
 
 function getOptions(datasets: Dataset[], key: FilterKey): string[] {
   const values = datasets.map((d) => d[key] as string).filter(Boolean)
   return [...new Set(values)].sort()
 }
 
+function yearOf(d: Dataset): number {
+  const m = (d.temporal_coverage ?? '').match(/\d{4}/)
+  return m ? parseInt(m[0], 10) : 0
+}
+
 function sortDatasets(datasets: Dataset[], sort: SortKey): Dataset[] {
   const sorted = [...datasets]
-  if (sort === 'az') sorted.sort((a, b) => a.title.localeCompare(b.title))
+  if (sort === 'recent') sorted.sort((a, b) => yearOf(b) - yearOf(a))
+  else if (sort === 'oldest') sorted.sort((a, b) => yearOf(a) - yearOf(b))
+  else if (sort === 'az') sorted.sort((a, b) => a.title.localeCompare(b.title))
   else if (sort === 'za') sorted.sort((a, b) => b.title.localeCompare(a.title))
   else if (sort === 'status') {
     const order = ['Analytics-ready', 'Validated', 'Accepted', 'Under review', 'Registered only']
@@ -41,7 +93,6 @@ function sortDatasets(datasets: Dataset[], sort: SortKey): Dataset[] {
 }
 
 export function CatalogueFilter({ datasets, base }: Props) {
-  // Initialise from URL params
   const [filters, setFilters] = useState<FilterState>(() => {
     const initial = emptyFilters()
     if (typeof window !== 'undefined') {
@@ -59,12 +110,13 @@ export function CatalogueFilter({ datasets, base }: Props) {
   })
 
   const [searchText, setSearchText] = useState('')
-  const [sortKey, setSortKey] = useState<SortKey>('default')
-  const [viewMode, setViewMode] = useState<ViewMode>('card')
+  const [sortKey, setSortKey] = useState<SortKey>('recent')
+  const [viewMode, setViewMode] = useState<ViewMode>('list')
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-  const [collapsedSections, setCollapsedSections] = useState<Set<FilterKey>>(new Set())
+  const [showMore, setShowMore] = useState(false)
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(10)
 
-  // Filtered + searched + sorted datasets
   const filtered = useMemo(() => {
     let result = filterDatasets(datasets, filters)
     if (searchText.trim()) {
@@ -80,7 +132,12 @@ export function CatalogueFilter({ datasets, base }: Props) {
     return sortDatasets(result, sortKey)
   }, [datasets, filters, searchText, sortKey])
 
-  // Active filter chips
+  // Reset to first page whenever the result set changes.
+  useEffect(() => { setPage(1) }, [filters, searchText, sortKey, pageSize])
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
+  const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize)
+
   const activeChips = useMemo(() =>
     Object.entries(filters).flatMap(([key, values]) =>
       (values as string[]).map((value) => ({ key: key as FilterKey, value }))
@@ -92,18 +149,13 @@ export function CatalogueFilter({ datasets, base }: Props) {
       const current = prev[key] as string[]
       return {
         ...prev,
-        [key]: current.includes(value)
-          ? current.filter((v) => v !== value)
-          : [...current, value],
+        [key]: current.includes(value) ? current.filter((v) => v !== value) : [...current, value],
       }
     })
   }
 
   function removeChip(key: FilterKey, value: string) {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: (prev[key] as string[]).filter((v) => v !== value),
-    }))
+    setFilters((prev) => ({ ...prev, [key]: (prev[key] as string[]).filter((v) => v !== value) }))
   }
 
   function clearAll() {
@@ -111,118 +163,100 @@ export function CatalogueFilter({ datasets, base }: Props) {
     setSearchText('')
   }
 
-  function toggleSection(key: FilterKey) {
-    setCollapsedSections((prev) => {
-      const next = new Set(prev)
-      if (next.has(key)) next.delete(key)
-      else next.add(key)
-      return next
-    })
+  const hasActiveFilters = activeChips.length > 0 || searchText.trim().length > 0
+
+  function renderFilterSection(key: FilterKey) {
+    const options = getOptions(datasets, key)
+    if (options.length === 0) return null
+    return (
+      <fieldset key={key} className="filter-group">
+        <legend className="filter-group-legend">
+          <span className={`filter-group-icon filter-group-icon--${key}`}>{FILTER_ICON[key]}</span>
+          {FILTER_LABELS[key]}
+        </legend>
+        <ul className="filter-options">
+          {options.map((opt) => {
+            const inputId = `f-${key}-${opt.replace(/\s+/g, '-').toLowerCase()}`
+            const count = datasets.filter((d) => d[key] === opt).length
+            return (
+              <li key={opt} className="filter-option">
+                <input
+                  type="checkbox"
+                  id={inputId}
+                  checked={(filters[key] as string[]).includes(opt)}
+                  onChange={() => toggle(key, opt)}
+                />
+                <label htmlFor={inputId}>
+                  <span>{opt}</span>
+                  <span className="filter-count">({count})</span>
+                </label>
+              </li>
+            )
+          })}
+        </ul>
+      </fieldset>
+    )
   }
 
-  const hasActiveFilters = activeChips.length > 0 || searchText.trim().length > 0
+  // Build the visible page-number window.
+  const pageNumbers: number[] = []
+  for (let p = 1; p <= totalPages; p++) pageNumbers.push(p)
 
   return (
     <div className="catalogue-layout">
-      {/* ── Filter panel ─────────────────────────────────── */}
+      {/* ── Sidebar ───────────────────────────────────────── */}
       <aside className="filter-panel">
-        {/* Mobile toggle */}
         <button
           className="filter-mobile-toggle"
           onClick={() => setMobileFiltersOpen((o) => !o)}
           aria-expanded={mobileFiltersOpen}
-          aria-controls="filter-panel-body"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
           </svg>
           {mobileFiltersOpen ? 'Hide filters' : 'Show filters'}
-          {activeChips.length > 0 && (
-            <span style={{ background: '#C89B3C', color: '#fff', borderRadius: '9999px', fontSize: '0.7rem', padding: '0 0.4rem', fontWeight: 700 }}>
-              {activeChips.length}
-            </span>
-          )}
+          {activeChips.length > 0 && <span className="filter-count-badge">{activeChips.length}</span>}
         </button>
 
-        <div className={`filter-panel-collapsible${mobileFiltersOpen ? ' open' : ''}`} id="filter-panel-body">
+        <div className={`filter-panel-inner${mobileFiltersOpen ? ' open' : ''}`}>
           <div className="filter-panel-header">
-            <p className="filter-panel-title">Filters</p>
+            <span className="filter-panel-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+              </svg>
+              Filters
+            </span>
             {hasActiveFilters && (
-              <button className="filter-clear-btn" onClick={clearAll}>
-                Clear all
-              </button>
+              <button className="filter-clear-btn" onClick={clearAll}>Clear all</button>
             )}
           </div>
 
           <div className="filter-panel-body">
-            {VISIBLE_FILTERS.map((key) => {
-              const options = getOptions(datasets, key)
-              if (options.length === 0) return null
-              const isCollapsed = collapsedSections.has(key)
-              const activeCount = (filters[key] as string[]).length
-
-              return (
-                <fieldset key={key} className="filter-section">
-                  <button
-                    type="button"
-                    className="filter-section-toggle"
-                    onClick={() => toggleSection(key)}
-                    aria-expanded={!isCollapsed}
-                  >
-                    <legend className="filter-section-label">
-                      {FILTER_LABELS[key]}
-                      {activeCount > 0 && (
-                        <span style={{ marginLeft: '0.375rem', background: '#0B4F3A', color: '#fff', borderRadius: '9999px', fontSize: '0.65rem', padding: '0 0.35rem', fontWeight: 700 }}>
-                          {activeCount}
-                        </span>
-                      )}
-                    </legend>
-                    <svg
-                      className={`filter-section-chevron${isCollapsed ? '' : ' open'}`}
-                      width="14" height="14" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="m18 15-6-6-6 6"/>
-                    </svg>
-                  </button>
-
-                  <div className={`filter-section-body${isCollapsed ? ' collapsed' : ''}`}>
-                    <ul className="filter-checkbox-list">
-                      {options.map((opt) => {
-                        const inputId = `filter-${key}-${opt.replace(/\s+/g, '-').toLowerCase()}`
-                        const count = datasets.filter((d) => d[key] === opt).length
-                        return (
-                          <li key={opt} className="filter-checkbox-item">
-                            <input
-                              type="checkbox"
-                              id={inputId}
-                              checked={(filters[key] as string[]).includes(opt)}
-                              onChange={() => toggle(key, opt)}
-                            />
-                            <label htmlFor={inputId}>
-                              {opt}
-                              <span className="filter-count">{count}</span>
-                            </label>
-                          </li>
-                        )
-                      })}
-                    </ul>
-                  </div>
-                </fieldset>
-              )
-            })}
+            {PRIMARY_FILTERS.map(renderFilterSection)}
+            {showMore && MORE_FILTERS.map(renderFilterSection)}
+            <button className="filter-more-btn" onClick={() => setShowMore((s) => !s)}>
+              {showMore ? (
+                <>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                  Fewer filters
+                </>
+              ) : (
+                <>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+                  More filters
+                </>
+              )}
+            </button>
           </div>
         </div>
       </aside>
 
-      {/* ── Results column ───────────────────────────────── */}
+      {/* ── Results ───────────────────────────────────────── */}
       <div className="catalogue-results">
-        {/* Toolbar: search + sort + view toggle */}
         <div className="results-toolbar">
           <div className="search-wrapper">
-            <svg className="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            <svg className="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
             </svg>
             <label htmlFor="dataset-search" className="sr-only">Search datasets</label>
             <input
@@ -232,85 +266,122 @@ export function CatalogueFilter({ datasets, base }: Props) {
               placeholder="Search by title, theme, keyword…"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
-              aria-label="Search datasets by title, theme or keyword"
             />
           </div>
 
-          <label htmlFor="sort-select" className="sr-only">Sort datasets</label>
-          <select
-            id="sort-select"
-            className="sort-select"
-            value={sortKey}
-            onChange={(e) => setSortKey(e.target.value as SortKey)}
-            aria-label="Sort datasets"
-          >
-            <option value="default">Default order</option>
-            <option value="az">A → Z</option>
-            <option value="za">Z → A</option>
-            <option value="status">By status</option>
-          </select>
+          <div className="toolbar-right">
+            <label htmlFor="sort-select" className="sort-label">Sort by</label>
+            <select
+              id="sort-select"
+              className="sort-select"
+              value={sortKey}
+              onChange={(e) => setSortKey(e.target.value as SortKey)}
+            >
+              <option value="recent">Most recent</option>
+              <option value="oldest">Oldest</option>
+              <option value="az">A → Z</option>
+              <option value="za">Z → A</option>
+              <option value="status">By status</option>
+            </select>
 
-          <div className="view-toggle-group" role="group" aria-label="View mode">
-            <button
-              type="button"
-              className={`view-toggle-btn${viewMode === 'card' ? ' active' : ''}`}
-              onClick={() => setViewMode('card')}
-              aria-pressed={viewMode === 'card'}
-              aria-label="Card view"
-              title="Card view"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-                <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-              </svg>
-            </button>
-            <button
-              type="button"
-              className={`view-toggle-btn${viewMode === 'list' ? ' active' : ''}`}
-              onClick={() => setViewMode('list')}
-              aria-pressed={viewMode === 'list'}
-              aria-label="List view"
-              title="List view"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
-                <line x1="8" y1="18" x2="21" y2="18"/>
-                <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/>
-                <line x1="3" y1="18" x2="3.01" y2="18"/>
-              </svg>
-            </button>
+            <div className="view-toggle-group" role="group" aria-label="View mode">
+              <button
+                type="button"
+                className={`view-toggle-btn${viewMode === 'list' ? ' active' : ''}`}
+                onClick={() => setViewMode('list')}
+                aria-pressed={viewMode === 'list'}
+                aria-label="List view"
+                title="List view"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" />
+                  <line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className={`view-toggle-btn${viewMode === 'card' ? ' active' : ''}`}
+                onClick={() => setViewMode('card')}
+                aria-pressed={viewMode === 'card'}
+                aria-label="Grid view"
+                title="Grid view"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+                  <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Active filter chips */}
         {activeChips.length > 0 && (
           <div className="active-chips" role="list" aria-label="Active filters">
             {activeChips.map(({ key, value }) => (
               <span key={`${key}-${value}`} className="chip" role="listitem">
                 {value}
-                <button
-                  className="chip-remove"
-                  onClick={() => removeChip(key, value)}
-                  aria-label={`Remove filter: ${value}`}
-                >
+                <button className="chip-remove" onClick={() => removeChip(key, value)} aria-label={`Remove filter: ${value}`}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
-                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                   </svg>
                 </button>
               </span>
             ))}
-            <button className="chip-clear-all" onClick={clearAll}>
-              Clear all
-            </button>
+            <button className="chip-clear-all" onClick={clearAll}>Clear all</button>
           </div>
         )}
 
-        {/* Results count */}
         <p className="results-count">
-          Showing <strong>{filtered.length}</strong> of {datasets.length} datasets
+          Showing <strong>{pageItems.length}</strong> of {filtered.length} datasets
         </p>
 
-        <DatasetGrid datasets={filtered} base={base} viewMode={viewMode} />
+        <DatasetGrid datasets={pageItems} base={base} viewMode={viewMode} />
+
+        {filtered.length > 0 && (
+          <div className="pagination">
+            <div className="pagination-nav">
+              <button
+                className="page-arrow"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                aria-label="Previous page"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6" /></svg>
+              </button>
+              {pageNumbers.map((p) => (
+                <button
+                  key={p}
+                  className={`page-num${p === page ? ' active' : ''}`}
+                  onClick={() => setPage(p)}
+                  aria-current={p === page ? 'page' : undefined}
+                >
+                  {p}
+                </button>
+              ))}
+              <button
+                className="page-arrow"
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                aria-label="Next page"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6" /></svg>
+              </button>
+            </div>
+
+            <div className="per-page">
+              <label htmlFor="per-page-select">Show</label>
+              <select
+                id="per-page-select"
+                value={pageSize}
+                onChange={(e) => setPageSize(Number(e.target.value))}
+              >
+                {PER_PAGE_OPTIONS.map((n) => (
+                  <option key={n} value={n}>{n} per page</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

@@ -13,6 +13,7 @@
     "access_level": "Open",
     "license": "CC BY 4.0",
     "readiness_status": "Validated",
+    "formats": ["NetCDF", "GeoTIFF", "COG"],
     "description": "Land cover classification for the Kenya portion of the Lake Victoria Basin, derived from Sentinel-2 imagery at 10 m resolution. Covers the 2023 growing season with eight land cover classes including cropland, forest, grassland, wetland, and built-up area.",
     "download_url": "https://data.ilri.org/portal/dataset/ken-lv-lc-2023",
     "metadata_url": "https://data.ilri.org/portal/dataset/ken-lv-lc-2023"
@@ -31,6 +32,7 @@
     "access_level": "Open",
     "license": "CC BY 4.0",
     "readiness_status": "Accepted",
+    "formats": ["Shapefile", "GeoJSON"],
     "description": "Sub-watershed delineations for the Ethiopian portion of the Great Rift Valley landscape, derived from SRTM 30 m DEM. Includes watershed area, slope, and drainage density attributes.",
     "download_url": "https://data.iwmi.org/rift-valley-watersheds-2022",
     "metadata_url": "https://data.iwmi.org/rift-valley-watersheds-2022"
@@ -49,6 +51,7 @@
     "access_level": "Restricted",
     "license": "CC BY-NC 4.0",
     "readiness_status": "Under review",
+    "formats": ["NetCDF", "GeoTIFF"],
     "description": "Species richness and biodiversity integrity index for the Western Ghats biodiversity hotspot. Based on field survey data from 2019-2021 combined with remote sensing layers.",
     "metadata_url": "https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=dataset_update.yml"
   },
@@ -59,12 +62,14 @@
     "living_landscape": "KEN-MT",
     "mfl_theme": "Socio-economic / livelihoods",
     "data_type": "Survey data",
+    "spatial_resolution": "N/A",
     "temporal_coverage": "2023",
     "source": "Alliance Bioversity-CIAT",
     "contact": "d.tibebe@cgiar.org",
     "access_level": "Internal",
     "license": "All rights reserved",
     "readiness_status": "Registered only",
+    "formats": ["CSV", "XLSX"],
     "description": "Household survey covering 1,200 farming households in the Mount Kenya landscape. Covers livelihood strategies, land use decisions, and ecosystem service perceptions.",
     "metadata_url": "https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=dataset_update.yml"
   },
@@ -82,6 +87,7 @@
     "access_level": "Open",
     "license": "CC BY 4.0",
     "readiness_status": "Analytics-ready",
+    "formats": ["GeoTIFF", "COG"],
     "description": "Composite land degradation index for the Blue Nile Highlands, combining soil erosion risk, vegetation cover loss, and productivity decline indicators from 2000 to 2022.",
     "download_url": "https://data.icarda.org/blue-nile-degradation-2022",
     "metadata_url": "https://data.icarda.org/blue-nile-degradation-2022"
