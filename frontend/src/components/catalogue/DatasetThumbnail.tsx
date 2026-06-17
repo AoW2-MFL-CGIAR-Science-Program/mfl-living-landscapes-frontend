@@ -137,8 +137,7 @@ export function DatasetThumbnail({ id, theme }: Props) {
       className="ds-thumb-svg"
       viewBox={`0 0 ${W} ${H}`}
       preserveAspectRatio="xMidYMid slice"
-      role="img"
-      aria-label={`${theme} dataset preview`}
+      aria-hidden="true"
     >
       <defs>
         <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">

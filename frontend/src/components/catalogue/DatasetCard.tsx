@@ -62,10 +62,7 @@ export function DatasetCard({ dataset, base }: Props) {
   const formats = dataset.formats ?? []
 
   return (
-    <article
-      className="ds-card"
-      onClick={() => { window.location.href = detailUrl }}
-    >
+    <article className="ds-card">
       {/* Thumbnail */}
       <div className="ds-card-thumb">
         <DatasetThumbnail id={dataset.id} theme={dataset.mfl_theme} />
@@ -73,7 +70,11 @@ export function DatasetCard({ dataset, base }: Props) {
 
       {/* Main content */}
       <div className="ds-card-main">
-        <h3 className="ds-card-title">{dataset.title}</h3>
+        <h3 className="ds-card-title">
+          {/* Stretched-link: the title is the real anchor; ::after overlay makes
+              the whole card clickable while keeping new-tab / keyboard behaviour. */}
+          <a href={detailUrl} className="ds-card-title-link">{dataset.title}</a>
+        </h3>
 
         <div className="ds-card-badges">
           <span className={STATUS_BADGE[dataset.readiness_status] ?? 'badge badge-registered'}>
@@ -107,7 +108,6 @@ export function DatasetCard({ dataset, base }: Props) {
         <a
           href={detailUrl}
           className="ds-view-btn"
-          onClick={(e) => e.stopPropagation()}
         >
           View details
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -119,7 +119,6 @@ export function DatasetCard({ dataset, base }: Props) {
           <a
             href={dataset.download_url}
             className="ds-download"
-            onClick={(e) => e.stopPropagation()}
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Download ${dataset.title}`}
@@ -136,7 +135,6 @@ export function DatasetCard({ dataset, base }: Props) {
           <a
             href={dataset.metadata_url ?? detailUrl}
             className="ds-download ds-download--request"
-            onClick={(e) => e.stopPropagation()}
             target="_blank"
             rel="noopener noreferrer"
           >

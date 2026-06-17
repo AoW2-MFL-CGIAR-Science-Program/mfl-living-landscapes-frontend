@@ -88,9 +88,10 @@
 
 .metric-icon svg { width: 20px; height: 20px; }
 
-.metric-icon--green { background: rgba(151, 188, 98, 0.18); color: #b9d98a; }
-.metric-icon--gold  { background: rgba(200, 155, 60, 0.18); color: #e0b35c; }
-.metric-icon--teal  { background: rgba(0, 156, 166, 0.20); color: #56c8d2; }
+/* MOSAIC accent trio on the dark teal hero: teal, amber, terracotta */
+.metric-icon--green { background: rgba(214, 238, 242, 0.16); color: #9BD4DE; }
+.metric-icon--gold  { background: rgba(201, 125, 27, 0.20);  color: #E0B35C; }
+.metric-icon--teal  { background: rgba(181, 77, 47, 0.20);   color: #E59B82; }
 
 .metric-text { display: flex; flex-direction: column; line-height: 1.1; }
 
@@ -145,7 +146,7 @@
 .filter-clear-btn {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--color-cgiar-teal, #009CA6);
+  color: var(--color-cgiar-teal, #0D5C6B);
   background: none;
   border: none;
   cursor: pointer;
@@ -154,7 +155,7 @@
   transition: color 0.15s;
 }
 
-.filter-clear-btn:hover { color: var(--color-cgiar-teal-dark, #007A8A); text-decoration: underline; }
+.filter-clear-btn:hover { color: var(--color-cgiar-teal-dark, #0A4753); text-decoration: underline; }
 .filter-clear-btn:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
 .filter-panel-body { display: flex; flex-direction: column; }
@@ -326,8 +327,8 @@
 
 .search-input:focus-visible {
   outline: none;
-  border-color: var(--color-cgiar-teal, #009CA6);
-  box-shadow: 0 0 0 3px rgba(0, 156, 166, 0.14);
+  border-color: var(--color-cgiar-teal, #0D5C6B);
+  box-shadow: 0 0 0 3px rgba(13, 92, 107, 0.16);
 }
 
 .search-input::placeholder { color: var(--color-muted); }
@@ -362,8 +363,8 @@
 
 .sort-select:focus-visible {
   outline: none;
-  border-color: var(--color-cgiar-teal, #009CA6);
-  box-shadow: 0 0 0 3px rgba(0, 156, 166, 0.14);
+  border-color: var(--color-cgiar-teal, #0D5C6B);
+  box-shadow: 0 0 0 3px rgba(13, 92, 107, 0.16);
 }
 
 .view-toggle-group {
@@ -465,12 +466,12 @@
 }
 
 .ds-card {
+  position: relative;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
   overflow: hidden;
   box-shadow: var(--shadow-card);
-  cursor: pointer;
   transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
   display: grid;
 }
@@ -478,8 +479,33 @@
 .ds-card:hover {
   box-shadow: var(--shadow-card-hover);
   transform: translateY(-2px);
-  border-color: rgba(0, 156, 166, 0.35);
+  border-color: rgba(13, 92, 107, 0.35);
 }
+
+/* Stretched-link: title anchor overlays the whole card so the card is
+   clickable, while remaining a real link (new-tab, keyboard, focus). */
+.ds-card-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ds-card-title-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ds-card-title-link:hover { color: var(--color-primary); }
+
+.ds-card-title-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Keep the action links clickable above the stretched-link overlay. */
+.ds-card-actions { position: relative; z-index: 1; }
 
 /* Thumbnail */
 .ds-card-thumb {
@@ -587,13 +613,13 @@
   gap: 0.35rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--color-cgiar-teal, #009CA6);
+  color: var(--color-cgiar-teal, #0D5C6B);
   transition: color 0.15s;
 }
 
-.ds-download:hover .ds-download-label { color: var(--color-cgiar-teal-dark, #007A8A); }
+.ds-download:hover .ds-download-label { color: var(--color-cgiar-teal-dark, #0A4753); }
 .ds-download--request .ds-download-label { color: var(--color-muted); }
-.ds-download--request:hover .ds-download-label { color: var(--color-earth, #B08552); }
+.ds-download--request:hover .ds-download-label { color: var(--color-earth, #B54D2F); }
 
 .ds-formats {
   font-size: 0.72rem;
@@ -601,7 +627,7 @@
   text-align: right;
 }
 
-.ds-download:focus-visible { outline: 2px solid var(--color-cgiar-teal, #009CA6); outline-offset: 2px; border-radius: var(--radius-sm); }
+.ds-download:focus-visible { outline: 2px solid var(--color-cgiar-teal, #0D5C6B); outline-offset: 2px; border-radius: var(--radius-sm); }
 
 /* ── List view layout (rows) ─────────────────────────────────── */
 .ds-results--list .ds-card {
@@ -712,6 +738,17 @@
 .page-arrow:disabled { opacity: 0.4; cursor: not-allowed; }
 .page-num:focus-visible, .page-arrow:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
+.page-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 38px;
+  color: var(--color-muted);
+  font-weight: 600;
+  user-select: none;
+}
+
 .per-page {
   display: flex;
   align-items: center;
@@ -752,6 +789,23 @@
   color: var(--color-text);
   margin-bottom: var(--space-2);
 }
+
+.empty-state-clear {
+  margin-top: var(--space-4);
+  padding: 0.55rem 1.1rem;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 0.625rem;
+  background: var(--color-surface);
+  color: var(--color-primary);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.empty-state-clear:hover { background: var(--color-primary); color: #fff; }
+.empty-state-clear:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
 
 /* ── Responsive ──────────────────────────────────────────────── */
 @media (max-width: 960px) {
