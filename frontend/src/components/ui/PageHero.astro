@@ -16,7 +16,7 @@ const { title, subtitle } = Astro.props
 
 <style>
   .page-hero {
-    background-color: var(--color-green-dark);
+    background-color: var(--mosaic-teal);
     color: var(--color-white);
     padding: var(--space-12) 0;
   }
@@ -26,9 +26,9 @@ const { title, subtitle } = Astro.props
     margin-bottom: var(--space-3);
   }
 
-  /* FIX CONTRASTE P1: verde claro (E8F0E0) sobre verde oscuro (2C5F2D) = ~9:1 */
+  /* Light Teal (#D6EEF2) on Ocean Teal (#0D5C6B) — contrast ~7:1 */
   .page-hero-subtitle {
-    color: var(--color-green-light);
+    color: var(--mosaic-light-teal);
     font-size: var(--text-lg);
     max-width: 640px;
     line-height: 1.6;

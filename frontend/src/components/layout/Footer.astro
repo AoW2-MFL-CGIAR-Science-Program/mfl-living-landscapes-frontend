@@ -3,35 +3,194 @@ const base = import.meta.env.BASE_URL
 const year = new Date().getFullYear()
 ---
 
-<footer style="background-color: var(--color-gray-900); color: var(--color-gray-400); margin-top: auto;">
-  <div class="container" style="padding-top: var(--space-8); padding-bottom: var(--space-8);">
-    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: var(--space-8); margin-bottom: var(--space-8);">
-      <div>
-        <p style="color: var(--color-white); font-family: var(--font-title); font-size: var(--text-lg); margin-bottom: var(--space-3);">MFL Living Landscapes Data Hub</p>
-        <p style="font-size: var(--text-sm); line-height: 1.7; color: var(--color-gray-400);">
-          A geospatial dataset catalogue for the CGIAR Multifunctional Landscapes Science Programme, Area of Work 2 — Landscape Optimization &amp; Inclusive Planning.
+<footer class="site-footer">
+  <div class="container footer-main">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <div class="footer-brand">
+          <img
+            src={`${base}/mosaic-mark-reverse.svg`}
+            alt=""
+            width="38"
+            height="25"
+            aria-hidden="true"
+          />
+          <span class="footer-brand-name">MOSAIC</span>
+        </div>
+        <p class="footer-about-text">
+          The shared spatial intelligence network for the CGIAR Multifunctional Landscapes
+          Science Programme (Area of Work 2). MOSAIC connects the geospatial data and capacity
+          of CGIAR centres into one coherent view of the Living Landscapes — connecting, not duplicating.
         </p>
       </div>
-      <div>
-        <p style="color: var(--color-white); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-3);">Explore</p>
-        <ul style="list-style: none; display: flex; flex-direction: column; gap: var(--space-2);">
-          <li><a href={`${base}/catalogue`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">Dataset Catalogue</a></li>
-          <li><a href={`${base}/landscapes`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">Living Landscapes</a></li>
-          <li><a href={`${base}/about`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">About the Hub</a></li>
+
+      <div class="footer-col">
+        <p class="footer-col-title">Explore</p>
+        <ul class="footer-links">
+          <li><a href={`${base}/catalogue`}>Dataset Catalogue</a></li>
+          <li><a href={`${base}/landscapes`}>Living Landscapes</a></li>
+          <li><a href={`${base}/about`}>About MOSAIC</a></li>
         </ul>
       </div>
-      <div>
-        <p style="color: var(--color-white); font-size: var(--text-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-3);">Contribute</p>
-        <ul style="list-style: none; display: flex; flex-direction: column; gap: var(--space-2);">
-          <li><a href={`${base}/contribute`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">Upload Guidelines</a></li>
-          <li><a href={`${base}/contribute/metadata-guide`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">Metadata Guide</a></li>
-          <li><a href={`${base}/contact`} style="color: var(--color-gray-400); font-size: var(--text-sm); text-decoration: none;">Contact</a></li>
+
+      <div class="footer-col">
+        <p class="footer-col-title">Contribute</p>
+        <ul class="footer-links">
+          <li><a href={`${base}/contribute`}>Contribution Guide</a></li>
+          <li><a href={`${base}/contribute/metadata-guide`}>Metadata Guide</a></li>
+          <li><a href={`${base}/contact`}>Contact</a></li>
         </ul>
       </div>
     </div>
-    <div style="border-top: 1px solid var(--color-gray-800); padding-top: var(--space-6); display: flex; justify-content: space-between; align-items: center; font-size: var(--text-xs);">
+
+    <!-- ── CGIAR / MFL endorsement ──────────────────────────────────────
+         Official "CGIAR Multifunctional Landscapes" lockup, used as supplied
+         and shown in CGIAR's own colours on a neutral (light) panel so it
+         reads as institutional endorsement — never restyled to the MOSAIC
+         palette (MOSAIC Brand Guidelines v1.0, §5). -->
+    <div class="footer-endorsement">
+      <img
+        src={`${base}/cgiar-mfl-lockup.png`}
+        alt="CGIAR Multifunctional Landscapes"
+        class="footer-endorsement-logo"
+        width="155"
+        height="52"
+      />
+      <p class="footer-endorsement-text">
+        MOSAIC is an initiative of the <strong>CGIAR Multifunctional Landscapes
+        Science Programme</strong>, Area of Work 2 — Landscape Optimization &amp; Inclusive
+        Planning, and is funded through it.
+      </p>
+    </div>
+
+    <div class="footer-bottom">
       <p>&copy; {year} CGIAR MFL Science Programme. Content licensed under CC BY 4.0 unless otherwise stated.</p>
-      <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend" style="color: var(--color-gray-400); text-decoration: none; font-size: var(--text-xs);">GitHub</a>
+      <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend">GitHub</a>
     </div>
   </div>
 </footer>
+
+<style>
+  .site-footer {
+    background-color: var(--mosaic-ink);
+    color: var(--color-gray-400);
+    margin-top: auto;
+  }
+
+  .footer-main {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-8);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: var(--space-8);
+    margin-bottom: var(--space-8);
+  }
+
+  .footer-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-brand-name {
+    font-family: var(--font-title);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-white);
+  }
+
+  .footer-about-text {
+    font-size: var(--text-sm);
+    line-height: 1.7;
+    color: var(--color-gray-400);
+    max-width: 46ch;
+    margin: 0;
+  }
+
+  .footer-col-title {
+    color: var(--color-white);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-3);
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-links a {
+    color: var(--color-gray-400);
+    font-size: var(--text-sm);
+    text-decoration: none;
+  }
+
+  .footer-links a:hover {
+    color: var(--mosaic-light-teal);
+  }
+
+  /* ── Endorsement panel ───────────────────────────────────────── */
+  .footer-endorsement {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    background-color: var(--color-white);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+
+  .footer-endorsement-logo {
+    height: 52px;
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .footer-endorsement-text {
+    font-size: var(--text-xs);
+    line-height: 1.6;
+    color: var(--color-gray-600);
+    margin: 0;
+  }
+
+  .footer-endorsement-text strong {
+    color: var(--mosaic-ink);
+  }
+
+  /* ── Bottom bar ──────────────────────────────────────────────── */
+  .footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: var(--space-6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    font-size: var(--text-xs);
+    flex-wrap: wrap;
+  }
+
+  .footer-bottom a {
+    color: var(--color-gray-400);
+    text-decoration: none;
+  }
+
+  .footer-bottom a:hover {
+    color: var(--mosaic-light-teal);
+  }
+
+  @media (max-width: 767px) {
+    .footer-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+    .footer-endorsement { flex-direction: column; align-items: flex-start; gap: var(--space-3); }
+  }
+</style>

@@ -5,18 +5,18 @@ const base = import.meta.env.BASE_URL
 
 <header class="site-header">
   <div class="container site-header-inner">
-    <a href={base} class="site-logo" aria-label="MFL Living Landscapes Data Hub — home">
+    <a href={base} class="site-logo" aria-label="MOSAIC — home">
       <img
-        src={`${base}/cgiar-logo.svg`}
-        alt="CGIAR"
-        class="site-logo-cgiar"
-        width="70"
+        src={`${base}/mosaic-mark.svg`}
+        alt=""
+        class="site-logo-mark"
+        width="40"
         height="26"
+        aria-hidden="true"
       />
-      <span class="site-logo-divider" aria-hidden="true"></span>
       <div class="site-logo-text">
-        <span class="site-logo-name">MFL Living Landscapes</span>
-        <span class="site-logo-tagline">Geospatial Data Hub</span>
+        <span class="site-logo-name">MOSAIC</span>
+        <span class="site-logo-tagline">CGIAR MFL Science Programme</span>
       </div>
     </a>
 
@@ -27,7 +27,7 @@ const base = import.meta.env.BASE_URL
 <style>
   .site-header {
     background-color: var(--color-white);
-    border-bottom: 3px solid var(--color-cgiar-teal);
+    border-bottom: 3px solid var(--mosaic-teal);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -53,50 +53,41 @@ const base = import.meta.env.BASE_URL
   }
 
   .site-logo:focus-visible {
-    outline: 2px solid var(--color-cgiar-teal);
+    outline: 2px solid var(--mosaic-teal);
     outline-offset: 3px;
     border-radius: var(--radius-sm);
   }
 
-  .site-logo-cgiar {
-    height: 28px;
-    width: auto;
-    flex-shrink: 0;
-  }
-
-  .site-logo-divider {
-    display: block;
-    width: 1px;
+  .site-logo-mark {
     height: 26px;
-    background-color: var(--color-gray-200);
+    width: auto;
     flex-shrink: 0;
   }
 
   .site-logo-text {
     display: flex;
     flex-direction: column;
-    line-height: 1.2;
+    line-height: 1.15;
     gap: 1px;
   }
 
   .site-logo-name {
     font-family: var(--font-title);
-    font-size: var(--text-base);
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--color-gray-900);
+    font-size: var(--text-xl);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--mosaic-teal);
   }
 
   .site-logo-tagline {
     font-size: 0.65rem;
-    color: var(--color-gray-400);
+    color: var(--color-gray-500);
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   @media (max-width: 480px) {
-    .site-logo-text { display: none; }
-    .site-logo-divider { display: none; }
+    .site-logo-tagline { display: none; }
   }
 </style>

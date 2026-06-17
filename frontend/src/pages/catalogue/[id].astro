@@ -17,7 +17,7 @@ const base = import.meta.env.BASE_URL
 
 const readinessDescriptions: Record<string, string> = {
   'Registered only': 'This dataset has been registered in the catalogue but has not yet been reviewed. Metadata may be incomplete.',
-  'Under review': 'This dataset is currently being reviewed by the hub team. Check back soon for an updated status.',
+  'Under review': 'This dataset is currently being reviewed by the MOSAIC team. Check back soon for an updated status.',
   'Accepted': 'This dataset has passed initial review. Metadata is complete and the dataset is considered reliable for reference use.',
   'Validated': 'This dataset has undergone quality control and meets the MFL spatial standards. Suitable for analysis.',
   'Analytics-ready': 'This dataset has been processed, harmonized, and validated to the highest standard. Ready for use in landscape analytics and modelling.',
@@ -85,7 +85,7 @@ const readinessDescriptions: Record<string, string> = {
         </div>
       ) : (
         <div>
-          <p style="margin-bottom: var(--space-4);">This dataset is for internal CGIAR use only. Contact the hub team if you believe you should have access.</p>
+          <p style="margin-bottom: var(--space-4);">This dataset is for internal CGIAR use only. Contact the MOSAIC team if you believe you should have access.</p>
           {dataset.contact && <p><strong>Contact:</strong> <a href={`mailto:${dataset.contact}`}>{dataset.contact}</a></p>}
         </div>
       )}
@@ -101,7 +101,7 @@ const readinessDescriptions: Record<string, string> = {
     <section style="margin-bottom: var(--space-8); padding: var(--space-6); background-color: var(--color-gray-50); border-left: 4px solid var(--color-green-dark); border-radius: 0 var(--radius-md) var(--radius-md) 0;">
       <h2 style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Suggested citation</h2>
       <p style="font-size: var(--text-sm); font-family: monospace; color: var(--color-gray-600); line-height: 1.7;">
-        {dataset.source ?? 'CGIAR'} ({dataset.temporal_coverage ?? new Date().getFullYear()}). {dataset.title}. MFL Living Landscapes Geospatial Data Hub. Retrieved from https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/catalogue/{dataset.id}
+        {dataset.source ?? 'CGIAR'} ({dataset.temporal_coverage ?? new Date().getFullYear()}). {dataset.title}. MOSAIC — CGIAR MFL Science Programme. Retrieved from https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/catalogue/{dataset.id}
       </p>
     </section>
 
@@ -114,7 +114,7 @@ const readinessDescriptions: Record<string, string> = {
         </thead>
         <tbody>
           <tr><td><span class="badge badge-registered">Registered only</span></td><td>Dataset registered; metadata may be incomplete. Not yet reviewed.</td></tr>
-          <tr><td><span class="badge badge-review">Under review</span></td><td>Metadata submitted; hub team is reviewing for completeness and accuracy.</td></tr>
+          <tr><td><span class="badge badge-review">Under review</span></td><td>Metadata submitted; MOSAIC team is reviewing for completeness and accuracy.</td></tr>
           <tr><td><span class="badge badge-accepted">Accepted</span></td><td>Metadata reviewed and approved. Dataset is reliable for reference use.</td></tr>
           <tr><td><span class="badge badge-validated">Validated</span></td><td>Dataset has passed spatial QC checks. Suitable for analysis.</td></tr>
           <tr><td><span class="badge badge-analytics">Analytics-ready</span></td><td>Fully harmonized and validated. Ready for landscape analytics and modelling.</td></tr>

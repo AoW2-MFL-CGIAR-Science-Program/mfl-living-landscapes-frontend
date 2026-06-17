@@ -1,0 +1,10 @@
+<svg width="102" height="66" viewBox="0 0 102 66" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MOSAIC">
+  <!-- Row 1 (35 / 28 / 35): Ocean Teal — Amber Land — Terracotta -->
+  <rect x="1.5"  y="1.5"  width="34" height="30" rx="1.5" fill="#0D5C6B"/>
+  <rect x="38.5" y="1.5"  width="27" height="30" rx="1.5" fill="#C97D1B"/>
+  <rect x="68.5" y="1.5"  width="32" height="30" rx="1.5" fill="#B54D2F"/>
+  <!-- Row 2 (28 / 35 / 35), offset: Terracotta — Ocean Teal — Amber Land -->
+  <rect x="1.5"  y="34.5" width="27" height="30" rx="1.5" fill="#B54D2F"/>
+  <rect x="31.5" y="34.5" width="34" height="30" rx="1.5" fill="#0D5C6B"/>
+  <rect x="68.5" y="34.5" width="32" height="30" rx="1.5" fill="#C97D1B"/>
+</svg>

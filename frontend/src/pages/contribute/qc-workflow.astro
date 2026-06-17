@@ -5,7 +5,7 @@ import Breadcrumb from '../../components/ui/Breadcrumb.astro'
 const base = import.meta.env.BASE_URL
 ---
 
-<BaseLayout title="QC Workflow" description="The MFL Living Landscapes Data Hub quality control process for dataset validation.">
+<BaseLayout title="QC Workflow" description="The MOSAIC quality control process for dataset validation.">
   <PageHero title="Quality Control Workflow" subtitle="How datasets move from registration to Analytics-ready." />
   <div class="container">
     <Breadcrumb crumbs={[
@@ -18,7 +18,7 @@ const base = import.meta.env.BASE_URL
   <div class="container" style="padding-top: var(--space-12); padding-bottom: var(--space-16); max-width: 800px;">
 
     <p style="font-size: var(--text-lg); color: var(--color-gray-600); margin-bottom: var(--space-12); max-width: 680px;">
-      Every dataset in the hub passes through up to five quality control stages. The current stage is shown as the readiness status badge on each catalogue entry and detail page.
+      Every dataset in MOSAIC passes through up to five quality control stages. The current stage is shown as the readiness status badge on each catalogue entry and detail page.
     </p>
 
     {[
@@ -34,7 +34,7 @@ const base = import.meta.env.BASE_URL
           'Access level is set',
           'License is specified',
         ],
-        note: 'Metadata may be incomplete at this stage. Registration confirms the dataset exists and is in scope for the hub.',
+        note: 'Metadata may be incomplete at this stage. Registration confirms the dataset exists and is in scope for MOSAIC.',
       },
       {
         status: 'Under review',
@@ -48,7 +48,7 @@ const base = import.meta.env.BASE_URL
           'Source and contact are provided',
           'Open datasets have a valid download_url',
         ],
-        note: 'The hub team will contact the contributor to resolve any gaps or errors.',
+        note: 'The MOSAIC team will contact the contributor to resolve any gaps or errors.',
       },
       {
         status: 'Accepted',
@@ -74,7 +74,7 @@ const base = import.meta.env.BASE_URL
           'Temporal coverage matches the stated period',
           'No major data gaps or artefacts in the spatial coverage',
         ],
-        note: 'Spatial validation is performed by the hub QC team. Contributors may be asked to provide the dataset in a standard format.',
+        note: 'Spatial validation is performed by the MOSAIC QC team. Contributors may be asked to provide the dataset in a standard format.',
       },
       {
         status: 'Analytics-ready',
@@ -106,7 +106,7 @@ const base = import.meta.env.BASE_URL
     <section style="margin-top: var(--space-8); padding: var(--space-6); background-color: var(--color-cream); border-radius: var(--radius-lg);">
       <h2 style="margin-bottom: var(--space-3);">What happens if a dataset fails review?</h2>
       <p style="color: var(--color-gray-600);">
-        If metadata review or spatial QC reveals issues, the hub team will open a GitHub issue on the repository and tag the contributor. The dataset stays at its current status until the issues are resolved. Datasets are never removed from the catalogue without notifying the contributor.
+        If metadata review or spatial QC reveals issues, the MOSAIC team will open a GitHub issue on the repository and tag the contributor. The dataset stays at its current status until the issues are resolved. Datasets are never removed from the catalogue without notifying the contributor.
       </p>
     </section>
 

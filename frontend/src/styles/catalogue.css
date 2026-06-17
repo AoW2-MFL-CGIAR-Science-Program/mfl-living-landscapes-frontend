@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    CATALOGUE — Design System v2
-   MFL Living Landscapes Geospatial Data Hub
+   MOSAIC — CGIAR MFL Science Programme (AoW2)
    ═══════════════════════════════════════════════════════════════ */
 
 .catalogue-page {
@@ -11,7 +11,7 @@
 /* ── Hero ────────────────────────────────────────────────────── */
 .catalogue-hero {
   position: relative;
-  background: linear-gradient(120deg, #0d3d27 0%, #15532f 52%, #0f4a4a 100%);
+  background: linear-gradient(120deg, #1C2B3A 0%, #0D5C6B 55%, #0A4753 100%);
   color: #fff;
   padding: 3.25rem 0 3rem;
   overflow: hidden;
@@ -193,9 +193,9 @@
 
 .filter-group-icon svg { width: 16px; height: 16px; }
 
-.filter-group-icon--country          { color: var(--color-cgiar-teal, #009CA6); }
-.filter-group-icon--living_landscape { color: #5D8233; }
-.filter-group-icon--mfl_theme        { color: #2C5F2D; }
+.filter-group-icon--country          { color: var(--mosaic-teal, #0D5C6B); }
+.filter-group-icon--living_landscape { color: var(--mosaic-amber, #C97D1B); }
+.filter-group-icon--mfl_theme        { color: var(--mosaic-terracotta, #B54D2F); }
 .filter-group-icon--readiness_status { color: #16A34A; }
 .filter-group-icon--data_type        { color: #1E6F8E; }
 .filter-group-icon--access_level     { color: #B45309; }

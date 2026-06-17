@@ -4,7 +4,7 @@ import PageHero from '../../components/ui/PageHero.astro'
 const base = import.meta.env.BASE_URL
 ---
 
-<BaseLayout title="Contribute Data" description="How to register and contribute a geospatial dataset to the MFL Living Landscapes Data Hub.">
+<BaseLayout title="Contribute Data" description="How to register and contribute a geospatial dataset to MOSAIC.">
   <PageHero title="Contribute Data" subtitle="Add your geospatial dataset to the catalogue in five steps." />
 
   <div class="container" style="padding-top: var(--space-12); padding-bottom: var(--space-16); max-width: 800px;">
@@ -42,17 +42,17 @@ const base = import.meta.env.BASE_URL
         {
           step: '01',
           title: 'Register',
-          desc: 'Open a Dataset Catalogue Update issue on GitHub using the provided template. Fill in the required fields: title, country, landscape, theme, data type, access level, and license. You do not need a GitHub account — contact the hub team and they will register the dataset for you.',
+          desc: 'Open a Dataset Catalogue Update issue on GitHub using the provided template. Fill in the required fields: title, country, landscape, theme, data type, access level, and license. You do not need a GitHub account — contact the MOSAIC team and they will register the dataset for you.',
         },
         {
           step: '02',
           title: 'Submit metadata',
-          desc: 'The hub team will prepare a draft entry in datasets.json using your registration information. You will be asked to review and complete any missing optional fields (description, spatial resolution, temporal coverage, download URL).',
+          desc: 'The MOSAIC team will prepare a draft entry in datasets.json using your registration information. You will be asked to review and complete any missing optional fields (description, spatial resolution, temporal coverage, download URL).',
         },
         {
           step: '03',
           title: 'Review',
-          desc: 'The hub team will review your metadata entry for completeness, accuracy, and consistency with the controlled vocabularies. This typically takes 5–10 working days. You may be contacted to clarify or correct specific fields.',
+          desc: 'The MOSAIC team will review your metadata entry for completeness, accuracy, and consistency with the controlled vocabularies. This typically takes 5–10 working days. You may be contacted to clarify or correct specific fields.',
         },
         {
           step: '04',
@@ -62,7 +62,7 @@ const base = import.meta.env.BASE_URL
         {
           step: '05',
           title: 'Publish and validate',
-          desc: 'If you have open data available for download, the hub team will verify the download URL and run spatial QC checks. Datasets that pass QC are promoted to Validated or Analytics-ready status.',
+          desc: 'If you have open data available for download, the MOSAIC team will verify the download URL and run spatial QC checks. Datasets that pass QC are promoted to Validated or Analytics-ready status.',
         },
       ].map((s) => (
         <div style="display: grid; grid-template-columns: 60px 1fr; gap: var(--space-6); margin-bottom: var(--space-8); padding-bottom: var(--space-8); border-bottom: 1px solid var(--color-gray-200);">
@@ -81,7 +81,7 @@ const base = import.meta.env.BASE_URL
       {[
         {
           q: 'Do I need to upload my data files to GitHub?',
-          a: 'No. The hub is a catalogue, not a file repository. Your data files stay wherever they are hosted (e.g. a CGIAR data portal, Google Drive, institutional server). You only need to provide a link to where the data can be accessed.',
+          a: 'No. MOSAIC is a catalogue, not a file repository. Your data files stay wherever they are hosted (e.g. a CGIAR data portal, Google Drive, institutional server). You only need to provide a link to where the data can be accessed.',
         },
         {
           q: 'Can I register a dataset before the data is publicly available?',
@@ -89,7 +89,7 @@ const base = import.meta.env.BASE_URL
         },
         {
           q: 'What if my dataset doesn\'t fit the controlled vocabulary?',
-          a: 'Contact the hub team via the Contact page. The controlled vocabularies are reviewed periodically and new values can be proposed.',
+          a: 'Contact the MOSAIC team via the Contact page. The controlled vocabularies are reviewed periodically and new values can be proposed.',
         },
         {
           q: 'How long does the review process take?',
@@ -97,7 +97,7 @@ const base = import.meta.env.BASE_URL
         },
         {
           q: 'Can I update a dataset entry after it is published?',
-          a: 'Yes. Open a Dataset Catalogue Update issue on GitHub and describe what needs to change. The hub team will prepare a pull request and ask you to review it before it goes live.',
+          a: 'Yes. Open a Dataset Catalogue Update issue on GitHub and describe what needs to change. The MOSAIC team will prepare a pull request and ask you to review it before it goes live.',
         },
       ].map((item) => (
         <details style="margin-bottom: var(--space-4); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); padding: var(--space-4);">

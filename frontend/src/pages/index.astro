@@ -25,7 +25,7 @@ const STATUS_CLASS: Record<string, string> = {
     <div class="hero-topo" aria-hidden="true">
       <svg width="100%" height="100%" viewBox="0 0 1440 560" preserveAspectRatio="xMidYMid slice" fill="none">
         <!-- Horizontal terrain contours -->
-        <g stroke="#97BC62" stroke-width="1.4" fill="none">
+        <g stroke="#D6EEF2" stroke-width="1.4" fill="none">
           <path d="M-100 510 Q200 475 480 500 T960 485 T1600 515" opacity="0.13"/>
           <path d="M-100 460 Q240 420 520 448 T1020 430 T1600 462" opacity="0.15"/>
           <path d="M-100 410 Q280 365 560 395 T1060 375 T1600 408" opacity="0.16"/>
@@ -37,7 +37,7 @@ const STATUS_CLASS: Record<string, string> = {
           <path d="M-100 110 Q520 40 800 74 T1300 56 T1600 92"  opacity="0.06"/>
         </g>
         <!-- Summit contours — tighter nested ellipses right of centre -->
-        <g stroke="#97BC62" stroke-width="1" fill="none">
+        <g stroke="#D6EEF2" stroke-width="1" fill="none">
           <ellipse cx="980" cy="310" rx="210" ry="115" opacity="0.10"/>
           <ellipse cx="980" cy="310" rx="165" ry="85"  opacity="0.09"/>
           <ellipse cx="980" cy="310" rx="120" ry="60"  opacity="0.08"/>
@@ -49,10 +49,11 @@ const STATUS_CLASS: Record<string, string> = {
 
     <div class="container hero-content">
       <p class="hero-eyebrow">CGIAR MFL Science Programme · Area of Work 2</p>
-      <h1 class="hero-headline">Geospatial Data Hub<br/>for Living Landscapes</h1>
+      <h1 class="hero-headline">MOSAIC<br/>Spatial intelligence for Living Landscapes</h1>
       <p class="hero-sub">
-        Discover, assess, and contribute spatial datasets from CGIAR centres
-        working across nine flagship Living Landscapes in Kenya, Ethiopia, India, and beyond.
+        The shared spatial intelligence network for the CGIAR Multifunctional Landscapes
+        Science Programme. Find, trust, and combine geospatial data across nine flagship
+        Living Landscapes in Kenya, Ethiopia, India, and beyond — connecting, not duplicating.
       </p>
       <div class="hero-actions">
         <a href={`${base}/catalogue`} class="btn btn-hero-primary">Browse datasets</a>
@@ -157,14 +158,15 @@ const STATUS_CLASS: Record<string, string> = {
   <section class="section-white section-about">
     <div class="container section-about-inner">
       <div class="about-label">About</div>
-      <h2>MFL Science Programme</h2>
+      <h2>An initiative of the MFL Science Programme</h2>
       <p>
-        The CGIAR Multifunctional Landscapes (MFL) Science Programme works to restore and sustain
-        landscapes that are productive, biodiverse, and resilient. Area of Work 2 focuses on
-        landscape optimization and inclusive planning across nine flagship Living Landscapes
-        in Kenya, Ethiopia, India, Colombia, and the Mekong region.
+        MOSAIC is the shared spatial intelligence network for the CGIAR Multifunctional
+        Landscapes (MFL) Science Programme. Under Area of Work 2 — Landscape Optimization &amp;
+        Inclusive Planning — it gives coherence to the geospatial work already happening across
+        ten CGIAR centres, connecting global data services and the local datasets only CGIAR holds
+        into one view of the Living Landscapes in Kenya, Ethiopia, India, Colombia, and the Mekong.
       </p>
-      <a href={`${base}/about`} class="btn btn-secondary">Learn more about the hub</a>
+      <a href={`${base}/about`} class="btn btn-secondary">Learn more about MOSAIC</a>
     </div>
   </section>
 
@@ -176,8 +178,8 @@ const STATUS_CLASS: Record<string, string> = {
   /* ── Hero ──────────────────────────────────────────────────── */
   .hero {
     position: relative;
-    background-color: #1A3B1B;
-    background-image: linear-gradient(160deg, #1A3B1B 0%, #2C5F2D 60%, #1E4A1F 100%);
+    background-color: #0D5C6B;
+    background-image: linear-gradient(160deg, #1C2B3A 0%, #0D5C6B 58%, #0A4753 100%);
     color: var(--color-white);
     padding: 6rem 0 5rem;
     overflow: hidden;
@@ -236,16 +238,16 @@ const STATUS_CLASS: Record<string, string> = {
   }
 
   .btn-hero-primary {
-    background-color: var(--color-cgiar-teal);
-    color: var(--color-white);
-    border-color: var(--color-cgiar-teal);
+    background-color: var(--mosaic-amber);
+    color: var(--mosaic-ink);
+    border-color: var(--mosaic-amber);
     font-weight: 600;
     padding: var(--space-3) var(--space-8);
   }
 
   .btn-hero-primary:hover {
-    background-color: var(--color-cgiar-teal-dark);
-    border-color: var(--color-cgiar-teal-dark);
+    background-color: #b06d12;
+    border-color: #b06d12;
     color: var(--color-white);
   }
 
@@ -462,7 +464,7 @@ const STATUS_CLASS: Record<string, string> = {
 
   /* ── CTA section ────────────────────────────────────────────── */
   .section-cta {
-    background-color: var(--color-green-dark);
+    background-color: var(--mosaic-ink);
     padding: var(--space-12) 0;
   }
 
@@ -493,15 +495,17 @@ const STATUS_CLASS: Record<string, string> = {
   }
 
   .section-cta .btn-primary {
-    background-color: var(--color-cgiar-teal);
-    border-color: var(--color-cgiar-teal);
+    background-color: var(--mosaic-amber);
+    border-color: var(--mosaic-amber);
+    color: var(--mosaic-ink);
     white-space: nowrap;
     flex-shrink: 0;
   }
 
   .section-cta .btn-primary:hover {
-    background-color: var(--color-cgiar-teal-dark);
-    border-color: var(--color-cgiar-teal-dark);
+    background-color: #b06d12;
+    border-color: #b06d12;
+    color: var(--color-white);
   }
 
   /* ── About section ──────────────────────────────────────────── */

@@ -1,44 +1,6 @@
-/* ── Web fonts — self-hosted, OFL license ──────────────────────────────── */
-
-@font-face {
-  font-family: 'Space Grotesk';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url('/mfl-living-landscapes-frontend/fonts/SpaceGrotesk-Regular.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Space Grotesk';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('/mfl-living-landscapes-frontend/fonts/SpaceGrotesk-Medium.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Space Grotesk';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('/mfl-living-landscapes-frontend/fonts/SpaceGrotesk-SemiBold.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Space Grotesk';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: url('/mfl-living-landscapes-frontend/fonts/SpaceGrotesk-Bold.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400 600;
-  font-display: swap;
-  src: url('/mfl-living-landscapes-frontend/fonts/Inter-Regular.woff2') format('woff2');
-}
+/* ── Web fonts — IBM Plex Mono kept for code/labels (OFL license) ─────────
+   MOSAIC brand fonts are Georgia (display, system serif) + Calibri (body),
+   both delivered via system font stacks — no web-font download required. */
 
 @font-face {
   font-family: 'IBM Plex Mono';
@@ -57,49 +19,73 @@
 }
 
 :root {
-  /* Colour palette — MFL green */
-  --color-green-dark:   #2C5F2D;
-  --color-green-mid:    #5D8233;
-  --color-green-moss:   #97BC62;
-  --color-green-light:  #E8F0E0;
-  --color-cream:        #F5F5F0;
+  /* ── MOSAIC cartographic palette ───────────────────────────────────────
+     The MOSAIC brand colours (MOSAIC Brand Guidelines v1.0, June 2026). */
+  --mosaic-teal:        #0D5C6B;   /* Ocean Teal  — primary: headers, key UI   */
+  --mosaic-teal-dark:   #0A4753;   /* darker teal — hover / pressed states     */
+  --mosaic-amber:       #C97D1B;   /* Amber Land  — secondary: accents          */
+  --mosaic-terracotta:  #B54D2F;   /* Terracotta  — accent: urgency / CTAs      */
+  --mosaic-light-teal:  #D6EEF2;   /* Light Teal  — background highlight, reverse logo */
+  --mosaic-sand:        #F7F4EF;   /* Warm Sand   — page & section backgrounds  */
+  --mosaic-ink:         #1C2B3A;   /* Near-black  — body text, dark sections    */
+  --mosaic-grey:        #6B7A85;   /* Muted Grey  — captions, secondary text    */
 
-  /* CGIAR brand teal */
-  --color-cgiar-teal:       #009CA6;
-  --color-cgiar-teal-dark:  #007A8A;
-  --color-cgiar-teal-light: #E0F5F7;
+  /* MOSAIC tile-mark colours (logo) */
+  --mosaic-tile-teal:        #0D5C6B;
+  --mosaic-tile-amber:       #C97D1B;
+  --mosaic-tile-terracotta:  #B54D2F;
+  --mosaic-tile-teal-reverse: #D6EEF2;  /* teal tile on dark backgrounds */
+
+  /* ── Legacy semantic aliases ───────────────────────────────────────────
+     Existing components reference these names; they now resolve to the
+     MOSAIC palette so the rebrand cascades without renaming every usage. */
+
+  /* "green" family → MOSAIC teal family */
+  --color-green-dark:   #0D5C6B;   /* Ocean Teal */
+  --color-green-mid:    #117A8D;   /* lighter teal for hovers */
+  --color-green-moss:   #C97D1B;   /* Amber accent (eyebrows, markers) */
+  --color-green-light:  #D6EEF2;   /* Light Teal */
+  --color-cream:        #F7F4EF;   /* Warm Sand */
+
+  /* CGIAR-teal aliases → MOSAIC Ocean Teal */
+  --color-cgiar-teal:       #0D5C6B;
+  --color-cgiar-teal-dark:  #0A4753;
+  --color-cgiar-teal-light: #D6EEF2;
 
   /* Accent colours */
-  --color-accent:       #009CA6;   /* CGIAR teal — datos, acciones */
-  --color-accent-light: #E0F5F7;   /* fondo claro del acento */
-  --color-earth:        #B08552;   /* terracota — iconografía de suelo/paisaje */
-  --color-earth-light:  #F5ECD9;   /* fondo claro del earth */
+  --color-accent:       #0D5C6B;   /* Ocean Teal — focus rings, key UI */
+  --color-accent-light: #D6EEF2;
+  --color-earth:        #B54D2F;   /* Terracotta */
+  --color-earth-light:  #F5E5DF;
+  --color-amber:        #C97D1B;   /* Amber Land — taglines, highlights */
 
   /* Neutrals */
   --color-white:        #FFFFFF;
-  --color-gray-50:      #F9FAFB;
-  --color-gray-100:     #F3F4F6;
-  --color-gray-200:     #E5E7EB;
+  --color-gray-50:      #FAFAF7;   /* warm-tinted to sit with Warm Sand */
+  --color-gray-100:     #F1EFEA;
+  --color-gray-200:     #E2E0D9;
   --color-gray-400:     #9CA3AF;
+  --color-gray-500:     #6B7A85;   /* MOSAIC Muted Grey */
   --color-gray-600:     #4B5563;
+  --color-gray-700:     #36424B;
   --color-gray-800:     #1F2937;
-  --color-gray-900:     #111827;
+  --color-gray-900:     #1C2B3A;   /* MOSAIC Near-black */
 
-  /* Catalogue design system */
-  --color-primary:       #0B4F3A;
-  --color-primary-light: #E6F2EC;
-  --color-secondary:     #0D6E6E;
-  --color-bg:            #F7FAF8;
+  /* Catalogue design system → MOSAIC */
+  --color-primary:       #0D5C6B;   /* Ocean Teal */
+  --color-primary-light: #D6EEF2;   /* Light Teal */
+  --color-secondary:     #117A8D;
+  --color-bg:            #F7F4EF;   /* Warm Sand */
   --color-surface:       #FFFFFF;
-  --color-border:        #E2E8E4;
-  --color-text:          #10201A;
-  --color-muted:         #64746B;
-  --shadow-card:         0 10px 30px rgba(16, 32, 26, 0.08);
-  --shadow-card-hover:   0 16px 40px rgba(16, 32, 26, 0.14);
+  --color-border:        #E2E0D9;
+  --color-text:          #1C2B3A;
+  --color-muted:         #6B7A85;
+  --shadow-card:         0 10px 30px rgba(28, 43, 58, 0.08);
+  --shadow-card-hover:   0 16px 40px rgba(28, 43, 58, 0.14);
   --radius-card:         1rem;
   --sidebar-width-new:   280px;
 
-  /* Status badge colours */
+  /* Status badge colours (functional traffic-light — unchanged) */
   --status-registered:  #6B7280;
   --status-review:      #D97706;
   --status-accepted:    #2563EB;
@@ -111,9 +97,11 @@
   --access-restricted:  #B45309;
   --access-internal:    #6B7280;
 
-  /* Typography — web fonts (Space Grotesk + Inter + IBM Plex Mono) */
-  --font-title:  'Space Grotesk', system-ui, sans-serif;
-  --font-body:   'Inter', system-ui, sans-serif;
+  /* ── Typography — MOSAIC brand fonts ────────────────────────────────────
+     Georgia (serif) for titles; Calibri (sans) for body, with robust
+     cross-platform fallbacks. */
+  --font-title:  Georgia, 'Times New Roman', 'Noto Serif', serif;
+  --font-body:   Calibri, Candara, 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
   --font-mono:   'IBM Plex Mono', 'Courier New', monospace;
 
   --text-xs:    0.75rem;

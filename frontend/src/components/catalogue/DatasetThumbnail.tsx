@@ -51,9 +51,9 @@ const THEME_PALETTE: Record<string, Palette> = {
 }
 
 const DEFAULT_PALETTE: Palette = {
-  bg: ['#0B4F3A', '#0D6E6E'],
-  patches: ['#2f7a5a', '#3a8a8a', '#5bbca8', '#c8b56a', '#4a9a7a', '#6fb89a'],
-  contour: '#cfeae0',
+  bg: ['#0D5C6B', '#0A4753'],
+  patches: ['#0D5C6B', '#117A8D', '#C97D1B', '#B54D2F', '#3a8a8a', '#d6a35a'],
+  contour: '#D6EEF2',
 }
 
 function hashSeed(str: string): number {
