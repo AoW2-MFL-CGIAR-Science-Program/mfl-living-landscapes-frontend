@@ -1,23 +1,31 @@
 export type Country =
-  | 'Kenya'
+  | 'Colombia'
+  | "Côte d'Ivoire"
   | 'Ethiopia'
   | 'India'
-  | 'Colombia'
-  | 'Myanmar'
-  | 'Vietnam'
+  | 'Kenya'
   | 'Laos'
-  | 'Cambodia'
-  | 'Thailand'
+  | 'Peru'
+  | 'Senegal'
+  | 'Tanzania'
+  | 'Tunisia'
+  | 'Vietnam'
+  | 'Zimbabwe'
 
 export type Landscape =
-  | 'KEN-LV'
-  | 'KEN-MT'
-  | 'ETH-GT'
-  | 'ETH-BL'
-  | 'IND-WG'
-  | 'IND-EP'
-  | 'COL-AM'
-  | 'MEK-LM'
+  | 'MEK-3S'
+  | 'IND-CH'
+  | 'SEN-FK'
+  | 'KEN-NAT'
+  | 'ZWE-MB'
+  | 'CIV-NZ'
+  | 'TUN-NW'
+  | 'ETH-OG'
+  | 'COL-NAT'
+  | 'PER-NAT'
+  | 'LAO-NAT'
+  | 'VNM-NAT'
+  | 'GLB-UNSPEC'
 
 export type MflTheme =
   | 'Boundaries / admin units'
@@ -34,42 +42,33 @@ export type MflTheme =
   | 'Agrobiodiversity / crops'
   | 'Socio-economic / livelihoods'
 
-export type DataType =
-  | 'Raster'
-  | 'Vector'
-  | 'Tabular'
-  | 'Time series'
-  | 'Model output'
-  | 'Survey data'
+export type DataType = 'Raster' | 'Vector' | 'Tabular' | 'Mixed'
 
-export type AccessLevel = 'Open' | 'Restricted' | 'Internal'
+export type AccessLevel = 'Open' | 'CGIAR-internal' | 'Restricted'
 
-export type ReadinessStatus =
-  | 'Registered only'
-  | 'Under review'
-  | 'Accepted'
-  | 'Validated'
-  | 'Analytics-ready'
+export type ReadinessStatus = 'Raw' | 'Processed' | 'Validated'
 
 export interface Dataset {
-  // Required fields
+  // Always present
   id: string
   title: string
-  country: Country
   living_landscape: Landscape
-  mfl_theme: MflTheme
-  data_type: DataType
-  access_level: AccessLevel
-  license: string
   readiness_status: ReadinessStatus
 
-  // Optional fields
-  description?: string
+  // Controlled-vocabulary fields — may be null for incomplete / flagged records
+  country: Country | null
+  mfl_theme: MflTheme | null
+  data_type: DataType | null
+  access_level: AccessLevel | null
+  license: string | null
+
+  // Optional descriptive fields
+  description?: string | null
   formats?: string[]
-  source?: string
-  contact?: string
-  spatial_resolution?: string
-  temporal_coverage?: string
-  download_url?: string
-  metadata_url?: string
+  source?: string | null
+  contact?: string | null
+  spatial_resolution?: string | null
+  temporal_coverage?: string | null
+  download_url?: string | null
+  metadata_url?: string | null
 }

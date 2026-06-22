@@ -108,6 +108,12 @@
 }
 
 /* ── Layout ──────────────────────────────────────────────────── */
+.catalogue-locator-wrap {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 2rem var(--space-6) 0;
+}
+
 .catalogue-layout {
   max-width: var(--container-max);
   margin: 0 auto;
@@ -672,11 +678,14 @@
   line-height: 1.4;
 }
 
-/* Status */
+/* Readiness status (MOSAIC: Raw / Processed / Validated) */
+.badge-raw, .status-raw                       { background: #F7F4EF; color: #6B5B45; }
+.badge-processed, .status-processed           { background: #F6E6CE; color: #8A540F; }
+.badge-validated, .status-validated           { background: #D6EEF2; color: #0D5C6B; }
+/* Legacy status classes retained for any older references */
 .badge-registered, .status-registered-only  { background: #F3F4F6; color: #4B5563; }
 .badge-review, .status-under-review          { background: #FEF3C7; color: #92400E; }
 .badge-accepted, .status-accepted            { background: #DBEAFE; color: #1E40AF; }
-.badge-validated, .status-validated          { background: #D1FAE5; color: #065F46; }
 .badge-analytics, .status-analytics-ready    { background: #EDE9FE; color: #5B21B6; }
 
 /* Access */
@@ -688,6 +697,7 @@
 .badge-raster            { background: #FEF0E2; color: #B45309; }
 .badge-vector            { background: #E0F2FE; color: #0369A1; }
 .badge-tabular           { background: #F5F3FF; color: #6D28D9; }
+.badge-mixed             { background: #D6EEF2; color: #0D5C6B; }
 .badge-timeseries        { background: #EFF6FF; color: #1D4ED8; }
 .badge-model             { background: #FFF7ED; color: #B45309; }
 .badge-survey            { background: #FDF2F8; color: #9D174D; }

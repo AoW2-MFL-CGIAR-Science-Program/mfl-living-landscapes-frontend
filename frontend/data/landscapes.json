@@ -1,10 +1,15 @@
 [
-  { "code": "KEN-LV", "name": "Lake Victoria Basin", "country": "Kenya" },
-  { "code": "KEN-MT", "name": "Mount Kenya Landscape", "country": "Kenya" },
-  { "code": "ETH-GT", "name": "Ethiopian Great Rift Valley", "country": "Ethiopia" },
-  { "code": "ETH-BL", "name": "Blue Nile Highlands", "country": "Ethiopia" },
-  { "code": "IND-WG", "name": "Western Ghats", "country": "India" },
-  { "code": "IND-EP", "name": "Eastern Plains", "country": "India" },
-  { "code": "COL-AM", "name": "Amazon-Andean Corridor", "country": "Colombia" },
-  { "code": "MEK-LM", "name": "Lower Mekong", "country": "Multi-country" }
+  { "code": "IND-CH", "name": "Central India Highlands", "country": "India" },
+  { "code": "SEN-FK", "name": "Fatick Department", "country": "Senegal" },
+  { "code": "ETH-OG", "name": "Omo-Gibe Basin", "country": "Ethiopia" },
+  { "code": "ZWE-MB", "name": "Mbire / Lower Zambezi", "country": "Zimbabwe" },
+  { "code": "TUN-NW", "name": "Northwestern Tunisia", "country": "Tunisia" },
+  { "code": "CIV-NZ", "name": "N'Zi Watershed", "country": "Côte d'Ivoire" },
+  { "code": "MEK-3S", "name": "3S Basins (Sekong, Sesan, Srepok)", "country": "Multi-country" },
+  { "code": "KEN-NAT", "name": "Kenya (national)", "country": "Kenya" },
+  { "code": "LAO-NAT", "name": "Laos (national)", "country": "Laos" },
+  { "code": "VNM-NAT", "name": "Vietnam (national)", "country": "Vietnam" },
+  { "code": "COL-NAT", "name": "Colombia (national)", "country": "Colombia" },
+  { "code": "PER-NAT", "name": "Peru (national)", "country": "Peru" },
+  { "code": "GLB-UNSPEC", "name": "Unspecified (flagged for repair)", "country": "Unspecified" }
 ]

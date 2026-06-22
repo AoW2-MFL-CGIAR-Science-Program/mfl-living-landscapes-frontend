@@ -86,7 +86,7 @@ function sortDatasets(datasets: Dataset[], sort: SortKey): Dataset[] {
   else if (sort === 'az') sorted.sort((a, b) => a.title.localeCompare(b.title))
   else if (sort === 'za') sorted.sort((a, b) => b.title.localeCompare(a.title))
   else if (sort === 'status') {
-    const order = ['Analytics-ready', 'Validated', 'Accepted', 'Under review', 'Registered only']
+    const order = ['Validated', 'Processed', 'Raw']
     sorted.sort((a, b) => order.indexOf(a.readiness_status) - order.indexOf(b.readiness_status))
   }
   return sorted
@@ -125,8 +125,9 @@ export function CatalogueFilter({ datasets, base }: Props) {
         d.title.toLowerCase().includes(q) ||
         d.description?.toLowerCase().includes(q) ||
         d.source?.toLowerCase().includes(q) ||
-        d.mfl_theme.toLowerCase().includes(q) ||
-        d.country.toLowerCase().includes(q)
+        d.mfl_theme?.toLowerCase().includes(q) ||
+        d.country?.toLowerCase().includes(q) ||
+        d.living_landscape.toLowerCase().includes(q)
       )
     }
     return sortDatasets(result, sortKey)

@@ -2,50 +2,72 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/schema/dataset.json",
   "title": "MFL Dataset Metadata Record",
-  "description": "Schema for a single dataset entry in frontend/data/datasets.json",
+  "description": "Schema for a single dataset entry in frontend/data/datasets.json. Aligned with MOSAIC vocab_reconciliation.md v1. Only id, title, living_landscape and readiness_status are strictly required; remaining controlled-vocabulary fields may be null for records whose source metadata is incomplete or flagged for repair.",
   "type": "object",
-  "required": ["id", "title", "country", "living_landscape", "mfl_theme", "data_type", "access_level", "license", "readiness_status"],
+  "required": ["id", "title", "living_landscape", "readiness_status"],
   "properties": {
     "id": {
       "type": "string",
-      "description": "Unique identifier. Format: {LANDSCAPE}_{THEME-CODE}_{YEAR}_{SOURCE}_{VERSION}",
-      "example": "KEN-LV_LC_2023_ILRI_v1"
+      "description": "Unique identifier.",
+      "example": "MFL-2026-000"
     },
     "title": { "type": "string", "description": "Human-readable dataset name" },
     "country": {
-      "type": "string",
-      "enum": ["Kenya", "Ethiopia", "India", "Colombia", "Myanmar", "Vietnam", "Laos", "Cambodia", "Thailand"]
+      "type": ["string", "null"],
+      "enum": [
+        "Colombia", "Côte d'Ivoire", "Ethiopia", "India", "Kenya", "Laos",
+        "Peru", "Senegal", "Tanzania", "Tunisia", "Vietnam", "Zimbabwe", null
+      ]
     },
     "living_landscape": {
       "type": "string",
-      "enum": ["KEN-LV", "KEN-MT", "ETH-GT", "ETH-BL", "IND-WG", "IND-EP", "COL-AM", "MEK-LM"]
+      "enum": [
+        "MEK-3S", "IND-CH", "SEN-FK", "KEN-NAT", "ZWE-MB", "CIV-NZ",
+        "TUN-NW", "ETH-OG", "COL-NAT", "PER-NAT", "LAO-NAT", "VNM-NAT", "GLB-UNSPEC"
+      ]
     },
     "mfl_theme": {
-      "type": "string",
+      "type": ["string", "null"],
       "enum": [
         "Boundaries / admin units", "Land cover / land use", "Ecosystem condition",
         "Degradation / land health", "Water / hydrology", "Biodiversity / ecosystems",
         "Pressures / drivers", "Ecosystem services", "Hotspots / leverage points",
         "Scenarios / future risks", "Decision-support outputs", "Agrobiodiversity / crops",
-        "Socio-economic / livelihoods"
+        "Socio-economic / livelihoods", null
       ]
     },
     "data_type": {
-      "type": "string",
-      "enum": ["Raster", "Vector", "Tabular", "Time series", "Model output", "Survey data"]
+      "type": ["string", "null"],
+      "enum": ["Raster", "Vector", "Tabular", "Mixed", null]
     },
-    "access_level": { "type": "string", "enum": ["Open", "Restricted", "Internal"] },
-    "license": { "type": "string", "minLength": 1 },
+    "access_level": {
+      "type": ["string", "null"],
+      "enum": ["Open", "CGIAR-internal", "Restricted", null]
+    },
+    "license": { "type": ["string", "null"] },
     "readiness_status": {
       "type": "string",
-      "enum": ["Registered only", "Under review", "Accepted", "Validated", "Analytics-ready"]
+      "enum": ["Raw", "Processed", "Validated"]
     },
-    "description": { "type": "string" },
-    "source": { "type": "string" },
-    "contact": { "type": "string", "format": "email" },
-    "spatial_resolution": { "type": "string" },
-    "temporal_coverage": { "type": "string" },
-    "download_url": { "type": "string", "format": "uri" },
-    "metadata_url": { "type": "string", "format": "uri" }
+    "description": { "type": ["string", "null"] },
+    "source": { "type": ["string", "null"] },
+    "contact": {
+      "type": ["string", "null"],
+      "description": "Steward email address, or null when not supplied."
+    },
+    "spatial_resolution": { "type": ["string", "null"] },
+    "temporal_coverage": { "type": ["string", "null"] },
+    "formats": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "download_url": {
+      "type": ["string", "null"],
+      "description": "External source URL, or null. MOSAIC connects to sources rather than re-hosting data; an Open record need not have a direct download_url."
+    },
+    "metadata_url": {
+      "type": ["string", "null"],
+      "description": "Relative path to the dataset's STAC Item JSON within the catalogue (e.g. stac/collections/IND-CH/items/MFL-2026-000.json). Not an absolute URI."
+    }
   }
 }

@@ -2,16 +2,19 @@
 import type { AccessLevel } from '../../utils/types'
 
 interface Props {
-  access: AccessLevel
+  access: AccessLevel | null
 }
 
 const { access } = Astro.props
 
 const classMap: Record<AccessLevel, string> = {
   'Open': 'badge-open',
+  'CGIAR-internal': 'badge-internal',
   'Restricted': 'badge-restricted',
-  'Internal': 'badge-internal',
 }
+
+const label = access ?? 'Access not specified'
+const cls = access ? (classMap[access] ?? 'badge-internal') : 'badge-internal'
 ---
 
-<span class={`badge ${classMap[access]}`}>{access}</span>
+<span class={`badge ${cls}`}>{label}</span>

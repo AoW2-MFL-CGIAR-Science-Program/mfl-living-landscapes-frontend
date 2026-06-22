@@ -1,0 +1,125 @@
+{
+  "_meta": {
+    "note": "APPROXIMATE living-landscape centroids for the catalogue locator map. Coarse locator points only, NOT authoritative delineations. Derived at build time from MOSAIC bbox_lookup.json (centroids) joined to datasets.json (counts). EPSG:4326 [lon,lat]. fallback=true means the point uses a country-level centroid because a landscape geometry is not yet defined.",
+    "crs": "EPSG:4326"
+  },
+  "landscapes": [
+    {
+      "code": "IND-CH",
+      "name": "Central India Highlands",
+      "country": "India",
+      "count": 17,
+      "lon": 78.0,
+      "lat": 22.7,
+      "fallback": false
+    },
+    {
+      "code": "SEN-FK",
+      "name": "Fatick Department",
+      "country": "Senegal",
+      "count": 8,
+      "lon": -16.3,
+      "lat": 14.1,
+      "fallback": false
+    },
+    {
+      "code": "ETH-OG",
+      "name": "Omo-Gibe Basin",
+      "country": "Ethiopia",
+      "count": 7,
+      "lon": 36.8,
+      "lat": 7.2,
+      "fallback": false
+    },
+    {
+      "code": "ZWE-MB",
+      "name": "Mbire / Lower Zambezi",
+      "country": "Zimbabwe",
+      "count": 6,
+      "lon": 30.6,
+      "lat": -16.2,
+      "fallback": false
+    },
+    {
+      "code": "TUN-NW",
+      "name": "Northwestern Tunisia",
+      "country": "Tunisia",
+      "count": 6,
+      "lon": 8.8,
+      "lat": 36.6,
+      "fallback": false
+    },
+    {
+      "code": "CIV-NZ",
+      "name": "N'Zi Watershed",
+      "country": "Côte d'Ivoire",
+      "count": 4,
+      "lon": -4.5,
+      "lat": 7.3,
+      "fallback": false
+    },
+    {
+      "code": "MEK-3S",
+      "name": "3S Basins",
+      "country": "Laos",
+      "count": 3,
+      "lon": 107.5,
+      "lat": 13.7,
+      "fallback": false
+    },
+    {
+      "code": "KEN-NAT",
+      "name": "Kenya (national)",
+      "country": "Kenya",
+      "count": 2,
+      "lon": 37.9,
+      "lat": 0.4,
+      "fallback": false
+    },
+    {
+      "code": "GLB-UNSPEC",
+      "name": "Unspecified",
+      "country": null,
+      "count": 2,
+      "lon": 45.0,
+      "lat": 2.0,
+      "fallback": true
+    },
+    {
+      "code": "LAO-NAT",
+      "name": "Laos (national)",
+      "country": "Laos",
+      "count": 2,
+      "lon": 103.9,
+      "lat": 18.2,
+      "fallback": true
+    },
+    {
+      "code": "PER-NAT",
+      "name": "Peru (national)",
+      "country": "Peru",
+      "count": 1,
+      "lon": -75.0,
+      "lat": -9.2,
+      "fallback": false
+    },
+    {
+      "code": "COL-NAT",
+      "name": "Colombia (national)",
+      "country": "Colombia",
+      "count": 1,
+      "lon": -73.0,
+      "lat": 4.1,
+      "fallback": false
+    },
+    {
+      "code": "VNM-NAT",
+      "name": "Vietnam (national)",
+      "country": "Vietnam",
+      "count": 1,
+      "lon": 105.8,
+      "lat": 15.8,
+      "fallback": true
+    }
+  ]
+}

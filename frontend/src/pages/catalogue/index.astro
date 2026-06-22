@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import { CatalogueFilter } from '../../components/catalogue/CatalogueFilter'
+import LandscapeLocatorMap from '../../components/catalogue/LandscapeLocatorMap.astro'
 import { loadDatasets } from '../../utils/loadDatasets'
 
 const datasets = await loadDatasets()
@@ -66,7 +67,8 @@ const countries   = [...new Set(datasets.map((d) => d.country))].length
       <div class="catalogue-hero-inner">
         <h1 class="catalogue-hero-title">Dataset Catalogue</h1>
         <p class="catalogue-hero-subtitle">
-          Explore geospatial datasets from Living Landscapes in Kenya, Ethiopia, India, and beyond.
+          Explore geospatial datasets connected through MOSAIC across MFL Living Landscapes
+          in Africa, Asia, and Latin America.
         </p>
 
         <div class="catalogue-hero-metrics" role="list" aria-label="Catalogue statistics">
@@ -107,6 +109,11 @@ const countries   = [...new Set(datasets.map((d) => d.country))].length
         </div>
       </div>
     </section>
+
+    <!-- ── Locator map ───────────────────────────────────────── -->
+    <div class="catalogue-locator-wrap">
+      <LandscapeLocatorMap />
+    </div>
 
     <!-- ── Filter + Results ──────────────────────────────────── -->
     <CatalogueFilter client:load datasets={datasets} base={base} />

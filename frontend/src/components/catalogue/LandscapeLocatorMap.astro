@@ -1,0 +1,203 @@
+---
+/**
+ * LandscapeLocatorMap — self-contained inline-SVG locator.
+ *
+ * Plots APPROXIMATE living-landscape centroids (from MOSAIC bbox_lookup.json,
+ * joined to dataset counts at build time). No runtime fetch, no external map
+ * tiles, no extra dependencies — builds and previews fully offline.
+ *
+ * Coordinates are coarse locator points, NOT authoritative delineations; this
+ * is labelled visibly in the UI. Real delineated boundaries are a 2026 MOSAIC
+ * objective and will replace these.
+ */
+import centroidData from '../../../data/landscape_centroids.json'
+
+interface LandscapePoint {
+  code: string
+  name: string
+  country: string | null
+  count: number
+  lon: number
+  lat: number
+  fallback: boolean
+}
+
+const points = centroidData.landscapes as LandscapePoint[]
+const base = import.meta.env.BASE_URL
+
+// ── Equirectangular projection over a 360 x 180 viewBox ──────────────
+// We crop to the latitude band that contains the programme's landscapes
+// (roughly 40°N to 25°S) so the dots are not lost in a full-globe view.
+const W = 360
+const LAT_TOP = 42
+const LAT_BOTTOM = -28
+const H = LAT_TOP - LAT_BOTTOM // 70
+
+const projX = (lon: number) => ((lon + 180) / 360) * W
+const projY = (lat: number) => LAT_TOP - lat // because viewBox y grows downward
+
+// Radius scales gently with dataset count.
+const rOf = (count: number) => 1.4 + Math.min(count, 20) * 0.18
+
+// Meridian / parallel lines for orientation.
+const meridians = [-150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150]
+const parallels = [40, 20, 0, -20]
+---
+
+<section class="locator" aria-labelledby="locator-heading">
+  <div class="locator-head">
+    <h2 id="locator-heading" class="locator-title">Where the datasets sit</h2>
+    <p class="locator-sub">
+      Approximate locations of the Living Landscapes connected through MOSAIC.
+      Dot size reflects how many datasets are registered for each landscape.
+    </p>
+    <p class="locator-approx" role="note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+      Locations are <strong>approximate</strong> locator points, not authoritative
+      boundaries. Delineated landscape maps are a 2026 MOSAIC objective.
+    </p>
+  </div>
+
+  <div class="locator-figure">
+    <svg
+      class="locator-svg"
+      viewBox={`0 0 ${W} ${H}`}
+      role="img"
+      aria-label="Locator map of MOSAIC Living Landscapes with one dot per landscape."
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <defs>
+        <linearGradient id="locator-sea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#D6EEF2" />
+          <stop offset="100%" stop-color="#BFE2E8" />
+        </linearGradient>
+      </defs>
+
+      <!-- Sea / backdrop -->
+      <rect x="0" y="0" width={W} height={H} fill="url(#locator-sea)" />
+
+      <!-- Graticule -->
+      <g stroke="#9CC6CE" stroke-width="0.2" opacity="0.7">
+        {meridians.map((lon) => (
+          <line x1={projX(lon)} y1="0" x2={projX(lon)} y2={H} />
+        ))}
+        {parallels.map((lat) => (
+          <line x1="0" y1={projY(lat)} x2={W} y2={projY(lat)} />
+        ))}
+      </g>
+
+      <!-- Equator emphasised -->
+      <line x1="0" y1={projY(0)} x2={W} y2={projY(0)} stroke="#0D5C6B" stroke-width="0.3" opacity="0.4" />
+
+      <!-- Landscape dots -->
+      {points.map((p) => {
+        const x = projX(p.lon)
+        const y = projY(p.lat)
+        const r = rOf(p.count)
+        const fill = p.fallback ? '#C97D1B' : '#0D5C6B'
+        return (
+          <a href={`${base}/catalogue?landscape=${p.code}`} class="locator-dot">
+            <title>{`${p.name} (${p.code}) — ${p.count} dataset${p.count === 1 ? '' : 's'}${p.fallback ? ' · approximate, country-level point' : ''}`}</title>
+            <circle cx={x} cy={y} r={r + 1.1} fill="#FFFFFF" opacity="0.85" />
+            <circle cx={x} cy={y} r={r} fill={fill} stroke="#1C2B3A" stroke-width="0.25" />
+            <text x={x} y={y - r - 1} class="locator-label" text-anchor="middle">{p.code}</text>
+          </a>
+        )
+      })}
+    </svg>
+
+    <ul class="locator-legend" aria-hidden="false">
+      <li><span class="locator-key locator-key--landscape"></span> Landscape locator point</li>
+      <li><span class="locator-key locator-key--fallback"></span> Country-level point (landscape not yet delineated)</li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .locator {
+    background: var(--mosaic-sand, #F7F4EF);
+    border: 1px solid #E4DACB;
+    border-radius: var(--radius-lg, 14px);
+    padding: 1.25rem 1.25rem 1.5rem;
+    margin: 0 0 1.75rem;
+  }
+  .locator-head { max-width: 60ch; }
+  .locator-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.25rem;
+    color: var(--mosaic-ink, #1C2B3A);
+    margin: 0 0 0.35rem;
+  }
+  .locator-sub {
+    font-size: 0.92rem;
+    color: #44525E;
+    margin: 0 0 0.5rem;
+  }
+  .locator-approx {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: #8A540F;
+    background: #F6E6CE;
+    border-radius: 8px;
+    padding: 0.45rem 0.6rem;
+    margin: 0 0 1rem;
+  }
+  .locator-approx svg { flex: 0 0 auto; margin-top: 0.1rem; }
+  .locator-figure { margin: 0; }
+  .locator-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 10px;
+    border: 1px solid #C9DEE3;
+    background: #D6EEF2;
+  }
+  .locator-label {
+    font-size: 2.4px;
+    font-weight: 700;
+    fill: #1C2B3A;
+    paint-order: stroke;
+    stroke: #FFFFFF;
+    stroke-width: 0.6px;
+    pointer-events: none;
+  }
+  .locator-dot { cursor: pointer; }
+  .locator-dot:hover circle:nth-of-type(2),
+  .locator-dot:focus circle:nth-of-type(2) {
+    stroke: #B54D2F;
+    stroke-width: 0.6px;
+  }
+  .locator-dot:focus { outline: none; }
+  .locator-dot:focus-visible circle:nth-of-type(1) {
+    stroke: #0D5C6B;
+    stroke-width: 0.8px;
+  }
+  .locator-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0.75rem 0 0;
+    font-size: 0.8rem;
+    color: #44525E;
+  }
+  .locator-legend li { display: flex; align-items: center; gap: 0.4rem; }
+  .locator-key {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid #1C2B3A;
+    display: inline-block;
+  }
+  .locator-key--landscape { background: #0D5C6B; }
+  .locator-key--fallback { background: #C97D1B; }
+
+  @media (max-width: 640px) {
+    .locator { padding: 1rem; }
+  }
+</style>

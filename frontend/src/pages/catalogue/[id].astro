@@ -16,11 +16,9 @@ const { dataset } = Astro.props
 const base = import.meta.env.BASE_URL
 
 const readinessDescriptions: Record<string, string> = {
-  'Registered only': 'This dataset has been registered in the catalogue but has not yet been reviewed. Metadata may be incomplete.',
-  'Under review': 'This dataset is currently being reviewed by the MOSAIC team. Check back soon for an updated status.',
-  'Accepted': 'This dataset has passed initial review. Metadata is complete and the dataset is considered reliable for reference use.',
+  'Raw': 'This dataset is registered as supplied by its source. It has not yet been processed or quality-checked by the MOSAIC network. Metadata may be incomplete.',
+  'Processed': 'This dataset has been processed (cleaned, reformatted, or harmonized) but has not yet completed full quality validation against the MFL spatial standards.',
   'Validated': 'This dataset has undergone quality control and meets the MFL spatial standards. Suitable for analysis.',
-  'Analytics-ready': 'This dataset has been processed, harmonized, and validated to the highest standard. Ready for use in landscape analytics and modelling.',
 }
 ---
 
@@ -55,37 +53,66 @@ const readinessDescriptions: Record<string, string> = {
       <table class="data-table">
         <tbody>
           <tr><td><strong>Dataset ID</strong></td><td><code>{dataset.id}</code></td></tr>
-          <tr><td><strong>Country</strong></td><td>{dataset.country}</td></tr>
+          <tr><td><strong>Country</strong></td><td>{dataset.country ?? 'Not specified'}</td></tr>
           <tr><td><strong>Living Landscape</strong></td><td>{dataset.living_landscape}</td></tr>
-          <tr><td><strong>MFL Theme</strong></td><td>{dataset.mfl_theme}</td></tr>
-          <tr><td><strong>Data Type</strong></td><td>{dataset.data_type}</td></tr>
+          <tr><td><strong>MFL Theme</strong></td><td>{dataset.mfl_theme ?? 'Not specified'}</td></tr>
+          <tr><td><strong>Data Type</strong></td><td>{dataset.data_type ?? 'Not specified'}</td></tr>
           {dataset.spatial_resolution && <tr><td><strong>Spatial Resolution</strong></td><td>{dataset.spatial_resolution}</td></tr>}
           {dataset.temporal_coverage && <tr><td><strong>Temporal Coverage</strong></td><td>{dataset.temporal_coverage}</td></tr>}
           {dataset.source && <tr><td><strong>Source</strong></td><td>{dataset.source}</td></tr>}
-          <tr><td><strong>Access Level</strong></td><td>{dataset.access_level}</td></tr>
-          <tr><td><strong>License</strong></td><td>{dataset.license}</td></tr>
+          {dataset.formats && dataset.formats.length > 0 && <tr><td><strong>Formats</strong></td><td>{dataset.formats.join(', ')}</td></tr>}
+          <tr><td><strong>Access Level</strong></td><td>{dataset.access_level ?? 'Not specified'}</td></tr>
+          <tr><td><strong>License</strong></td><td>{dataset.license ?? 'Not specified'}</td></tr>
           <tr><td><strong>Readiness Status</strong></td><td>{dataset.readiness_status}</td></tr>
-          {dataset.metadata_url && <tr><td><strong>Metadata Record</strong></td><td><a href={dataset.metadata_url}>View full metadata</a></td></tr>}
         </tbody>
       </table>
+    </section>
+
+    <!-- STAC metadata pointer -->
+    <section style="margin-bottom: var(--space-8);">
+      <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-3);">Full metadata record</h2>
+      {dataset.metadata_url ? (
+        <p>
+          The canonical metadata for this dataset is published as a STAC Item.
+          <br />
+          <a href={`${base}/${dataset.metadata_url}`} style="color: var(--mosaic-teal); font-weight: 600;">View STAC metadata (JSON)</a>
+          <br />
+          <code style="font-size: var(--text-xs); color: var(--color-gray-600); word-break: break-all;">{dataset.metadata_url}</code>
+        </p>
+      ) : (
+        <p style="color: var(--color-gray-600);">No STAC metadata record is registered for this dataset yet.</p>
+      )}
     </section>
 
     <!-- Access section -->
     <section style="margin-bottom: var(--space-8); padding: var(--space-6); background-color: var(--mosaic-light-teal); border-radius: var(--radius-lg);">
       <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-3);">How to access this dataset</h2>
-      {dataset.access_level === 'Open' && dataset.download_url ? (
+      {dataset.access_level === 'Open' ? (
         <div>
-          <p style="margin-bottom: var(--space-4);">This dataset is openly available for download under the {dataset.license} license.</p>
-          <a href={dataset.download_url} class="btn btn-primary">Download dataset</a>
+          <p style="margin-bottom: var(--space-4);">
+            This dataset is openly available{dataset.license ? ` under the ${dataset.license} license` : ''}.
+            MOSAIC connects to the source rather than re-hosting the data.
+          </p>
+          {dataset.download_url
+            ? <a href={dataset.download_url} class="btn btn-primary" target="_blank" rel="noopener noreferrer">Go to source</a>
+            : <p style="margin-bottom: var(--space-2);">No direct source link has been registered yet. See the contact below or the STAC metadata record above.</p>}
+          {dataset.contact && <p style="margin-top: var(--space-3);"><strong>Contact:</strong> <a href={`mailto:${dataset.contact}`}>{dataset.contact}</a></p>}
         </div>
       ) : dataset.access_level === 'Restricted' ? (
         <div>
           <p style="margin-bottom: var(--space-4);">Access to this dataset is restricted. To request access, please contact the data steward.</p>
+          {dataset.contact
+            ? <p><strong>Contact:</strong> <a href={`mailto:${dataset.contact}`}>{dataset.contact}</a></p>
+            : <p>No steward contact is registered yet. Contact the MOSAIC coordination team.</p>}
+        </div>
+      ) : dataset.access_level === 'CGIAR-internal' ? (
+        <div>
+          <p style="margin-bottom: var(--space-4);">This dataset is for internal CGIAR use only. Contact the MOSAIC team if you believe you should have access.</p>
           {dataset.contact && <p><strong>Contact:</strong> <a href={`mailto:${dataset.contact}`}>{dataset.contact}</a></p>}
         </div>
       ) : (
         <div>
-          <p style="margin-bottom: var(--space-4);">This dataset is for internal CGIAR use only. Contact the MOSAIC team if you believe you should have access.</p>
+          <p style="margin-bottom: var(--space-4);">The access level for this dataset has not been specified yet. Contact the data steward or the MOSAIC coordination team for details.</p>
           {dataset.contact && <p><strong>Contact:</strong> <a href={`mailto:${dataset.contact}`}>{dataset.contact}</a></p>}
         </div>
       )}
@@ -113,11 +140,9 @@ const readinessDescriptions: Record<string, string> = {
           <tr><th>Status</th><th>Meaning</th></tr>
         </thead>
         <tbody>
-          <tr><td><span class="badge badge-registered">Registered only</span></td><td>Dataset registered; metadata may be incomplete. Not yet reviewed.</td></tr>
-          <tr><td><span class="badge badge-review">Under review</span></td><td>Metadata submitted; MOSAIC team is reviewing for completeness and accuracy.</td></tr>
-          <tr><td><span class="badge badge-accepted">Accepted</span></td><td>Metadata reviewed and approved. Dataset is reliable for reference use.</td></tr>
-          <tr><td><span class="badge badge-validated">Validated</span></td><td>Dataset has passed spatial QC checks. Suitable for analysis.</td></tr>
-          <tr><td><span class="badge badge-analytics">Analytics-ready</span></td><td>Fully harmonized and validated. Ready for landscape analytics and modelling.</td></tr>
+          <tr><td><span class="badge badge-raw">Raw</span></td><td>Registered as supplied by the source; not yet processed or quality-checked. Metadata may be incomplete.</td></tr>
+          <tr><td><span class="badge badge-processed">Processed</span></td><td>Cleaned, reformatted, or harmonized, but not yet fully validated against the MFL spatial standards.</td></tr>
+          <tr><td><span class="badge badge-validated">Validated</span></td><td>Passed quality control and meets the MFL spatial standards. Suitable for analysis.</td></tr>
         </tbody>
       </table>
     </details>

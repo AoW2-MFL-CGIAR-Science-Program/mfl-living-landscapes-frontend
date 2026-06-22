@@ -5,19 +5,26 @@ import json
 import sys
 from pathlib import Path
 
+# Always-present fields. Every real record carries these; the remaining
+# controlled-vocabulary fields may legitimately be null for records whose
+# source metadata is incomplete or flagged for repair (see OPTIONAL_VOCAB_FIELDS).
 REQUIRED_FIELDS = [
-    "id", "title", "country", "living_landscape", "mfl_theme",
-    "data_type", "access_level", "license", "readiness_status"
+    "id", "title", "living_landscape", "readiness_status"
 ]
 
+# Controlled-vocabulary fields that are validated only when present.
+# null/"" is tolerated (the registry is the source of truth and some rows are
+# legitimately incomplete or flagged for repair, e.g. the malformed "Soil dataset" rows).
+OPTIONAL_VOCAB_FIELDS = ["country", "mfl_theme", "data_type", "access_level", "license"]
+
 VALID_COUNTRIES = [
-    "Kenya", "Ethiopia", "India", "Colombia",
-    "Myanmar", "Vietnam", "Laos", "Cambodia", "Thailand"
+    "Colombia", "Côte d'Ivoire", "Ethiopia", "India", "Kenya", "Laos",
+    "Peru", "Senegal", "Tanzania", "Tunisia", "Vietnam", "Zimbabwe"
 ]
 
 VALID_LANDSCAPES = [
-    "KEN-LV", "KEN-MT", "ETH-GT", "ETH-BL",
-    "IND-WG", "IND-EP", "COL-AM", "MEK-LM"
+    "MEK-3S", "IND-CH", "SEN-FK", "KEN-NAT", "ZWE-MB", "CIV-NZ",
+    "TUN-NW", "ETH-OG", "COL-NAT", "PER-NAT", "LAO-NAT", "VNM-NAT", "GLB-UNSPEC"
 ]
 
 VALID_MFL_THEMES = [
@@ -36,15 +43,11 @@ VALID_MFL_THEMES = [
     "Socio-economic / livelihoods"
 ]
 
-VALID_DATA_TYPES = [
-    "Raster", "Vector", "Tabular", "Time series", "Model output", "Survey data"
-]
+VALID_DATA_TYPES = ["Raster", "Vector", "Tabular", "Mixed"]
 
-VALID_ACCESS = ["Open", "Restricted", "Internal"]
+VALID_ACCESS = ["Open", "CGIAR-internal", "Restricted"]
 
-VALID_READINESS = [
-    "Registered only", "Under review", "Accepted", "Validated", "Analytics-ready"
-]
+VALID_READINESS = ["Raw", "Processed", "Validated"]
 
 RECORD_COUNT_WARNING = 300
 
@@ -85,14 +88,11 @@ def validate(path: str) -> list[str]:
                 errors.append(f"{prefix}: duplicate id '{eid}'")
             seen_ids.add(eid)
 
-        # download_url required when Open
-        if entry.get("access_level") == "Open":
-            if not entry.get("download_url"):
-                errors.append(
-                    f"{prefix}: access_level is Open but download_url is missing"
-                )
+        # NOTE: download_url is NOT required for Open records. MOSAIC follows a
+        # "connect, don't duplicate" model: an Open dataset is reachable at its
+        # external source via the metadata link, not necessarily a file we host.
 
-        # Controlled vocabularies
+        # Controlled vocabularies (validated only when present; null is tolerated)
         if entry.get("country") and entry["country"] not in VALID_COUNTRIES:
             errors.append(f"{prefix}: invalid country '{entry['country']}'")
 

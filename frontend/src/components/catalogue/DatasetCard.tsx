@@ -2,20 +2,16 @@ import type { Dataset } from '../../utils/types'
 import { DatasetThumbnail } from './DatasetThumbnail'
 
 const STATUS_BADGE: Record<string, string> = {
-  'Registered only': 'badge badge-registered',
-  'Under review':    'badge badge-review',
-  'Accepted':        'badge badge-accepted',
-  'Validated':       'badge badge-validated',
-  'Analytics-ready': 'badge badge-analytics',
+  'Raw':       'badge badge-raw',
+  'Processed': 'badge badge-processed',
+  'Validated': 'badge badge-validated',
 }
 
 const TYPE_BADGE: Record<string, string> = {
-  'Raster':       'badge badge-raster',
-  'Vector':       'badge badge-vector',
-  'Tabular':      'badge badge-tabular',
-  'Time series':  'badge badge-timeseries',
-  'Model output': 'badge badge-model',
-  'Survey data':  'badge badge-survey',
+  'Raster':  'badge badge-raster',
+  'Vector':  'badge badge-vector',
+  'Tabular': 'badge badge-tabular',
+  'Mixed':   'badge badge-mixed',
 }
 
 function GlobeIcon() {
@@ -65,7 +61,7 @@ export function DatasetCard({ dataset, base }: Props) {
     <article className="ds-card">
       {/* Thumbnail */}
       <div className="ds-card-thumb">
-        <DatasetThumbnail id={dataset.id} theme={dataset.mfl_theme} />
+        <DatasetThumbnail id={dataset.id} theme={dataset.mfl_theme ?? ''} />
       </div>
 
       {/* Main content */}
@@ -77,12 +73,14 @@ export function DatasetCard({ dataset, base }: Props) {
         </h3>
 
         <div className="ds-card-badges">
-          <span className={STATUS_BADGE[dataset.readiness_status] ?? 'badge badge-registered'}>
+          <span className={STATUS_BADGE[dataset.readiness_status] ?? 'badge badge-raw'}>
             {dataset.readiness_status}
           </span>
-          <span className={TYPE_BADGE[dataset.data_type] ?? 'badge badge-tabular'}>
-            {dataset.data_type}
-          </span>
+          {dataset.data_type && (
+            <span className={TYPE_BADGE[dataset.data_type] ?? 'badge badge-tabular'}>
+              {dataset.data_type}
+            </span>
+          )}
           {dataset.spatial_resolution && dataset.spatial_resolution !== 'N/A' && (
             <span className="badge badge-resolution">{dataset.spatial_resolution}</span>
           )}
@@ -96,9 +94,9 @@ export function DatasetCard({ dataset, base }: Props) {
         )}
 
         <div className="ds-card-meta">
-          <span className="ds-meta-item"><GlobeIcon />{dataset.country}</span>
+          {dataset.country && <span className="ds-meta-item"><GlobeIcon />{dataset.country}</span>}
           <span className="ds-meta-item"><MapIcon />{dataset.living_landscape}</span>
-          <span className="ds-meta-item"><LeafIcon />{dataset.mfl_theme}</span>
+          {dataset.mfl_theme && <span className="ds-meta-item"><LeafIcon />{dataset.mfl_theme}</span>}
           {dataset.source && <span className="ds-meta-item"><BankIcon />{dataset.source}</span>}
         </div>
       </div>
@@ -115,34 +113,21 @@ export function DatasetCard({ dataset, base }: Props) {
           </svg>
         </a>
 
-        {isOpen ? (
+        {/* MOSAIC connects to sources rather than re-hosting: only show a
+            source link when the record carries a real external download_url. */}
+        {dataset.download_url && (
           <a
             href={dataset.download_url}
             className="ds-download"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Download ${dataset.title}`}
+            aria-label={`Go to source for ${dataset.title}`}
           >
             <span className="ds-download-label">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
               </svg>
-              Download
-            </span>
-            {formats.length > 0 && <span className="ds-formats">{formats.join(', ')}</span>}
-          </a>
-        ) : (
-          <a
-            href={dataset.metadata_url ?? detailUrl}
-            className="ds-download ds-download--request"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span className="ds-download-label">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              Request access
+              {isOpen ? 'Go to source' : 'Source link'}
             </span>
             {formats.length > 0 && <span className="ds-formats">{formats.join(', ')}</span>}
           </a>
