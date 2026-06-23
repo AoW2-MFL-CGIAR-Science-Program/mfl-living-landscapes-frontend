@@ -17,36 +17,38 @@ interface Palette {
   contour: string
 }
 
+// MOSAIC cartographic palette only — Ocean Teal / Amber Land / Terracotta /
+// Light Teal / Warm Sand / Ink. No MFL forest-green (brand rule).
 const THEME_PALETTE: Record<string, Palette> = {
   'Land cover / land use': {
-    bg: ['#1d3a16', '#2f5320'],
-    patches: ['#3f6b2a', '#6f9438', '#a3b84e', '#c9b96a', '#4a7a2f', '#7da647'],
-    contour: '#cfe0b0',
+    bg: ['#0D5C6B', '#0A4753'],
+    patches: ['#117A8D', '#3A8A8A', '#C97D1B', '#D6A35A', '#0D5C6B', '#7FB0B8'],
+    contour: '#D6EEF2',
   },
   'Water / hydrology': {
-    bg: ['#0c3a4a', '#114f63'],
-    patches: ['#1E6F8E', '#2f8fa8', '#62bdd6', '#3a7a5a', '#8fcfe0', '#256f7e'],
-    contour: '#bfe6f0',
+    bg: ['#0A4753', '#08323B'],
+    patches: ['#0D5C6B', '#117A8D', '#2F8FA8', '#62BDD6', '#3A7A8A', '#8FCFE0'],
+    contour: '#D6EEF2',
   },
   'Biodiversity / ecosystems': {
-    bg: ['#14331d', '#1f4a2a'],
-    patches: ['#2f7a3a', '#7fae3a', '#d6b94a', '#dd7e32', '#c2452a', '#4a9a45'],
-    contour: '#e6e0b0',
+    bg: ['#0D5C6B', '#16424A'],
+    patches: ['#117A8D', '#3A8A8A', '#C97D1B', '#D6A35A', '#B54D2F', '#E0A060'],
+    contour: '#D6EEF2',
   },
   'Degradation / land health': {
-    bg: ['#392616', '#54381f'],
-    patches: ['#8a5a2f', '#b0814f', '#caa66a', '#dbbb8a', '#9a6b3a', '#c98a4a'],
-    contour: '#ecd8b8',
+    bg: ['#5A2E1C', '#7A3F26'],
+    patches: ['#B54D2F', '#C97D1B', '#D6A35A', '#E0B380', '#A85A3A', '#CAA66A'],
+    contour: '#F7E4DD',
   },
   'Socio-economic / livelihoods': {
-    bg: ['#20323a', '#2e4450'],
-    patches: ['#3a6b6b', '#4a7f8f', '#6f6f9c', '#8c7c9c', '#5a8a7c', '#7a9aa8'],
-    contour: '#d6dde2',
+    bg: ['#1C2B3A', '#283A4A'],
+    patches: ['#0D5C6B', '#3A6B7A', '#C97D1B', '#8C7C6C', '#5A8A92', '#B08A5A'],
+    contour: '#D6E2E6',
   },
   'Ecosystem condition': {
-    bg: ['#14331d', '#1f4a2a'],
-    patches: ['#2f7a3a', '#7fae3a', '#a8c25a', '#5a9a55', '#3a8a6a', '#cdbf6a'],
-    contour: '#e0e6c0',
+    bg: ['#0D5C6B', '#0A4753'],
+    patches: ['#117A8D', '#3A9A9A', '#C97D1B', '#5A9A8A', '#3A8A6A', '#CDAF6A'],
+    contour: '#D6EEF2',
   },
 }
 

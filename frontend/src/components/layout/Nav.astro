@@ -5,15 +5,9 @@ const currentPath = Astro.url.pathname
 const navLinks = [
   { href: `${base}/catalogue`, label: 'Catalogue' },
   { href: `${base}/landscapes`, label: 'Landscapes' },
+  { href: `${base}/contribute`, label: 'Contribute' },
   { href: `${base}/about`, label: 'About' },
   { href: `${base}/contact`, label: 'Contact' },
-]
-
-const contributeLinks = [
-  { href: `${base}/contribute`, label: 'How to contribute' },
-  { href: `${base}/contribute/metadata-guide`, label: 'Metadata Guide' },
-  { href: `${base}/contribute/qc-workflow`, label: 'QC Workflow' },
-  { href: `${base}/contribute/governance`, label: 'Governance & Access' },
 ]
 
 function isActive(href: string) {
@@ -36,41 +30,6 @@ function isActive(href: string) {
         >{link.label}</a>
       </li>
     ))}
-
-    <!-- Contribute dropdown -->
-    <li class="dropdown-wrapper">
-      <button
-        type="button"
-        class="nav-link dropdown-trigger"
-        aria-haspopup="true"
-        aria-expanded="false"
-        id="contribute-btn"
-        aria-controls="contribute-menu"
-      >
-        Contribute
-        <svg aria-hidden="true" focusable="false" width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </button>
-      <ul
-        class="dropdown-menu"
-        id="contribute-menu"
-        role="menu"
-        aria-labelledby="contribute-btn"
-        hidden
-      >
-        {contributeLinks.map(link => (
-          <li role="none">
-            <a
-              href={link.href}
-              class="dropdown-item"
-              role="menuitem"
-              aria-current={isActive(link.href) ? 'page' : undefined}
-            >{link.label}</a>
-          </li>
-        ))}
-      </ul>
-    </li>
   </ul>
 </nav>
 
@@ -106,20 +65,6 @@ function isActive(href: string) {
         >{link.label}</a>
       </li>
     ))}
-    <li>
-      <p class="mobile-nav-section-label">Contribute</p>
-      <ul class="mobile-subnav-list">
-        {contributeLinks.map(link => (
-          <li>
-            <a
-              href={link.href}
-              class="mobile-nav-link mobile-nav-link--sub"
-              aria-current={isActive(link.href) ? 'page' : undefined}
-            >{link.label}</a>
-          </li>
-        ))}
-      </ul>
-    </li>
   </ul>
 </nav>
 
@@ -181,49 +126,6 @@ function isActive(href: string) {
   .nav-link[aria-current="page"] {
     color: var(--color-gray-900);
     border-bottom-color: var(--color-cgiar-teal);
-    font-weight: 600;
-  }
-
-  /* ── Dropdown ───────────────────────────────────────── */
-  .dropdown-wrapper { position: relative; }
-
-  .dropdown-menu {
-    position: absolute;
-    top: calc(100% + 4px);
-    right: 0;
-    background: var(--color-white);
-    border: 1px solid var(--color-gray-200);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-md);
-    list-style: none;
-    min-width: 210px;
-    z-index: 100;
-    padding: var(--space-2) 0;
-    margin: 0;
-  }
-
-  .dropdown-menu[hidden] { display: none; }
-
-  .dropdown-item {
-    display: block;
-    padding: var(--space-2) var(--space-4);
-    font-size: var(--text-sm);
-    color: var(--color-gray-800);
-    text-decoration: none;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    transition: background-color 0.1s;
-  }
-
-  .dropdown-item:hover,
-  .dropdown-item:focus-visible {
-    background-color: var(--color-green-light);
-    outline: none;
-  }
-
-  .dropdown-item[aria-current="page"] {
-    color: var(--color-green-dark);
     font-weight: 600;
   }
 
@@ -296,28 +198,6 @@ function isActive(href: string) {
     padding-left: calc(var(--space-6) - 3px);
   }
 
-  .mobile-nav-link--sub {
-    font-size: var(--text-sm);
-    padding-left: var(--space-8);
-    color: var(--color-gray-500);
-  }
-
-  .mobile-nav-section-label {
-    padding: var(--space-3) var(--space-6) var(--space-1);
-    font-size: var(--text-xs);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-cgiar-teal);
-    margin: 0;
-  }
-
-  .mobile-subnav-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
   /* ── Responsive: show hamburger, hide desktop nav ──── */
   @media (max-width: 767px) {
     .main-nav { display: none; }
@@ -326,33 +206,6 @@ function isActive(href: string) {
 </style>
 
 <script>
-  // Dropdown: toggle on click, close on Escape / outside click
-  const btn = document.getElementById('contribute-btn')
-  const menu = document.getElementById('contribute-menu')
-
-  if (btn && menu) {
-    btn.addEventListener('click', () => {
-      const open = btn.getAttribute('aria-expanded') === 'true'
-      btn.setAttribute('aria-expanded', String(!open))
-      menu.hidden = open
-    })
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
-        btn.setAttribute('aria-expanded', 'false')
-        menu.hidden = true
-        btn.focus()
-      }
-    })
-
-    document.addEventListener('click', (e) => {
-      if (!btn.contains(e.target as Node) && !menu.contains(e.target as Node)) {
-        btn.setAttribute('aria-expanded', 'false')
-        menu.hidden = true
-      }
-    })
-  }
-
   // Hamburger: toggle mobile menu
   const hamburger = document.getElementById('hamburger-btn')
   const mobileMenu = document.getElementById('mobile-menu')

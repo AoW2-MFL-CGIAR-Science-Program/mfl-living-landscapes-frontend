@@ -33,7 +33,7 @@ const base = import.meta.env.BASE_URL
             <td><code>id</code></td>
             <td>String</td>
             <td>Unique identifier. Format: LANDSCAPE_THEME-CODE_YEAR_SOURCE_VERSION</td>
-            <td><code>KEN-LV_LC_2023_ILRI_v1</code></td>
+            <td><code>KEN-NAT_LC_2023_ILRI_v1</code></td>
           </tr>
           <tr>
             <td><code>title</code></td>
@@ -51,7 +51,7 @@ const base = import.meta.env.BASE_URL
             <td><code>living_landscape</code></td>
             <td>Controlled vocabulary</td>
             <td>Living Landscape code</td>
-            <td>KEN-LV</td>
+            <td>KEN-NAT</td>
           </tr>
           <tr>
             <td><code>mfl_theme</code></td>
@@ -151,24 +151,33 @@ const base = import.meta.env.BASE_URL
       <h3 style="margin-bottom: var(--space-3);">Country</h3>
       <p style="color: var(--color-gray-600); margin-bottom: var(--space-3); font-size: var(--text-sm);">Priority countries for 2026: Kenya, Ethiopia, India.</p>
       <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-8);">
-        {['Kenya', 'Ethiopia', 'India', 'Colombia', 'Myanmar', 'Vietnam', 'Laos', 'Cambodia', 'Thailand'].map((v) => (
+        {['Kenya', 'Ethiopia', 'India', 'Colombia', 'Peru', "Côte d'Ivoire", 'Senegal', 'Tanzania', 'Tunisia', 'Vietnam', 'Laos', 'Zimbabwe'].map((v) => (
           <code style="background-color: var(--color-gray-100); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">{v}</code>
         ))}
       </div>
 
       <h3 style="margin-bottom: var(--space-3);">Living Landscape</h3>
+      <p style="color: var(--color-gray-600); margin-bottom: var(--space-3); font-size: var(--text-sm);">
+        Codes are <strong>provisional</strong> and pending confirmation of the canonical MFL landscape list.
+        <code>*-NAT</code> are national-level fallbacks; <code>GLB-UNSPEC</code> is a catch-all for unscoped datasets.
+      </p>
       <table class="data-table" style="margin-bottom: var(--space-8);">
         <thead><tr><th>Code</th><th>Landscape Name</th><th>Country</th></tr></thead>
         <tbody>
           {[
-            ['KEN-LV', 'Lake Victoria Basin', 'Kenya'],
-            ['KEN-MT', 'Mount Kenya Landscape', 'Kenya'],
-            ['ETH-GT', 'Ethiopian Great Rift Valley', 'Ethiopia'],
-            ['ETH-BL', 'Blue Nile Highlands', 'Ethiopia'],
-            ['IND-WG', 'Western Ghats', 'India'],
-            ['IND-EP', 'Eastern Plains', 'India'],
-            ['COL-AM', 'Amazon-Andean Corridor', 'Colombia'],
-            ['MEK-LM', 'Lower Mekong', 'Multi-country'],
+            ['KEN-NAT', 'Kenya (national)', 'Kenya'],
+            ['ETH-OG', 'Omo-Gibe Basin', 'Ethiopia'],
+            ['IND-CH', 'Central India Highlands', 'India'],
+            ['COL-NAT', 'Colombia (national)', 'Colombia'],
+            ['PER-NAT', 'Peru (national)', 'Peru'],
+            ['VNM-NAT', 'Vietnam (national)', 'Vietnam'],
+            ['LAO-NAT', 'Laos (national)', 'Laos'],
+            ['MEK-3S', '3S Basins (Sekong, Sesan, Srepok)', 'Multi-country'],
+            ['CIV-NZ', "N'Zi Watershed", "Côte d'Ivoire"],
+            ['SEN-FK', 'Fatick Department', 'Senegal'],
+            ['TUN-NW', 'Northwestern Tunisia', 'Tunisia'],
+            ['ZWE-MB', 'Mbire / Lower Zambezi Valley', 'Zimbabwe'],
+            ['GLB-UNSPEC', 'Unspecified (catch-all)', '—'],
           ].map(([code, name, country]) => (
             <tr><td><code>{code}</code></td><td>{name}</td><td>{country}</td></tr>
           ))}
@@ -184,18 +193,21 @@ const base = import.meta.env.BASE_URL
 
       <h3 style="margin-bottom: var(--space-3);">Data Type</h3>
       <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-8);">
-        {['Raster','Vector','Tabular','Time series','Model output','Survey data'].map((v) => (
+        {['Raster','Vector','Tabular','Mixed'].map((v) => (
           <code style="background-color: var(--color-gray-100); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">{v}</code>
         ))}
       </div>
 
       <h3 style="margin-bottom: var(--space-3);">Access Level</h3>
+      <p style="color: var(--color-gray-600); margin-bottom: var(--space-3); font-size: var(--text-sm);">
+        Access level decisions are made by the contributing centre, not by the MOSAIC team. MOSAIC records and displays the access level the contributor declares, and never overrides it.
+      </p>
       <table class="data-table" style="margin-bottom: var(--space-8);">
-        <thead><tr><th>Value</th><th>Meaning</th></tr></thead>
+        <thead><tr><th>Value</th><th>Who can access</th><th>How to access</th></tr></thead>
         <tbody>
-          <tr><td><code>Open</code></td><td>Freely downloadable. A download_url is required.</td></tr>
-          <tr><td><code>Restricted</code></td><td>Available on request. Contact information is shown on the dataset detail page.</td></tr>
-          <tr><td><code>Internal</code></td><td>For CGIAR internal use only. Visible in catalogue but not accessible to external users.</td></tr>
+          <tr><td><span class="badge badge-open">Open</span></td><td>Anyone — the dataset is publicly available</td><td>Direct download link on the dataset detail page (a <code>download_url</code> is required)</td></tr>
+          <tr><td><span class="badge badge-restricted">Restricted</span></td><td>Approved users — access is granted by the contributing centre</td><td>Contact email shown on the dataset detail page; decision made by the data owner</td></tr>
+          <tr><td><span class="badge badge-internal">Internal</span></td><td>CGIAR staff only — for datasets not ready for external sharing</td><td>Contact the MOSAIC team; verification of CGIAR affiliation required</td></tr>
         </tbody>
       </table>
 
@@ -203,11 +215,9 @@ const base = import.meta.env.BASE_URL
       <table class="data-table">
         <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
         <tbody>
-          <tr><td><code>Registered only</code></td><td>Dataset registered; metadata may be incomplete. Not yet reviewed.</td></tr>
-          <tr><td><code>Under review</code></td><td>Metadata submitted; MOSAIC team is reviewing.</td></tr>
-          <tr><td><code>Accepted</code></td><td>Metadata reviewed and approved. Reliable for reference use.</td></tr>
-          <tr><td><code>Validated</code></td><td>Passed spatial QC. Suitable for analysis.</td></tr>
-          <tr><td><code>Analytics-ready</code></td><td>Fully harmonized and validated. Ready for landscape analytics and modelling.</td></tr>
+          <tr><td><span class="badge badge-raw">Raw</span></td><td>Registered as supplied by the source; not yet processed or quality-checked. Metadata may be incomplete.</td></tr>
+          <tr><td><span class="badge badge-processed">Processed</span></td><td>Cleaned, reformatted, or harmonized, but not yet fully validated against the MFL spatial standards.</td></tr>
+          <tr><td><span class="badge badge-validated">Validated</span></td><td>Passed quality control and meets the MFL spatial standards. Suitable for analysis.</td></tr>
         </tbody>
       </table>
     </section>

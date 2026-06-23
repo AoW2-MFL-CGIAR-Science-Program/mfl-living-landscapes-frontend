@@ -57,12 +57,12 @@ const base = import.meta.env.BASE_URL
         {
           step: '04',
           title: 'Accept',
-          desc: 'Once metadata passes review, the entry is merged into the catalogue with status Accepted. The dataset is now visible in the catalogue and can be browsed and filtered.',
+          desc: 'Once metadata passes review, the entry is merged into the catalogue. The dataset is now visible and can be browsed and filtered. Its readiness status reflects how far it has been processed — Raw or Processed.',
         },
         {
           step: '05',
           title: 'Publish and validate',
-          desc: 'If you have open data available for download, the MOSAIC team will verify the download URL and run spatial QC checks. Datasets that pass QC are promoted to Validated or Analytics-ready status.',
+          desc: 'If you have open data available for download, the MOSAIC team will verify the download URL and run spatial QC checks. Datasets that pass QC are promoted to Validated status.',
         },
       ].map((s) => (
         <div style="display: grid; grid-template-columns: 60px 1fr; gap: var(--space-6); margin-bottom: var(--space-8); padding-bottom: var(--space-8); border-bottom: 1px solid var(--color-gray-200);">
@@ -73,6 +73,52 @@ const base = import.meta.env.BASE_URL
           </div>
         </div>
       ))}
+    </section>
+
+    <!-- Who can contribute -->
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">Who can contribute</h2>
+      <p style="color: var(--color-gray-600); margin-bottom: var(--space-4);">The following groups are eligible to register and contribute datasets:</p>
+      <ul style="list-style: disc; padding-left: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); color: var(--color-gray-600);">
+        <li>Staff at CGIAR centres that are members of the MFL Science Programme</li>
+        <li>Programme partners and national partners working directly with a CGIAR centre on a Living Landscape</li>
+        <li>Postdoctoral researchers and consultants contracted to a CGIAR centre for MFL-related work</li>
+      </ul>
+      <p style="color: var(--color-gray-600); margin-top: var(--space-4);">
+        If you are not sure whether you are eligible, contact the MOSAIC coordinator via the <a href={`${base}/contact`}>Contact</a> page.
+      </p>
+    </section>
+
+    <!-- Quality control & validation -->
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">Quality control &amp; validation</h2>
+      <p style="color: var(--color-gray-600); margin-bottom: var(--space-4);">
+        After a dataset is accepted, the MOSAIC team runs spatial quality control: the data is opened and read,
+        the coordinate reference system is checked, and the spatial extent and temporal coverage are confirmed
+        against the stated Living Landscape and period. The current stage of this process is shown as the
+        <strong>readiness status</strong> on each catalogue entry and dataset page — see the readiness legend on any
+        dataset detail page for what each status means.
+      </p>
+      <p style="color: var(--color-gray-600);">
+        If metadata review or spatial QC reveals issues, the MOSAIC team opens a GitHub issue and tags the contributor.
+        The dataset stays at its current status until the issues are resolved, and is never removed from the catalogue
+        without notifying the contributor.
+      </p>
+    </section>
+
+    <!-- Data ownership & licensing -->
+    <section style="margin-bottom: var(--space-12);">
+      <h2 style="margin-bottom: var(--space-4);">Data ownership &amp; licensing</h2>
+      <p style="color: var(--color-gray-600); margin-bottom: var(--space-4);">
+        Data ownership remains with the contributing CGIAR centre or organisation. MOSAIC only catalogues metadata and
+        links to the data; it does not host data files. Each dataset entry must carry a license, and contributing centres
+        are responsible for ensuring the declared license reflects their centre's data-sharing policy. Access-level
+        decisions are made by the contributing centre — see the <a href={`${base}/contribute/metadata-guide`}>Metadata Guide</a>
+        for the access tiers.
+      </p>
+      <p style="color: var(--color-gray-600);">
+        MOSAIC website code and content (excluding linked datasets) is licensed under CC BY 4.0.
+      </p>
     </section>
 
     <!-- FAQ -->

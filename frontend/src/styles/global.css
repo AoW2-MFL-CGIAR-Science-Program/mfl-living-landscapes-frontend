@@ -121,6 +121,16 @@ img {
   font-size: var(--text-sm);
 }
 
+/* Let wide tables scroll horizontally on phones instead of overflowing the page */
+@media (max-width: 640px) {
+  .data-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 .data-table th {
   text-align: left;
   padding: var(--space-3) var(--space-4);
@@ -175,4 +185,15 @@ code, pre, kbd {
   background-repeat: no-repeat;
   background-size: cover;
   overflow: hidden;
+}
+
+/* ── Reduced motion: drop movement, keep colour/opacity feedback (Standard 8) ── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .ds-card:hover { transform: none; }
 }

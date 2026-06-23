@@ -69,6 +69,40 @@ const FILTER_ICON: Record<FilterKey, ReactNode> = {
 
 const PER_PAGE_OPTIONS = [10, 25, 50]
 
+const FILTER_KEYS: FilterKey[] = ['country', 'living_landscape', 'mfl_theme', 'readiness_status', 'data_type', 'access_level', 'license']
+const SORT_KEYS: SortKey[] = ['recent', 'oldest', 'az', 'za', 'status']
+
+// Legacy single-value params used by deep links from the Landscapes page.
+const PARAM_ALIASES: Record<string, FilterKey> = {
+  landscape: 'living_landscape',
+  theme: 'mfl_theme',
+  status: 'readiness_status',
+}
+
+const QS_STORAGE_KEY = 'mosaic:catalogue:qs'
+
+/** Read filter/search/sort state from the current URL (canonical keys + legacy aliases). */
+function readInitialState(): { filters: FilterState; search: string; sort: SortKey } {
+  const filters = emptyFilters()
+  let search = ''
+  let sort: SortKey = 'recent'
+  if (typeof window !== 'undefined') {
+    const params = new URLSearchParams(window.location.search)
+    for (const key of FILTER_KEYS) {
+      const raw = params.get(key)
+      if (raw) filters[key] = raw.split(',').map((v) => v.trim()).filter(Boolean)
+    }
+    for (const [alias, key] of Object.entries(PARAM_ALIASES)) {
+      const v = params.get(alias)
+      if (v && !(filters[key] as string[]).includes(v)) (filters[key] as string[]).push(v)
+    }
+    search = params.get('q') ?? ''
+    const s = params.get('sort') as SortKey | null
+    if (s && SORT_KEYS.includes(s)) sort = s
+  }
+  return { filters, search, sort }
+}
+
 function getOptions(datasets: Dataset[], key: FilterKey): string[] {
   const values = datasets.map((d) => d[key] as string).filter(Boolean)
   return [...new Set(values)].sort()
@@ -93,24 +127,9 @@ function sortDatasets(datasets: Dataset[], sort: SortKey): Dataset[] {
 }
 
 export function CatalogueFilter({ datasets, base }: Props) {
-  const [filters, setFilters] = useState<FilterState>(() => {
-    const initial = emptyFilters()
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search)
-      const landscape = params.get('landscape')
-      if (landscape) initial.living_landscape = [landscape]
-      const country = params.get('country')
-      if (country) initial.country = [country]
-      const theme = params.get('theme')
-      if (theme) initial.mfl_theme = [theme]
-      const status = params.get('status')
-      if (status) initial.readiness_status = [status]
-    }
-    return initial
-  })
-
-  const [searchText, setSearchText] = useState('')
-  const [sortKey, setSortKey] = useState<SortKey>('recent')
+  const [filters, setFilters] = useState<FilterState>(() => readInitialState().filters)
+  const [searchText, setSearchText] = useState(() => readInitialState().search)
+  const [sortKey, setSortKey] = useState<SortKey>(() => readInitialState().sort)
   const [viewMode, setViewMode] = useState<ViewMode>('list')
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [showMore, setShowMore] = useState(false)
@@ -135,6 +154,22 @@ export function CatalogueFilter({ datasets, base }: Props) {
 
   // Reset to first page whenever the result set changes.
   useEffect(() => { setPage(1) }, [filters, searchText, sortKey, pageSize])
+
+  // Mirror filter/search/sort state into the URL so the browser Back button
+  // (and the detail page's "Back to catalogue" link) restore the same view.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const params = new URLSearchParams()
+    for (const key of FILTER_KEYS) {
+      const vals = filters[key] as string[]
+      if (vals.length) params.set(key, vals.join(','))
+    }
+    if (searchText.trim()) params.set('q', searchText.trim())
+    if (sortKey !== 'recent') params.set('sort', sortKey)
+    const qs = params.toString()
+    window.history.replaceState(null, '', qs ? `${window.location.pathname}?${qs}` : window.location.pathname)
+    try { sessionStorage.setItem(QS_STORAGE_KEY, qs) } catch { /* storage unavailable */ }
+  }, [filters, searchText, sortKey])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize)

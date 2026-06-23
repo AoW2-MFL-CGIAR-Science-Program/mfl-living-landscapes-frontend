@@ -44,7 +44,7 @@ export type MflTheme =
 
 export type DataType = 'Raster' | 'Vector' | 'Tabular' | 'Mixed'
 
-export type AccessLevel = 'Open' | 'CGIAR-internal' | 'Restricted'
+export type AccessLevel = 'Open' | 'Internal' | 'Restricted'
 
 export type ReadinessStatus = 'Raw' | 'Processed' | 'Validated'
 

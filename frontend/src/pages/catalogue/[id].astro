@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import StatusBadge from '../../components/ui/StatusBadge.astro'
 import AccessBadge from '../../components/ui/AccessBadge.astro'
+import Breadcrumb from '../../components/ui/Breadcrumb.astro'
 import { loadDatasets } from '../../utils/loadDatasets'
 
 export async function getStaticPaths() {
@@ -15,6 +16,21 @@ export async function getStaticPaths() {
 const { dataset } = Astro.props
 const base = import.meta.env.BASE_URL
 
+// Related datasets: same landscape and/or theme, best matches first, excluding self.
+const allDatasets = await loadDatasets()
+const related = allDatasets
+  .filter((d) => d.id !== dataset.id &&
+    (d.living_landscape === dataset.living_landscape ||
+      (!!dataset.mfl_theme && d.mfl_theme === dataset.mfl_theme)))
+  .map((d) => ({
+    d,
+    score: (d.living_landscape === dataset.living_landscape ? 2 : 0) +
+      (!!dataset.mfl_theme && d.mfl_theme === dataset.mfl_theme ? 1 : 0),
+  }))
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 4)
+  .map((x) => x.d)
+
 const readinessDescriptions: Record<string, string> = {
   'Raw': 'This dataset is registered as supplied by its source. It has not yet been processed or quality-checked by the MOSAIC network. Metadata may be incomplete.',
   'Processed': 'This dataset has been processed (cleaned, reformatted, or harmonized) but has not yet completed full quality validation against the MFL spatial standards.',
@@ -26,11 +42,11 @@ const readinessDescriptions: Record<string, string> = {
   <div class="container" style="padding-top: var(--space-8); padding-bottom: var(--space-16); max-width: 860px;">
 
     <!-- Breadcrumb -->
-    <nav aria-label="Breadcrumb" style="font-size: var(--text-sm); color: var(--color-gray-400); margin-bottom: var(--space-6);">
-      <a href={`${base}/catalogue`} style="color: var(--mosaic-teal);">Catalogue</a>
-      <span style="margin: 0 var(--space-2);">/</span>
-      <span>{dataset.title}</span>
-    </nav>
+    <Breadcrumb crumbs={[
+      { label: 'Home', href: `${base}/` },
+      { label: 'Catalogue', href: `${base}/catalogue` },
+      { label: dataset.title },
+    ]} />
 
     <!-- Badges -->
     <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-4);">
@@ -105,7 +121,7 @@ const readinessDescriptions: Record<string, string> = {
             ? <p><strong>Contact:</strong> <a href={`mailto:${dataset.contact}`}>{dataset.contact}</a></p>
             : <p>No steward contact is registered yet. Contact the MOSAIC coordination team.</p>}
         </div>
-      ) : dataset.access_level === 'CGIAR-internal' ? (
+      ) : dataset.access_level === 'Internal' ? (
         <div>
           <p style="margin-bottom: var(--space-4);">This dataset is for internal CGIAR use only. Contact the MOSAIC team if you believe you should have access.</p>
           {dataset.contact && <p><strong>Contact:</strong> <a href={`mailto:${dataset.contact}`}>{dataset.contact}</a></p>}
@@ -127,7 +143,7 @@ const readinessDescriptions: Record<string, string> = {
     <!-- Citation -->
     <section style="margin-bottom: var(--space-8); padding: var(--space-6); background-color: var(--color-gray-50); border-left: 4px solid var(--mosaic-teal); border-radius: 0 var(--radius-md) var(--radius-md) 0;">
       <h2 style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Suggested citation</h2>
-      <p style="font-size: var(--text-sm); font-family: monospace; color: var(--color-gray-600); line-height: 1.7;">
+      <p style="font-size: var(--text-sm); font-family: var(--font-mono); color: var(--color-gray-600); line-height: 1.7;">
         {dataset.source ?? 'CGIAR'} ({dataset.temporal_coverage ?? new Date().getFullYear()}). {dataset.title}. MOSAIC — CGIAR MFL Science Programme. Retrieved from https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/catalogue/{dataset.id}
       </p>
     </section>
@@ -147,9 +163,37 @@ const readinessDescriptions: Record<string, string> = {
       </table>
     </details>
 
+    <!-- Related datasets -->
+    {related.length > 0 && (
+      <section style="margin-bottom: var(--space-8);">
+        <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-4);">Related datasets</h2>
+        <ul style="list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-3);">
+          {related.map((r) => (
+            <li>
+              <a href={`${base}/catalogue/${r.id}`} style="display: flex; flex-direction: column; gap: 2px; padding: var(--space-4); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); text-decoration: none; color: inherit;">
+                <span style="font-weight: 600; color: var(--color-gray-900);">{r.title}</span>
+                <span style="font-size: var(--text-sm); color: var(--color-gray-500);">{r.living_landscape}{r.mfl_theme ? ` · ${r.mfl_theme}` : ''}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
     <!-- Back link -->
-    <a href={`${base}/catalogue`} style="color: var(--mosaic-teal); font-size: var(--text-sm);">&larr; Back to catalogue</a>
+    <a id="back-to-catalogue" href={`${base}/catalogue`} style="color: var(--mosaic-teal); font-size: var(--text-sm);">&larr; Back to catalogue</a>
   </div>
+
+  <script is:inline define:vars={{ base }}>
+    // Restore the catalogue view (filters/search/sort) the visitor came from.
+    try {
+      const qs = sessionStorage.getItem('mosaic:catalogue:qs')
+      if (qs) {
+        const link = document.getElementById('back-to-catalogue')
+        if (link) link.setAttribute('href', `${base}/catalogue?${qs}`)
+      }
+    } catch (_) { /* storage unavailable */ }
+  </script>
 </BaseLayout>
 
 <style>
