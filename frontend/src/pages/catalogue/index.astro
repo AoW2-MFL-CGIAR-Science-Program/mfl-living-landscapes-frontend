@@ -1,5 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
+import PageHero from '../../components/ui/PageHero.astro'
+import StatCard from '../../components/ui/StatCard.astro'
 import { CatalogueFilter } from '../../components/catalogue/CatalogueFilter'
 import LandscapeLocatorMap from '../../components/catalogue/LandscapeLocatorMap.astro'
 import { loadDatasets } from '../../utils/loadDatasets'
@@ -19,96 +21,20 @@ const countries   = [...new Set(datasets.map((d) => d.country))].length
   <div class="catalogue-page">
 
     <!-- ── Hero ──────────────────────────────────────────────── -->
-    <section class="catalogue-hero">
-      <!-- Satellite / terrain panel bleeding off the right edge -->
-      <div class="catalogue-hero-terrain" aria-hidden="true">
-        <svg viewBox="0 0 720 420" preserveAspectRatio="xMidYMid slice">
-          <defs>
-            <linearGradient id="terrain-bg" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#0D5C6B"/>
-              <stop offset="55%" stop-color="#0A4753"/>
-              <stop offset="100%" stop-color="#1C2B3A"/>
-            </linearGradient>
-            <linearGradient id="terrain-fade" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stop-color="#1C2B3A" stop-opacity="1"/>
-              <stop offset="38%" stop-color="#1C2B3A" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
+    <PageHero
+      variant="light"
+      title="Dataset Catalogue"
+      subtitle="Explore geospatial datasets connected through MOSAIC across MFL Living Landscapes in Africa, Asia, and Latin America."
+    >
+      <img slot="art" src={`${base}/illustrations/hero-catalogue.jpg`} alt="" />
+    </PageHero>
 
-          <rect width="720" height="420" fill="url(#terrain-bg)"/>
-
-          <!-- Land mass patches — amber & terracotta terrain -->
-          <g opacity="0.9">
-            <path d="M120 40 Q260 10 420 60 T720 90 L720 0 L120 0 Z" fill="#C97D1B" opacity="0.42"/>
-            <path d="M300 120 Q430 90 560 140 T760 180 L760 60 Q600 40 460 70 T300 120 Z" fill="#B54D2F" opacity="0.4"/>
-            <path d="M380 230 Q520 200 660 250 T820 300 L820 150 Q640 130 520 170 T380 230 Z" fill="#C97D1B" opacity="0.34"/>
-            <path d="M150 300 Q300 270 460 320 T760 370 L760 240 Q560 230 420 270 T150 300 Z" fill="#B54D2F" opacity="0.36"/>
-          </g>
-
-          <!-- Water body (lake / rift) -->
-          <path d="M250 180 Q330 150 420 200 Q500 250 470 320 Q430 380 340 360 Q260 340 240 270 Q230 215 250 180 Z"
-                fill="#0A4753" opacity="0.85"/>
-          <path d="M280 200 Q340 180 400 215 Q450 250 430 300 Q400 345 340 330 Q285 315 275 265 Q272 225 280 200 Z"
-                fill="#0D5C6B" opacity="0.8"/>
-
-          <!-- Topographic contours -->
-          <g fill="none" stroke="#D6EEF2" stroke-width="1.1">
-            <path d="M-20 120 Q160 70 340 120 T700 130 T1040 120" opacity="0.18"/>
-            <path d="M-20 190 Q180 140 360 190 T720 200 T1060 190" opacity="0.15"/>
-            <path d="M-20 260 Q200 210 380 260 T740 270 T1080 260" opacity="0.13"/>
-            <path d="M-20 330 Q220 280 400 330 T760 340 T1100 330" opacity="0.11"/>
-          </g>
-
-          <!-- Left-edge fade into hero background -->
-          <rect width="720" height="420" fill="url(#terrain-fade)"/>
-        </svg>
-      </div>
-
-      <div class="catalogue-hero-inner">
-        <h1 class="catalogue-hero-title">Dataset Catalogue</h1>
-        <p class="catalogue-hero-subtitle">
-          Explore geospatial datasets connected through MOSAIC across MFL Living Landscapes
-          in Africa, Asia, and Latin America.
-        </p>
-
-        <div class="catalogue-hero-metrics" role="list" aria-label="Catalogue statistics">
-          <div class="metric-card" role="listitem">
-            <span class="metric-icon metric-icon--green" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
-              </svg>
-            </span>
-            <span class="metric-text">
-              <span class="metric-value">{totalDatasets}</span>
-              <span class="metric-label">Datasets</span>
-            </span>
-          </div>
-          <div class="metric-card" role="listitem">
-            <span class="metric-icon metric-icon--gold" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-              </svg>
-            </span>
-            <span class="metric-text">
-              <span class="metric-value">{landscapes}</span>
-              <span class="metric-label">Landscapes</span>
-            </span>
-          </div>
-          <div class="metric-card" role="listitem">
-            <span class="metric-icon metric-icon--teal" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
-                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-              </svg>
-            </span>
-            <span class="metric-text">
-              <span class="metric-value">{countries}</span>
-              <span class="metric-label">Countries</span>
-            </span>
-          </div>
-        </div>
-      </div>
-    </section>
+    <!-- ── Stats ─────────────────────────────────────────────── -->
+    <div class="catalogue-stats">
+      <StatCard icon="layers" value={totalDatasets} label="Datasets" tint="teal" />
+      <StatCard icon="map-pin" value={landscapes} label="Landscapes" tint="amber" />
+      <StatCard icon="globe" value={countries} label="Countries" tint="terracotta" />
+    </div>
 
     <!-- ── Locator map ───────────────────────────────────────── -->
     <div class="catalogue-locator-wrap">

@@ -1,164 +1,240 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'
 import PageHero from '../../components/ui/PageHero.astro'
+import Icon from '../../components/ui/Icon.astro'
+import StickyNote from '../../components/ui/StickyNote.astro'
+import StepTimeline from '../../components/ui/StepTimeline.astro'
+import CtaBand from '../../components/ui/CtaBand.astro'
+
 const base = import.meta.env.BASE_URL
+const issueUrl = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=dataset_update.yml'
+
+const checklist = [
+  'A dataset that is related to a Living Landscape (see landscape codes)',
+  'A dataset title and short description (1–3 sentences)',
+  'The country, Living Landscape code, MFL theme, and data type',
+  'An access level decision (Open, Restricted, or Internal)',
+  'A license for the dataset (e.g. CC BY 4.0)',
+  'For Open datasets: a download URL',
+  'A contact email for access requests (Restricted or Internal datasets)',
+]
+
+const steps = [
+  { num: '01', icon: 'upload', title: 'Register', body: 'Open a Dataset Catalogue Update issue on GitHub using our template and fill in the required fields.' },
+  { num: '02', icon: 'file-text', title: 'Submit metadata', body: 'We prepare a draft entry in datasets.json using your registration information.' },
+  { num: '03', icon: 'eye', title: 'Review & refine', body: 'You review the draft and complete any missing optional fields.' },
+  { num: '04', icon: 'check-circle', title: 'Validation', body: 'Our team checks the metadata and validates the information.' },
+  { num: '05', icon: 'globe', title: 'Published', body: 'Your dataset is published in the catalogue and becomes discoverable by everyone.' },
+]
+
+const faqs = [
+  { q: 'Do I need to upload my data files to GitHub?', a: 'No. MOSAIC is a catalogue, not a file repository. Your data files stay wherever they are hosted (e.g. a CGIAR data portal, Google Drive, institutional server). You only need to provide a link to where the data can be accessed.' },
+  { q: 'Can I register a dataset before the data is publicly available?', a: 'Yes. You can register a dataset with Internal or Restricted access. This makes the dataset discoverable in the catalogue while access is managed through your centre\'s normal procedures.' },
+  { q: 'What if my dataset doesn\'t fit the controlled vocabulary?', a: 'Contact the MOSAIC team via the Contact page. The controlled vocabularies are reviewed periodically and new values can be proposed.' },
+  { q: 'How long does the review process take?', a: 'Metadata review typically takes 5–10 working days. Spatial QC (for Validated status) may take longer depending on the dataset and the QC team\'s capacity.' },
+  { q: 'Can I update a dataset entry after it is published?', a: 'Yes. Open a Dataset Catalogue Update issue on GitHub and describe what needs to change. The MOSAIC team will prepare a pull request and ask you to review it before it goes live.' },
+]
 ---
 
 <BaseLayout title="How to contribute" description="How to register and contribute a geospatial dataset to MOSAIC.">
-  <PageHero title="How to contribute" subtitle="Add your geospatial dataset to the catalogue in five steps." />
+  <PageHero
+    variant="light"
+    title="How to contribute"
+    subtitle="Add your geospatial dataset to the catalogue in five simple steps."
+    subtitle2="Your data can help others make better decisions and drive real impact on people and landscapes."
+  >
+    <img slot="art" src={`${base}/illustrations/hero-home.jpg`} alt="" />
+  </PageHero>
 
-  <div class="container" style="padding-top: var(--space-12); padding-bottom: var(--space-16); max-width: 800px;">
+  <div class="container contrib-body">
 
-    <!-- Before you start -->
-    <section style="margin-bottom: var(--space-12); padding: var(--space-6); background-color: var(--color-green-light); border-radius: var(--radius-lg);">
-      <h2 style="margin-bottom: var(--space-4);">Before you start — checklist</h2>
-      <p style="margin-bottom: var(--space-4); color: var(--color-gray-600);">To register a dataset you will need:</p>
-      <ul style="list-style: none; display: flex; flex-direction: column; gap: var(--space-3);">
-        {[
-          'A dataset that is related to a Living Landscape (see landscape codes)',
-          'A dataset title and short description (1–3 sentences)',
-          'The country, Living Landscape code, MFL theme, and data type',
-          'An access level decision (Open, Restricted, or Internal)',
-          'A license for the dataset (e.g. CC BY 4.0)',
-          'For Open datasets: a download URL',
-          'A contact email for access requests (Restricted or Internal datasets)',
-        ].map((item) => (
-          <li style="display: flex; gap: var(--space-3); align-items: flex-start; font-size: var(--text-sm); color: var(--color-gray-700);">
-            <span style="color: var(--color-green-dark); font-weight: 700; flex-shrink: 0;">&#10003;</span>
-            {item}
-          </li>
+    <!-- Before you start — checklist -->
+    <section class="checklist-card">
+      <div class="checklist-intro">
+        <span class="checklist-icon" aria-hidden="true"><Icon name="check-square" size={28} /></span>
+        <h2>Before you start — quick checklist</h2>
+        <p>To register a dataset you will need:</p>
+        <StickyNote tint="teal" rotate={-2}>Don't worry if you're not sure about everything. You can always come back and edit later!</StickyNote>
+      </div>
+      <div class="checklist-list">
+        <ul>
+          {checklist.map((item) => (
+            <li>
+              <span class="checklist-tick" aria-hidden="true"><Icon name="check-square" size={18} /></span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="checklist-foot">
+          See the <a href={`${base}/contribute/metadata-guide`}>Metadata Guide</a> for full descriptions of all fields.
+        </p>
+      </div>
+    </section>
+
+    <!-- The contribution process -->
+    <section class="contrib-process">
+      <h2 class="contrib-h2 center">The contribution process</h2>
+      <StepTimeline steps={steps} />
+    </section>
+
+    <!-- Supporting detail -->
+    <div class="contrib-prose">
+      <section>
+        <h2>Who can contribute</h2>
+        <p>The following groups are eligible to register and contribute datasets:</p>
+        <ul class="bullets">
+          <li>Staff at CGIAR centres that are members of the MFL Science Programme</li>
+          <li>Programme partners and national partners working directly with a CGIAR centre on a Living Landscape</li>
+          <li>Postdoctoral researchers and consultants contracted to a CGIAR centre for MFL-related work</li>
+        </ul>
+        <p>If you are not sure whether you are eligible, contact the MOSAIC coordinator via the <a href={`${base}/contact`}>Contact</a> page.</p>
+      </section>
+
+      <section>
+        <h2>Quality control &amp; validation</h2>
+        <p>
+          After a dataset is accepted, the MOSAIC team runs spatial quality control: the data is opened and read,
+          the coordinate reference system is checked, and the spatial extent and temporal coverage are confirmed
+          against the stated Living Landscape and period. The current stage of this process is shown as the
+          <strong> readiness status</strong> on each catalogue entry and dataset page.
+        </p>
+        <p>
+          If metadata review or spatial QC reveals issues, the MOSAIC team opens a GitHub issue and tags the contributor.
+          The dataset stays at its current status until the issues are resolved, and is never removed from the catalogue
+          without notifying the contributor.
+        </p>
+      </section>
+
+      <section>
+        <h2>Data ownership &amp; licensing</h2>
+        <p>
+          Data ownership remains with the contributing CGIAR centre or organisation. MOSAIC only catalogues metadata and
+          links to the data; it does not host data files. Each dataset entry must carry a license, and contributing centres
+          are responsible for ensuring the declared license reflects their centre's data-sharing policy. Access-level
+          decisions are made by the contributing centre — see the <a href={`${base}/contribute/metadata-guide`}>Metadata Guide</a>
+          for the access tiers.
+        </p>
+        <p>MOSAIC website code and content (excluding linked datasets) is licensed under CC BY 4.0.</p>
+      </section>
+
+      <section>
+        <h2>Frequently asked questions</h2>
+        {faqs.map((item) => (
+          <details class="faq">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
         ))}
-      </ul>
-      <p style="margin-top: var(--space-4); font-size: var(--text-sm); color: var(--color-gray-600);">
-        See the <a href={`${base}/contribute/metadata-guide`}>Metadata Guide</a> for full descriptions of all fields.
-      </p>
-    </section>
-
-    <!-- Five steps -->
-    <section style="margin-bottom: var(--space-12);">
-      <h2 style="margin-bottom: var(--space-8);">The contribution process</h2>
-
-      {[
-        {
-          step: '01',
-          title: 'Register',
-          desc: 'Open a Dataset Catalogue Update issue on GitHub using the provided template. Fill in the required fields: title, country, landscape, theme, data type, access level, and license. You do not need a GitHub account — contact the MOSAIC team and they will register the dataset for you.',
-        },
-        {
-          step: '02',
-          title: 'Submit metadata',
-          desc: 'The MOSAIC team will prepare a draft entry in datasets.json using your registration information. You will be asked to review and complete any missing optional fields (description, spatial resolution, temporal coverage, download URL).',
-        },
-        {
-          step: '03',
-          title: 'Review',
-          desc: 'The MOSAIC team will review your metadata entry for completeness, accuracy, and consistency with the controlled vocabularies. This typically takes 5–10 working days. You may be contacted to clarify or correct specific fields.',
-        },
-        {
-          step: '04',
-          title: 'Accept',
-          desc: 'Once metadata passes review, the entry is merged into the catalogue. The dataset is now visible and can be browsed and filtered. Its readiness status reflects how far it has been processed — Raw or Processed.',
-        },
-        {
-          step: '05',
-          title: 'Publish and validate',
-          desc: 'If you have open data available for download, the MOSAIC team will verify the download URL and run spatial QC checks. Datasets that pass QC are promoted to Validated status.',
-        },
-      ].map((s) => (
-        <div style="display: grid; grid-template-columns: 60px 1fr; gap: var(--space-6); margin-bottom: var(--space-8); padding-bottom: var(--space-8); border-bottom: 1px solid var(--color-gray-200);">
-          <div style="font-size: var(--text-3xl); font-family: var(--font-title); font-weight: 700; color: var(--color-green-dark);">{s.step}</div>
-          <div>
-            <h3 style="margin-bottom: var(--space-2);">{s.title}</h3>
-            <p style="color: var(--color-gray-600);">{s.desc}</p>
-          </div>
-        </div>
-      ))}
-    </section>
-
-    <!-- Who can contribute -->
-    <section style="margin-bottom: var(--space-12);">
-      <h2 style="margin-bottom: var(--space-4);">Who can contribute</h2>
-      <p style="color: var(--color-gray-600); margin-bottom: var(--space-4);">The following groups are eligible to register and contribute datasets:</p>
-      <ul style="list-style: disc; padding-left: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); color: var(--color-gray-600);">
-        <li>Staff at CGIAR centres that are members of the MFL Science Programme</li>
-        <li>Programme partners and national partners working directly with a CGIAR centre on a Living Landscape</li>
-        <li>Postdoctoral researchers and consultants contracted to a CGIAR centre for MFL-related work</li>
-      </ul>
-      <p style="color: var(--color-gray-600); margin-top: var(--space-4);">
-        If you are not sure whether you are eligible, contact the MOSAIC coordinator via the <a href={`${base}/contact`}>Contact</a> page.
-      </p>
-    </section>
-
-    <!-- Quality control & validation -->
-    <section style="margin-bottom: var(--space-12);">
-      <h2 style="margin-bottom: var(--space-4);">Quality control &amp; validation</h2>
-      <p style="color: var(--color-gray-600); margin-bottom: var(--space-4);">
-        After a dataset is accepted, the MOSAIC team runs spatial quality control: the data is opened and read,
-        the coordinate reference system is checked, and the spatial extent and temporal coverage are confirmed
-        against the stated Living Landscape and period. The current stage of this process is shown as the
-        <strong>readiness status</strong> on each catalogue entry and dataset page — see the readiness legend on any
-        dataset detail page for what each status means.
-      </p>
-      <p style="color: var(--color-gray-600);">
-        If metadata review or spatial QC reveals issues, the MOSAIC team opens a GitHub issue and tags the contributor.
-        The dataset stays at its current status until the issues are resolved, and is never removed from the catalogue
-        without notifying the contributor.
-      </p>
-    </section>
-
-    <!-- Data ownership & licensing -->
-    <section style="margin-bottom: var(--space-12);">
-      <h2 style="margin-bottom: var(--space-4);">Data ownership &amp; licensing</h2>
-      <p style="color: var(--color-gray-600); margin-bottom: var(--space-4);">
-        Data ownership remains with the contributing CGIAR centre or organisation. MOSAIC only catalogues metadata and
-        links to the data; it does not host data files. Each dataset entry must carry a license, and contributing centres
-        are responsible for ensuring the declared license reflects their centre's data-sharing policy. Access-level
-        decisions are made by the contributing centre — see the <a href={`${base}/contribute/metadata-guide`}>Metadata Guide</a>
-        for the access tiers.
-      </p>
-      <p style="color: var(--color-gray-600);">
-        MOSAIC website code and content (excluding linked datasets) is licensed under CC BY 4.0.
-      </p>
-    </section>
-
-    <!-- FAQ -->
-    <section style="margin-bottom: var(--space-12);">
-      <h2 style="margin-bottom: var(--space-6);">Frequently asked questions</h2>
-      {[
-        {
-          q: 'Do I need to upload my data files to GitHub?',
-          a: 'No. MOSAIC is a catalogue, not a file repository. Your data files stay wherever they are hosted (e.g. a CGIAR data portal, Google Drive, institutional server). You only need to provide a link to where the data can be accessed.',
-        },
-        {
-          q: 'Can I register a dataset before the data is publicly available?',
-          a: 'Yes. You can register a dataset with Internal or Restricted access. This makes the dataset discoverable in the catalogue while access is managed through your centre\'s normal procedures.',
-        },
-        {
-          q: 'What if my dataset doesn\'t fit the controlled vocabulary?',
-          a: 'Contact the MOSAIC team via the Contact page. The controlled vocabularies are reviewed periodically and new values can be proposed.',
-        },
-        {
-          q: 'How long does the review process take?',
-          a: 'Metadata review typically takes 5–10 working days. Spatial QC (for Validated status) may take longer depending on the dataset and the QC team\'s capacity.',
-        },
-        {
-          q: 'Can I update a dataset entry after it is published?',
-          a: 'Yes. Open a Dataset Catalogue Update issue on GitHub and describe what needs to change. The MOSAIC team will prepare a pull request and ask you to review it before it goes live.',
-        },
-      ].map((item) => (
-        <details style="margin-bottom: var(--space-4); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); padding: var(--space-4);">
-          <summary style="cursor: pointer; font-weight: 600; color: var(--color-gray-800);">{item.q}</summary>
-          <p style="margin-top: var(--space-3); color: var(--color-gray-600);">{item.a}</p>
-        </details>
-      ))}
-    </section>
-
-    <!-- CTA -->
-    <section style="text-align: center; padding: var(--space-8); background-color: var(--color-green-dark); border-radius: var(--radius-lg);">
-      <h2 style="color: var(--color-white); margin-bottom: var(--space-3);">Ready to contribute?</h2>
-      <p style="color: var(--color-green-moss); margin-bottom: var(--space-6);">Open a GitHub Issue to register your dataset. It takes about 30 minutes.</p>
-      <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=dataset_update.yml" class="btn btn-primary" style="background-color: var(--color-white); color: var(--color-green-dark);">Register a dataset</a>
-    </section>
+      </section>
+    </div>
 
   </div>
+
+  <CtaBand
+    variant="soft"
+    tint="sand"
+    title="Your data has the power to create change."
+    body="By contributing, you help build a shared resource that supports research, restoration and better outcomes for people and nature across the globe."
+    primaryCta={{ label: 'Start contributing', href: issueUrl, target: '_blank' }}
+    secondaryCta={{ label: 'View metadata guide', href: `${base}/contribute/metadata-guide` }}
+  >
+    <img slot="art" src={`${base}/illustrations/seedling.png`} alt="" />
+    <StickyNote slot="sticky" tint="amber" rotate={3}>Thank you for being part of the MOSAIC community!</StickyNote>
+  </CtaBand>
+
+  <CtaBand
+    variant="bar"
+    icon="help-circle"
+    title="Need help?"
+    body="Check our Metadata Guide or contact the MOSAIC team."
+    primaryCta={{ label: 'Contact us', href: `${base}/contact` }}
+  />
 </BaseLayout>
+
+<style>
+  .contrib-body {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-12);
+  }
+
+  /* Checklist card */
+  .checklist-card {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: var(--space-8);
+    padding: var(--space-8);
+    background-color: var(--color-gray-50);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    margin-bottom: var(--space-16);
+  }
+  .checklist-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-full);
+    background-color: var(--tint-teal-bg);
+    color: var(--tint-teal-fg);
+    margin-bottom: var(--space-3);
+  }
+  .checklist-intro h2 { margin: 0 0 var(--space-2); font-size: var(--text-2xl); }
+  .checklist-intro p { color: var(--color-muted); margin: 0 0 var(--space-4); }
+  .checklist-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .checklist-list li {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    color: var(--color-text);
+    line-height: 1.5;
+  }
+  .checklist-tick { color: var(--mosaic-teal); flex-shrink: 0; display: inline-flex; margin-top: 1px; }
+  .checklist-foot { margin: var(--space-4) 0 0; font-size: var(--text-sm); color: var(--color-muted); }
+  .checklist-foot a, .contrib-prose a { color: var(--mosaic-teal); }
+
+  /* Process */
+  .contrib-process { margin-bottom: var(--space-16); }
+  .contrib-h2.center { text-align: center; margin-bottom: var(--space-8); }
+
+  /* Supporting prose */
+  .contrib-prose {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+  .contrib-prose h2 { margin: 0 0 var(--space-4); }
+  .contrib-prose p { color: var(--color-muted); line-height: 1.7; margin: 0 0 var(--space-4); }
+  .contrib-prose p:last-child { margin-bottom: 0; }
+  .contrib-prose .bullets {
+    list-style: disc;
+    padding-left: var(--space-6);
+    color: var(--color-muted);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+  }
+  .faq {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin-bottom: var(--space-3);
+    background-color: var(--color-surface);
+  }
+  .faq summary { cursor: pointer; font-weight: 600; color: var(--color-text); }
+  .faq p { margin: var(--space-3) 0 0; }
+
+  @media (max-width: 767px) {
+    .checklist-card { grid-template-columns: 1fr; gap: var(--space-6); }
+  }
+</style>

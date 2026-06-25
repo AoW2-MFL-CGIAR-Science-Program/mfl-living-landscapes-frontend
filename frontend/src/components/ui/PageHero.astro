@@ -2,41 +2,74 @@
 interface Props {
   title: string
   subtitle?: string
+  subtitle2?: string
+  eyebrow?: string
+  variant?: 'dark' | 'light'
 }
 
-const { title, subtitle } = Astro.props
+const { title, subtitle, subtitle2, eyebrow, variant = 'light' } = Astro.props
+const hasArt = Astro.slots.has('art')
 ---
 
-<section class="page-hero">
-  <!-- Topographic contour pattern (decorative), shared with Home/Catalogue heroes -->
-  <div class="page-hero-topo" aria-hidden="true">
-    <svg width="100%" height="100%" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMid slice" fill="none">
-      <g stroke="#D6EEF2" stroke-width="1.2" fill="none">
-        <path d="M-100 280 Q260 240 540 268 T1080 250 T1600 282" opacity="0.12"/>
-        <path d="M-100 230 Q300 188 580 216 T1120 198 T1600 230" opacity="0.11"/>
-        <path d="M-100 180 Q340 136 620 164 T1160 146 T1600 178" opacity="0.10"/>
-        <path d="M-100 130 Q380 86 660 114 T1200 96 T1600 128" opacity="0.08"/>
-        <path d="M-100 80 Q420 36 700 64 T1240 46 T1600 78" opacity="0.06"/>
-      </g>
-    </svg>
-  </div>
+<section
+  class:list={[
+    'page-hero',
+    `page-hero--${variant}`,
+    { 'page-hero--has-art': hasArt },
+  ]}
+>
+  {variant === 'dark' && (
+    <!-- Topographic contour pattern (decorative), only on the dark variant -->
+    <div class="page-hero-topo" aria-hidden="true">
+      <svg width="100%" height="100%" viewBox="0 0 1440 320" preserveAspectRatio="xMidYMid slice" fill="none">
+        <g stroke="#D6EEF2" stroke-width="1.2" fill="none">
+          <path d="M-100 280 Q260 240 540 268 T1080 250 T1600 282" opacity="0.12"/>
+          <path d="M-100 230 Q300 188 580 216 T1120 198 T1600 230" opacity="0.11"/>
+          <path d="M-100 180 Q340 136 620 164 T1160 146 T1600 178" opacity="0.10"/>
+          <path d="M-100 130 Q380 86 660 114 T1200 96 T1600 128" opacity="0.08"/>
+          <path d="M-100 80 Q420 36 700 64 T1240 46 T1600 78" opacity="0.06"/>
+        </g>
+      </svg>
+    </div>
+  )}
 
   <div class="container page-hero-inner">
-    <h1 class="page-hero-title">{title}</h1>
-    {subtitle && <p class="page-hero-subtitle">{subtitle}</p>}
+    <div class="page-hero-text">
+      {eyebrow && <p class="page-hero-eyebrow">{eyebrow}</p>}
+      <h1 class="page-hero-title">{title}</h1>
+      {subtitle && <p class="page-hero-subtitle">{subtitle}</p>}
+      {subtitle2 && <p class="page-hero-subtitle page-hero-subtitle2">{subtitle2}</p>}
+    </div>
   </div>
+
+  {hasArt && (
+    <!-- Full-bleed art anchored to the right edge of the viewport (matches the home hero) -->
+    <div class="page-hero-art" aria-hidden="true">
+      <slot name="art" />
+    </div>
+  )}
 </section>
 
 <style>
   .page-hero {
     position: relative;
-    background-color: var(--mosaic-teal);
-    background-image: linear-gradient(120deg, #1C2B3A 0%, #0D5C6B 58%, #0A4753 100%);
     color: var(--color-white);
-    padding: var(--space-12) 0;
+    padding: 4.5rem 0 6.5rem;
     overflow: hidden;
   }
 
+  /* ── Variants ─────────────────────────────────────────── */
+  .page-hero--dark {
+    background-color: var(--mosaic-teal);
+    background-image: linear-gradient(120deg, #1C2B3A 0%, #0D5C6B 58%, #0A4753 100%);
+  }
+
+  .page-hero--light {
+    background-color: var(--mosaic-sand);
+    color: var(--mosaic-ink);
+  }
+
+  /* ── Topo pattern (dark only) ─────────────────────────── */
   .page-hero-topo {
     position: absolute;
     inset: 0;
@@ -50,22 +83,115 @@ const { title, subtitle } = Astro.props
     inset: 0;
   }
 
+  /* ── Layout ───────────────────────────────────────────── */
   .page-hero-inner {
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
+  .page-hero-text {
+    min-width: 0;
+  }
+
+  /* Constrain the text column when art shares the row, so the copy never
+     runs under the full-bleed image (mirrors the home hero). */
+  .page-hero--has-art .page-hero-text {
+    max-width: 540px;
+  }
+
+  /* ── Eyebrow ──────────────────────────────────────────── */
+  .page-hero-eyebrow {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .page-hero--dark .page-hero-eyebrow { color: var(--mosaic-light-teal); }
+  .page-hero--light .page-hero-eyebrow { color: var(--mosaic-amber); }
+
+  /* ── Title ────────────────────────────────────────────── */
   .page-hero-title {
-    color: var(--color-white);
-    margin-bottom: var(--space-3);
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-5);
+  }
+
+  .page-hero--dark .page-hero-title { color: var(--color-white); }
+  .page-hero--light .page-hero-title { color: var(--mosaic-ink); }
+
+  /* ── Subtitle ─────────────────────────────────────────── */
+  .page-hero-subtitle {
+    font-size: var(--text-lg);
+    max-width: 470px;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .page-hero--has-art .page-hero-subtitle {
+    max-width: 470px;
+  }
+
+  .page-hero-subtitle2 {
+    margin-top: var(--space-3);
   }
 
   /* Light Teal (#D6EEF2) on Ocean Teal — contrast ~7:1 */
-  .page-hero-subtitle {
-    color: var(--mosaic-light-teal);
-    font-size: var(--text-lg);
-    max-width: 640px;
-    line-height: 1.6;
-    margin: 0;
+  .page-hero--dark .page-hero-subtitle { color: var(--mosaic-light-teal); }
+  /* Fixed grey (not a theming token) — the light hero stays dark-on-sand in
+     both colour themes, so the subtitle must never invert. */
+  .page-hero--light .page-hero-subtitle { color: #4B5563; }
+
+  /* ── Art slot (full-bleed, right-anchored) ────────────── */
+  .page-hero-art {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 58%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .page-hero-art :global(img),
+  .page-hero-art :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* Soft blend of the image's left edge into the hero background */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 16%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 16%);
+  }
+
+  /* ── Responsive ───────────────────────────────────────── */
+  @media (max-width: 992px) {
+    .page-hero-art { width: 50%; }
+    .page-hero--has-art .page-hero-text { max-width: 460px; }
+  }
+
+  @media (max-width: 767px) {
+    .page-hero { padding: 3.5rem 0 4rem; }
+    .page-hero--has-art .page-hero-text { max-width: none; }
+
+    .page-hero-art {
+      position: static;
+      width: 100%;
+      margin-top: var(--space-8);
+      justify-content: center;
+    }
+
+    .page-hero-art :global(img),
+    .page-hero-art :global(svg) {
+      -webkit-mask-image: none;
+      mask-image: none;
+      border-radius: var(--radius-lg);
+    }
   }
 </style>

@@ -8,102 +8,18 @@
   min-height: 100vh;
 }
 
-/* ── Hero ────────────────────────────────────────────────────── */
-.catalogue-hero {
-  position: relative;
-  background: linear-gradient(120deg, #1C2B3A 0%, #0D5C6B 55%, #0A4753 100%);
-  color: #fff;
-  padding: 3.25rem 0 3rem;
-  overflow: hidden;
-}
-
-.catalogue-hero-terrain {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 52%;
-  pointer-events: none;
-}
-
-.catalogue-hero-terrain svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.catalogue-hero-inner {
-  position: relative;
-  z-index: 1;
+/* ── Stats row (StatCard) ────────────────────────────────────── */
+.catalogue-stats {
   max-width: var(--container-max);
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: var(--space-8) var(--space-6) 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
 }
 
-.catalogue-hero-title {
-  font-family: var(--font-title);
-  font-size: clamp(2.25rem, 5vw, 3.5rem);
-  font-weight: 700;
-  color: #fff;
-  margin: 0 0 0.625rem;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
-}
-
-.catalogue-hero-subtitle {
-  font-size: var(--text-lg);
-  color: rgba(255, 255, 255, 0.82);
-  max-width: 520px;
-  line-height: 1.6;
-  margin: 0 0 1.75rem;
-}
-
-.catalogue-hero-metrics {
-  display: flex;
-  gap: 0.875rem;
-  flex-wrap: wrap;
-}
-
-.metric-card {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 0.75rem;
-  padding: 0.75rem 1.1rem;
-  min-width: 148px;
-}
-
-.metric-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 0.5rem;
-  flex-shrink: 0;
-}
-
-.metric-icon svg { width: 20px; height: 20px; }
-
-/* MOSAIC accent trio on the dark teal hero: teal, amber, terracotta */
-.metric-icon--green { background: rgba(214, 238, 242, 0.16); color: #9BD4DE; }
-.metric-icon--gold  { background: rgba(201, 125, 27, 0.20);  color: #E0B35C; }
-.metric-icon--teal  { background: rgba(181, 77, 47, 0.20);   color: #E59B82; }
-
-.metric-text { display: flex; flex-direction: column; line-height: 1.1; }
-
-.metric-value {
-  font-family: var(--font-title);
-  font-size: 1.65rem;
-  font-weight: 700;
-  color: #fff;
-}
-
-.metric-label {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.72);
+@media (max-width: 640px) {
+  .catalogue-stats { grid-template-columns: 1fr; gap: var(--space-4); }
 }
 
 /* ── Layout ──────────────────────────────────────────────────── */
@@ -666,49 +582,10 @@
 .ds-results--grid .ds-card-title { font-size: 1.05rem; }
 
 /* ═══════════════════════════════════════════════════════════════
-   BADGES
+   BADGES — moved to src/styles/badges.css (imported globally in
+   BaseLayout) so the colour code is shared by every page. Edit the
+   badge palette there, not here.
    ═══════════════════════════════════════════════════════════════ */
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.22rem 0.6rem;
-  border-radius: 9999px;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  line-height: 1.4;
-}
-
-/* Readiness status (MOSAIC: Raw / Processed / Validated) */
-.badge-raw, .status-raw                       { background: #F7F4EF; color: #6B5B45; }
-.badge-processed, .status-processed           { background: #F6E6CE; color: #8A540F; }
-.badge-validated, .status-validated           { background: #D6EEF2; color: #0D5C6B; }
-/* Legacy status classes retained for any older references */
-.badge-registered, .status-registered-only  { background: #F3F4F6; color: #4B5563; }
-.badge-review, .status-under-review          { background: #FEF3C7; color: #92400E; }
-.badge-accepted, .status-accepted            { background: #DBEAFE; color: #1E40AF; }
-.badge-analytics, .status-analytics-ready    { background: #EDE9FE; color: #5B21B6; }
-
-/* Access */
-.badge-open, .access-open                     { background: #D1FAE5; color: #065F46; }
-.badge-restricted, .access-restricted         { background: #FEF3C7; color: #92400E; }
-.badge-internal, .access-internal             { background: #F3F4F6; color: #4B5563; }
-
-/* Data type — MOSAIC accent tints (teal / amber / terracotta / sand) */
-.badge-raster            { background: #F7E4DD; color: #B54D2F; }
-.badge-vector            { background: #D6EEF2; color: #0D5C6B; }
-.badge-tabular           { background: #F6E6CE; color: #8A540F; }
-.badge-mixed             { background: #F7F4EF; color: #6B5B45; }
-/* Not present in current data; kept on-palette for forward compatibility */
-.badge-timeseries        { background: #D6EEF2; color: #0D5C6B; }
-.badge-model             { background: #F6E6CE; color: #8A540F; }
-.badge-survey            { background: #F7E4DD; color: #B54D2F; }
-
-/* Resolution / year (neutral info badges) */
-.badge-resolution        { background: #F7F4EF; color: #6B5B45; }
-.badge-year              { background: #F3F4F6; color: #4B5563; }
 
 /* ── Pagination ──────────────────────────────────────────────── */
 .pagination {
@@ -831,13 +708,9 @@
   .filter-mobile-toggle { display: flex; }
   .filter-panel-inner { display: none; }
   .filter-panel-inner.open { display: block; }
-  .catalogue-hero-terrain { width: 44%; opacity: 0.5; }
 }
 
 @media (max-width: 720px) {
-  .catalogue-hero { padding: 2.5rem 0 2.25rem; }
-  .catalogue-hero-terrain { display: none; }
-
   .results-toolbar { flex-direction: column; align-items: stretch; }
   .toolbar-right { justify-content: space-between; }
 

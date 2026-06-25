@@ -1,0 +1,147 @@
+---
+import Icon from './Icon.astro'
+
+interface Cta {
+  label: string
+  href: string
+  target?: string
+}
+
+interface Props {
+  variant?: 'soft' | 'dark' | 'bar'
+  title: string
+  body?: string
+  primaryCta?: Cta
+  secondaryCta?: Cta
+  icon?: string
+  tint?: 'sand' | 'teal'
+}
+
+const {
+  variant = 'soft',
+  title,
+  body,
+  primaryCta,
+  secondaryCta,
+  icon = 'help-circle',
+  tint = 'sand',
+} = Astro.props
+
+const hasArt = Astro.slots.has('art')
+const hasSticky = Astro.slots.has('sticky')
+
+const relFor = (c?: Cta) => (c?.target === '_blank' ? 'noopener noreferrer' : undefined)
+---
+
+{variant === 'bar' ? (
+  <section class="cta-band cta-band--bar">
+    <div class="container cta-band-bar-inner">
+      <span class="cta-band-bar-icon" aria-hidden="true"><Icon name={icon as any} size={22} /></span>
+      <p class="cta-band-bar-text"><strong>{title}</strong>{body && <span> {body}</span>}</p>
+      {primaryCta && (
+        <a class="btn btn-secondary" href={primaryCta.href} target={primaryCta.target} rel={relFor(primaryCta)}>{primaryCta.label}</a>
+      )}
+    </div>
+  </section>
+) : (
+  <section class:list={['cta-band', `cta-band--${variant}`]} data-tint={tint}>
+    <div class="container cta-band-inner">
+      {hasArt && <div class="cta-band-art" aria-hidden="true"><slot name="art" /></div>}
+
+      <div class="cta-band-text">
+        <h2 class="cta-band-title">{title}</h2>
+        {body && <p class="cta-band-body">{body}</p>}
+        <div class="cta-band-actions">
+          {primaryCta && (
+            <a class="btn btn-primary" href={primaryCta.href} target={primaryCta.target} rel={relFor(primaryCta)}>
+              {primaryCta.label}
+              <Icon name="arrow-right" size={18} />
+            </a>
+          )}
+          {secondaryCta && (
+            <a class="cta-band-link" href={secondaryCta.href} target={secondaryCta.target} rel={relFor(secondaryCta)}>{secondaryCta.label}</a>
+          )}
+        </div>
+      </div>
+
+      {hasSticky && <div class="cta-band-sticky"><slot name="sticky" /></div>}
+    </div>
+  </section>
+)}
+
+<style>
+  .cta-band { padding: var(--space-12) 0; }
+
+  /* ── soft ─────────────────────────────────────────────── */
+  .cta-band--soft[data-tint='sand'] { background-color: var(--mosaic-sand); }
+  .cta-band--soft[data-tint='teal'] { background-color: var(--mosaic-light-teal); }
+
+  .cta-band--soft .cta-band-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+  .cta-band--soft .cta-band-art { flex-shrink: 0; width: 140px; }
+  .cta-band--soft .cta-band-text { flex: 1; min-width: 260px; }
+  .cta-band--soft .cta-band-title { color: var(--mosaic-ink); margin: 0 0 var(--space-2); }
+  .cta-band--soft .cta-band-body { color: var(--color-gray-700); margin: 0 0 var(--space-4); max-width: 56ch; }
+  .cta-band--soft .cta-band-sticky { flex-shrink: 0; }
+
+  /* ── dark ─────────────────────────────────────────────── */
+  .cta-band--dark { background-color: var(--mosaic-ink); }
+  .cta-band--dark .cta-band-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+  }
+  .cta-band--dark .cta-band-text { flex: 1; min-width: 260px; }
+  .cta-band--dark .cta-band-title { color: var(--color-white); margin: 0 0 var(--space-2); font-size: var(--text-2xl); }
+  .cta-band--dark .cta-band-body { color: rgba(255, 255, 255, 0.72); margin: 0; max-width: 56ch; }
+  .cta-band--dark .btn-primary {
+    background-color: var(--mosaic-amber);
+    border-color: var(--mosaic-amber);
+    color: var(--mosaic-ink);
+  }
+  .cta-band--dark .btn-primary:hover { background-color: #b06d12; border-color: #b06d12; color: var(--color-white); }
+  .cta-band--dark .cta-band-link { color: var(--mosaic-light-teal); }
+
+  /* shared actions */
+  .cta-band-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+  .cta-band-link {
+    font-weight: 600;
+    color: var(--mosaic-teal);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .cta-band-art :global(img),
+  .cta-band-art :global(svg) { display: block; width: 100%; height: auto; }
+
+  /* ── bar ──────────────────────────────────────────────── */
+  .cta-band--bar { padding: var(--space-6) 0; }
+  .cta-band-bar-inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    padding: var(--space-4) var(--space-6);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+  }
+  .cta-band-bar-icon { color: var(--mosaic-teal); flex-shrink: 0; display: inline-flex; }
+  .cta-band-bar-text { margin: 0; flex: 1; min-width: 220px; color: var(--color-muted); font-size: var(--text-sm); }
+  .cta-band-bar-text strong { color: var(--color-text); }
+
+  @media (max-width: 640px) {
+    .cta-band--soft .cta-band-art,
+    .cta-band--soft .cta-band-sticky { display: none; }
+  }
+</style>

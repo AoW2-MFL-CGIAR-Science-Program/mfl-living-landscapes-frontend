@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css'
+import '../styles/badges.css'
 import Header from '../components/layout/Header.astro'
 import Footer from '../components/layout/Footer.astro'
 
@@ -26,6 +27,18 @@ const base = import.meta.env.BASE_URL
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Set the colour theme before first paint to avoid a flash of the wrong theme. -->
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('mosaic-theme')
+          if (t !== 'light' && t !== 'dark') {
+            t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          }
+          if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark')
+        } catch (e) {}
+      })()
+    </script>
     <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
     <title>{pageTitle}</title>
@@ -49,5 +62,32 @@ const base = import.meta.env.BASE_URL
       <slot />
     </main>
     <Footer />
+
+    <!-- Theme toggle wiring (runs once, shared by every .js-theme-toggle button). -->
+    <script is:inline>
+      (function () {
+        var root = document.documentElement
+        var btns = document.querySelectorAll('.js-theme-toggle')
+
+        function syncButtons(isDark) {
+          for (var i = 0; i < btns.length; i++) {
+            btns[i].setAttribute('aria-pressed', String(isDark))
+            btns[i].setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme')
+          }
+        }
+
+        syncButtons(root.getAttribute('data-theme') === 'dark')
+
+        for (var j = 0; j < btns.length; j++) {
+          btns[j].addEventListener('click', function () {
+            var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+            if (next === 'dark') root.setAttribute('data-theme', 'dark')
+            else root.removeAttribute('data-theme')
+            try { localStorage.setItem('mosaic-theme', next) } catch (e) {}
+            syncButtons(next === 'dark')
+          })
+        }
+      })()
+    </script>
   </body>
 </html>

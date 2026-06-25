@@ -1,0 +1,141 @@
+---
+import Icon from './Icon.astro'
+
+interface Row {
+  icon: string
+  label: string
+  value: string
+  href?: string
+}
+
+interface Props {
+  name: string
+  role?: string
+  orgLines?: string[]
+  photo?: string
+  rows?: Row[]
+}
+
+const { name, role, orgLines = [], photo, rows = [] } = Astro.props
+const initials = name
+  .split(/\s+/)
+  .map((w) => w[0])
+  .slice(0, 2)
+  .join('')
+  .toUpperCase()
+---
+
+<div class="coordinator-card">
+  <div class="coordinator-photo">
+    {photo
+      ? <img src={photo} alt={name} width="96" height="96" />
+      : <span class="coordinator-initials" aria-hidden="true">{initials}</span>}
+  </div>
+
+  <div class="coordinator-info">
+    <p class="coordinator-name">
+      {name}{role && <span class="coordinator-role"> — {role}</span>}
+    </p>
+    {orgLines.map((line) => <p class="coordinator-org">{line}</p>)}
+
+    {rows.length > 0 && (
+      <ul class="coordinator-rows">
+        {rows.map((r) => (
+          <li class="coordinator-row">
+            <span class="coordinator-row-icon" aria-hidden="true">
+              <Icon name={r.icon as any} size={18} />
+            </span>
+            <span class="coordinator-row-text">
+              <span class="visually-hidden">{r.label}: </span>
+              {r.href ? <a href={r.href}>{r.value}</a> : <span>{r.value}</span>}
+            </span>
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+</div>
+
+<style>
+  .coordinator-card {
+    display: flex;
+    gap: var(--space-6);
+    align-items: flex-start;
+    padding: var(--space-6);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .coordinator-photo {
+    flex-shrink: 0;
+    width: 96px;
+    height: 96px;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    background-color: var(--mosaic-light-teal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .coordinator-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .coordinator-initials {
+    font-family: var(--font-title);
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--mosaic-teal);
+  }
+
+  .coordinator-info { min-width: 0; }
+
+  .coordinator-name {
+    margin: 0;
+    font-weight: 700;
+    font-size: var(--text-lg);
+    color: var(--color-text);
+  }
+  .coordinator-role { font-weight: 400; color: var(--color-muted); }
+
+  .coordinator-org {
+    margin: 2px 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .coordinator-rows {
+    list-style: none;
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .coordinator-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+  }
+  .coordinator-row-icon { color: var(--mosaic-teal); flex-shrink: 0; display: inline-flex; }
+  .coordinator-row a { color: var(--mosaic-teal); }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 480px) {
+    .coordinator-card { flex-direction: column; align-items: center; text-align: center; }
+    .coordinator-row { justify-content: center; }
+  }
+</style>

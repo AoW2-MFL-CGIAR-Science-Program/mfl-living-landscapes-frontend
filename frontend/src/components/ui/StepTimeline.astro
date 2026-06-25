@@ -1,0 +1,122 @@
+---
+import Icon from './Icon.astro'
+
+interface Step {
+  num: string
+  icon: string
+  title: string
+  body: string
+}
+
+interface Props {
+  steps: Step[]
+  tint?: 'teal' | 'amber' | 'terracotta' | 'light-teal'
+}
+
+const { steps, tint = 'teal' } = Astro.props
+---
+
+<ol class="step-timeline" data-tint={tint} style={`--step-count:${steps.length}`}>
+  {steps.map((s) => (
+    <li class="step">
+      <div class="step-marker">
+        <span class="step-icon" aria-hidden="true"><Icon name={s.icon as any} size={24} /></span>
+        <span class="step-num">{s.num}</span>
+      </div>
+      <h3 class="step-title">{s.title}</h3>
+      <p class="step-body">{s.body}</p>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .step-timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--step-count), 1fr);
+    gap: var(--space-4);
+
+    --chip-bg: var(--tint-teal-bg);
+    --chip-fg: var(--tint-teal-fg);
+  }
+  .step-timeline[data-tint='amber']      { --chip-bg: var(--tint-amber-bg);      --chip-fg: var(--tint-amber-fg); }
+  .step-timeline[data-tint='terracotta'] { --chip-bg: var(--tint-terracotta-bg); --chip-fg: var(--tint-terracotta-fg); }
+  .step-timeline[data-tint='light-teal'] { --chip-bg: var(--tint-light-teal-bg); --chip-fg: var(--tint-light-teal-fg); }
+
+  .step {
+    position: relative;
+    text-align: center;
+    padding-top: var(--space-2);
+  }
+
+  /* Dotted connector between adjacent markers (markers are 64px, centred). */
+  .step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: calc(50% + 38px);
+    right: calc(-50% + 38px);
+    border-top: 2px dotted var(--color-border);
+    z-index: 0;
+  }
+
+  .step-marker {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    margin: 0 auto var(--space-3);
+  }
+
+  .step-icon {
+    position: relative;
+    z-index: 1;
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--chip-bg);
+    color: var(--chip-fg);
+  }
+
+  .step-num {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    z-index: 2;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    border-radius: var(--radius-full);
+    background-color: var(--mosaic-teal);
+    color: #fff;
+    border: 2px solid var(--color-surface);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .step-title {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-lg);
+    font-family: var(--font-title);
+    color: var(--color-text);
+  }
+
+  .step-body {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    line-height: 1.6;
+  }
+
+  @media (max-width: 767px) {
+    .step-timeline { grid-template-columns: 1fr; gap: var(--space-8); }
+    .step:not(:last-child)::after { display: none; }
+  }
+</style>

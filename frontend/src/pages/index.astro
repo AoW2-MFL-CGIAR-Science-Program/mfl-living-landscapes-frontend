@@ -2,6 +2,8 @@
 import BaseLayout from '../layouts/BaseLayout.astro'
 import StatusBadge from '../components/ui/StatusBadge.astro'
 import AccessBadge from '../components/ui/AccessBadge.astro'
+import ContentCard from '../components/ui/ContentCard.astro'
+import Icon from '../components/ui/Icon.astro'
 import datasets from '../../data/datasets.json'
 
 const base = import.meta.env.BASE_URL
@@ -15,68 +17,91 @@ const featured = datasets.slice(0, 3)
 
   <!-- ── Hero ──────────────────────────────────────────────────────── -->
   <section class="hero">
-    <!-- Topographic contour pattern (decorative) -->
-    <div class="hero-topo" aria-hidden="true">
-      <svg width="100%" height="100%" viewBox="0 0 1440 560" preserveAspectRatio="xMidYMid slice" fill="none">
-        <!-- Horizontal terrain contours -->
-        <g stroke="#D6EEF2" stroke-width="1.4" fill="none">
-          <path d="M-100 510 Q200 475 480 500 T960 485 T1600 515" opacity="0.13"/>
-          <path d="M-100 460 Q240 420 520 448 T1020 430 T1600 462" opacity="0.15"/>
-          <path d="M-100 410 Q280 365 560 395 T1060 375 T1600 408" opacity="0.16"/>
-          <path d="M-100 360 Q320 308 600 342 T1100 322 T1600 355" opacity="0.15"/>
-          <path d="M-100 310 Q360 252 640 288 T1140 268 T1600 302" opacity="0.14"/>
-          <path d="M-100 260 Q400 198 680 234 T1180 215 T1600 250" opacity="0.12"/>
-          <path d="M-100 210 Q440 145 720 180 T1220 162 T1600 198" opacity="0.10"/>
-          <path d="M-100 160 Q480 92 760 126 T1260 108 T1600 145" opacity="0.08"/>
-          <path d="M-100 110 Q520 40 800 74 T1300 56 T1600 92"  opacity="0.06"/>
-        </g>
-        <!-- Summit contours — tighter nested ellipses right of centre -->
-        <g stroke="#D6EEF2" stroke-width="1" fill="none">
-          <ellipse cx="980" cy="310" rx="210" ry="115" opacity="0.10"/>
-          <ellipse cx="980" cy="310" rx="165" ry="85"  opacity="0.09"/>
-          <ellipse cx="980" cy="310" rx="120" ry="60"  opacity="0.08"/>
-          <ellipse cx="980" cy="310" rx="78"  ry="38"  opacity="0.07"/>
-          <ellipse cx="980" cy="310" rx="42"  ry="20"  opacity="0.06"/>
-        </g>
-      </svg>
+    <div class="container hero-inner">
+      <div class="hero-content">
+        <p class="hero-eyebrow">CGIAR MFL Science Programme · Area of Work 2</p>
+        <h1 class="hero-headline">Connecting Spatial Intelligence for Living Landscapes</h1>
+        <p class="hero-sub">
+          No single dataset can explain a landscape. MOSAIC brings together geospatial resources,
+          shared standards, and collaborative expertise into one connected network, making it easier
+          to discover trusted information, combine local and global knowledge, and support
+          evidence-based decisions across CGIAR Living Landscapes. Together, we connect knowledge
+          instead of duplicating it, creating a shared foundation for landscape innovation.
+        </p>
+        <div class="hero-actions">
+          <a href={`${base}/catalogue`} class="btn btn-hero-primary">
+            <Icon name="search" size={18} aria-hidden="true" /> Browse datasets
+          </a>
+          <a href={`${base}/contribute`} class="btn btn-hero-ghost">
+            <Icon name="database" size={18} aria-hidden="true" /> Contribute data
+          </a>
+        </div>
+      </div>
     </div>
+    <div class="hero-art" aria-hidden="true">
+      <img src={`${base}/illustrations/hero-home.jpg`} alt="" />
+    </div>
+  </section>
 
-    <div class="container hero-content">
-      <p class="hero-eyebrow">CGIAR MFL Science Programme · Area of Work 2</p>
-      <h1 class="hero-headline">MOSAIC<br/>Spatial intelligence for Living Landscapes</h1>
-      <p class="hero-sub">
-        The shared spatial intelligence network for the CGIAR Multifunctional Landscapes
-        Science Programme. Find, trust, and combine geospatial data across the flagship
-        Living Landscapes in Kenya, Ethiopia, India, and beyond — connecting, not duplicating.
-      </p>
-      <div class="hero-actions">
-        <a href={`${base}/catalogue`} class="btn btn-hero-primary">Browse datasets</a>
-        <a href={`${base}/contribute`} class="btn btn-hero-ghost">Contribute data</a>
+  <!-- ── Stats bar (floating card) ─────────────────────────────────── -->
+  <section class="stats-section">
+    <div class="container">
+      <div class="stats-card">
+        <div class="stat-item">
+          <span class="stat-icon" data-tint="teal" aria-hidden="true"><Icon name="database" size={24} /></span>
+          <span class="stat-text">
+            <span class="stat-number">{totalDatasets}</span>
+            <span class="stat-label">Datasets catalogued</span>
+          </span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-icon" data-tint="green" aria-hidden="true"><Icon name="mountains" size={24} /></span>
+          <span class="stat-text">
+            <span class="stat-number">{landscapes}</span>
+            <span class="stat-label">Landscapes with data</span>
+          </span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-icon" data-tint="amber" aria-hidden="true"><Icon name="globe" size={24} /></span>
+          <span class="stat-text">
+            <span class="stat-number">{countries}</span>
+            <span class="stat-label">Countries with data</span>
+          </span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-icon" data-tint="teal" aria-hidden="true"><Icon name="building" size={24} /></span>
+          <span class="stat-text">
+            <span class="stat-number">10</span>
+            <span class="stat-label">CGIAR centres</span>
+          </span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- ── Stats bar ─────────────────────────────────────────────────── -->
-  <section class="stats-section">
-    <div class="container stats-grid">
-      <div class="stat-item">
-        <span class="stat-number">{totalDatasets}</span>
-        <span class="stat-label">Datasets catalogued</span>
+  <!-- ── Entry points ──────────────────────────────────────────────── -->
+  <section class="section-subtle">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow">Get started</p>
+        <h2 class="section-title-center">Find your way in</h2>
+        <svg class="section-wavy" width="72" height="9" viewBox="0 0 64 8" fill="none" aria-hidden="true">
+          <path d="M1 4 Q9 1 17 4 T33 4 T49 4 T63 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
       </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item">
-        <span class="stat-number">{landscapes}</span>
-        <span class="stat-label">Landscapes with data</span>
-      </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item">
-        <span class="stat-number">{countries}</span>
-        <span class="stat-label">Countries with data</span>
-      </div>
-      <div class="stat-divider" aria-hidden="true"></div>
-      <div class="stat-item">
-        <span class="stat-number">10</span>
-        <span class="stat-label">CGIAR centres</span>
+      <div class="home-entry">
+        <ContentCard icon="database" title="Browse the catalogue" href={`${base}/catalogue`} tint="teal" arrow>
+          Explore geospatial datasets across the MFL Living Landscapes — filter by country, theme, and readiness status.
+        </ContentCard>
+        <ContentCard icon="map-pin" title="Explore Living Landscapes" href={`${base}/landscapes`} tint="amber" arrow>
+          See the flagship landscapes where CGIAR centres work together, and the data registered for each.
+        </ContentCard>
+        <ContentCard icon="upload" title="Contribute data" href={`${base}/contribute`} tint="terracotta" arrow>
+          Are you a CGIAR data steward or focal point? Register your dataset in five simple steps.
+        </ContentCard>
       </div>
     </div>
   </section>
@@ -85,8 +110,12 @@ const featured = datasets.slice(0, 3)
   <section class="section-white">
     <div class="container">
       <div class="section-header">
-        <h2>Featured datasets</h2>
-        <a href={`${base}/catalogue`} class="section-link">View all &rarr;</a>
+        <div class="section-header-text">
+          <p class="section-eyebrow section-eyebrow--amber">Explore data</p>
+          <h2>Featured datasets</h2>
+          <p class="section-subtitle">Recently added and validated datasets from across the network.</p>
+        </div>
+        <a href={`${base}/catalogue`} class="section-link">View all datasets &rarr;</a>
       </div>
       <div class="cards-grid">
         {featured.map((d) => (
@@ -97,14 +126,8 @@ const featured = datasets.slice(0, 3)
             </div>
             <h3 class="dataset-card-title">{d.title}</h3>
             <dl class="dataset-card-meta">
-              <div>
-                <dt>Country</dt>
-                <dd>{d.country}</dd>
-              </div>
-              <div>
-                <dt>Theme</dt>
-                <dd>{d.mfl_theme}</dd>
-              </div>
+              <div><dt>Country</dt><dd>{d.country}</dd></div>
+              <div><dt>Theme</dt><dd>{d.mfl_theme}</dd></div>
             </dl>
             <a href={`${base}/catalogue/${d.id}`} class="dataset-card-link">View details &rarr;</a>
           </article>
@@ -113,431 +136,426 @@ const featured = datasets.slice(0, 3)
     </div>
   </section>
 
-  <!-- ── How it works ──────────────────────────────────────────────── -->
-  <section class="section-subtle">
+  <!-- ── Closing CTA — grow the network ────────────────────────────── -->
+  <section class="grow-cta">
     <div class="container">
-      <h2 class="section-title-center">How it works</h2>
-      <div class="steps-grid">
-        <div class="step-item">
-          <span class="step-number">01</span>
-          <h3>Browse the catalogue</h3>
-          <p>Filter datasets by country, landscape, theme, and readiness status. Each entry shows what data exists and how to access it.</p>
+      <div class="grow-card">
+        <div class="grow-art" aria-hidden="true">
+          <img src={`${base}/illustrations/seedling.png`} alt="" />
         </div>
-        <div class="step-item">
-          <span class="step-number">02</span>
-          <h3>Access or request data</h3>
-          <p>Open datasets are linked directly for download. Restricted datasets show a contact path for access requests.</p>
+        <div class="grow-main">
+          <h2 class="grow-title">Help grow the MOSAIC network</h2>
+          <p class="grow-body">Your dataset could help researchers, landscape teams and decision-makers across multiple countries.</p>
+          <ul class="grow-features">
+            <li><span class="grow-feat-icon" aria-hidden="true"><Icon name="users" size={18} /></span><span>Strengthen collaboration</span></li>
+            <li><span class="grow-feat-icon" aria-hidden="true"><Icon name="database" size={18} /></span><span>Increase data discoverability</span></li>
+            <li><span class="grow-feat-icon" aria-hidden="true"><Icon name="sparkles" size={18} /></span><span>Drive better decisions</span></li>
+          </ul>
         </div>
-        <div class="step-item">
-          <span class="step-number">03</span>
-          <h3>Contribute your data</h3>
-          <p>CGIAR staff and partners can register and submit datasets through a five-step guided process with metadata support.</p>
-        </div>
+        <a class="grow-btn" href={`${base}/contribute`}>
+          Contribute your data
+          <Icon name="arrow-right" size={18} aria-hidden="true" />
+        </a>
       </div>
-    </div>
-  </section>
-
-  <!-- ── Contribute CTA ────────────────────────────────────────────── -->
-  <section class="section-cta">
-    <div class="container section-cta-inner">
-      <div class="cta-text">
-        <h2>Have data to share?</h2>
-        <p>If you work on geospatial data for a Living Landscape, we want to hear from you. Adding your dataset takes about 30 minutes.</p>
-      </div>
-      <a href={`${base}/contribute`} class="btn btn-primary">Start contributing</a>
-    </div>
-  </section>
-
-  <!-- ── About ─────────────────────────────────────────────────────── -->
-  <section class="section-white section-about">
-    <div class="container section-about-inner">
-      <div class="about-label">About</div>
-      <h2>An initiative of the MFL Science Programme</h2>
-      <p>
-        MOSAIC is the shared spatial intelligence network for the CGIAR Multifunctional
-        Landscapes (MFL) Science Programme. Under Area of Work 2 — Landscape Optimization &amp;
-        Inclusive Planning — it gives coherence to the geospatial work already happening across
-        ten CGIAR centres, connecting global data services and the local datasets only CGIAR holds
-        into one view of the Living Landscapes in Kenya, Ethiopia, India, Colombia, and the Mekong.
-      </p>
-      <a href={`${base}/about`} class="btn btn-secondary">Learn more about MOSAIC</a>
     </div>
   </section>
 
 </BaseLayout>
 
 <style>
-  @import '../styles/catalogue.css';
-
-  /* ── Hero ──────────────────────────────────────────────────── */
+  /* ── Hero (light) ──────────────────────────────────────────── */
   .hero {
     position: relative;
-    background-color: #0D5C6B;
-    background-image: linear-gradient(160deg, #1C2B3A 0%, #0D5C6B 58%, #0A4753 100%);
-    color: var(--color-white);
-    padding: 6rem 0 5rem;
+    background-color: var(--mosaic-sand);
+    color: var(--mosaic-ink);
+    padding: 4.5rem 0 6.5rem;
     overflow: hidden;
   }
 
-  .hero-topo {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-
-  .hero-topo svg {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    inset: 0;
-  }
-
-  .hero-content {
+  .hero-inner {
     position: relative;
+    z-index: 2;
+  }
+  .hero-content { max-width: 540px; }
+
+  /* Full-bleed art anchored to the right edge of the viewport */
+  .hero-art {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 58%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    pointer-events: none;
     z-index: 1;
-    max-width: 680px;
+  }
+  .hero-art img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* Soft blend of the image's left edge into the sand background */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 16%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 16%);
   }
 
   .hero-eyebrow {
-    font-size: var(--text-xs);
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-green-moss);
+    color: var(--mosaic-amber);
     margin-bottom: var(--space-4);
-    line-height: 1;
+    line-height: 1.2;
   }
-
   .hero-headline {
-    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
     font-weight: 700;
     line-height: 1.1;
-    color: var(--color-white);
+    color: var(--mosaic-ink);
     letter-spacing: -0.02em;
     margin-bottom: var(--space-6);
   }
-
   .hero-sub {
     font-size: var(--text-lg);
-    color: rgba(255, 255, 255, 0.75);
+    /* Fixed grey (not a theming token) — this hero is always light in both
+       themes, so the subtitle must stay dark-on-sand and never invert. */
+    color: #4B5563;
     line-height: 1.7;
-    max-width: 560px;
+    max-width: 470px;
     margin-bottom: var(--space-8);
   }
-
-  .hero-actions {
-    display: flex;
-    gap: var(--space-3);
-    flex-wrap: wrap;
-  }
+  .hero-actions { display: flex; gap: var(--space-4); flex-wrap: wrap; }
+  .hero-actions .btn { display: inline-flex; align-items: center; gap: var(--space-2); }
 
   .btn-hero-primary {
     background-color: var(--mosaic-amber);
-    color: var(--mosaic-ink);
+    color: var(--color-white);
     border-color: var(--mosaic-amber);
     font-weight: 600;
-    padding: var(--space-3) var(--space-8);
+    padding: var(--space-3) var(--space-6);
   }
-
-  .btn-hero-primary:hover {
-    background-color: #b06d12;
-    border-color: #b06d12;
-    color: var(--color-white);
-  }
-
+  .btn-hero-primary:hover { background-color: #b06d12; border-color: #b06d12; color: var(--color-white); }
   .btn-hero-ghost {
-    background-color: transparent;
-    color: var(--color-white);
-    border: 2px solid rgba(255,255,255,0.4);
-    font-weight: 500;
-    padding: var(--space-3) var(--space-8);
+    background-color: var(--color-surface);
+    color: var(--mosaic-teal);
+    border: 2px solid var(--mosaic-teal);
+    font-weight: 600;
+    padding: var(--space-3) var(--space-6);
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     border-radius: var(--radius-md);
     font-family: var(--font-body);
     font-size: var(--text-base);
-    transition: background-color 0.15s, border-color 0.15s;
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
     cursor: pointer;
   }
+  .btn-hero-ghost:hover { background-color: var(--mosaic-teal); color: var(--color-white); }
 
-  .btn-hero-ghost:hover {
-    background-color: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.7);
-    color: var(--color-white);
-  }
-
-  /* ── Stats ─────────────────────────────────────────────────── */
+  /* ── Stats (floating card) ─────────────────────────────────── */
   .stats-section {
-    background-color: var(--color-white);
-    border-bottom: 1px solid var(--color-gray-100);
-    padding: var(--space-8) 0;
+    background-color: var(--color-bg);
+    padding: 0 0 var(--space-16);
   }
-
-  .stats-grid {
+  .stats-card {
+    position: relative;
+    z-index: 5;
+    margin-top: -3.5rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
     display: flex;
     align-items: center;
-    gap: var(--space-8);
-    flex-wrap: wrap;
+    gap: var(--space-4);
+    padding: var(--space-6) var(--space-8);
   }
-
   .stat-item {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: center;
+    gap: var(--space-4);
+    flex: 1 1 0;
+    min-width: 0;
   }
-
+  .stat-icon {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+  }
+  .stat-icon[data-tint="teal"]  { background-color: var(--mosaic-teal); }
+  .stat-icon[data-tint="green"] { background-color: #6F8F5F; }
+  .stat-icon[data-tint="amber"] { background-color: var(--mosaic-amber); }
+  .stat-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
   .stat-number {
     font-family: var(--font-title);
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
-    color: var(--color-cgiar-teal);
+    color: var(--color-text);
     line-height: 1;
     letter-spacing: -0.03em;
   }
+  .stat-label { font-size: var(--text-sm); color: var(--color-muted); font-weight: 400; }
+  .stat-divider { width: 1px; align-self: stretch; background-color: var(--color-border); flex-shrink: 0; margin: var(--space-1) 0; }
 
-  .stat-label {
+  /* ── Sections ──────────────────────────────────────────────── */
+  .section-white { background-color: var(--color-bg); padding: var(--space-16) 0; }
+  .section-subtle { background-color: var(--color-gray-50); padding: var(--space-16) 0; }
+  .section-title-center { text-align: center; margin-bottom: var(--space-12); }
+
+  /* Centred section head: eyebrow + title + wavy underline */
+  .section-head { text-align: center; margin-bottom: var(--space-12); }
+  .section-head .section-title-center { margin-bottom: var(--space-2); }
+  .section-eyebrow {
+    margin: 0 0 var(--space-3);
     font-size: var(--text-sm);
-    color: var(--color-gray-500);
-    font-weight: 400;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6F8F5F;
   }
-
-  .stat-divider {
-    width: 1px;
-    height: 40px;
-    background-color: var(--color-gray-200);
-    flex-shrink: 0;
-  }
-
-  /* ── Shared section styles ──────────────────────────────────── */
-  .section-white {
-    background-color: var(--color-white);
-    padding: var(--space-16) 0;
-  }
-
-  .section-subtle {
-    background-color: var(--color-gray-50);
-    padding: var(--space-16) 0;
-  }
+  .section-wavy { display: inline-block; color: var(--mosaic-teal); }
 
   .section-header {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     margin-bottom: var(--space-8);
     gap: var(--space-4);
   }
+  .section-header h2 { margin: 0; }
+  .section-header-text { display: flex; flex-direction: column; }
+  .section-header .section-eyebrow { margin-bottom: var(--space-2); }
+  .section-eyebrow--amber { color: var(--mosaic-amber); }
+  .section-subtitle {
+    margin: var(--space-2) 0 0;
+    color: var(--color-muted);
+    font-size: var(--text-base);
+    max-width: 60ch;
+  }
+  .section-link { font-size: var(--text-sm); font-weight: 600; color: var(--mosaic-teal); text-decoration: none; white-space: nowrap; }
 
-  .section-header h2 {
-    margin: 0;
+  .home-entry { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+
+  /* ── "Find your way in" action cards ───────────────────────────
+     Rounded card with a topographic contour texture rising from the
+     bottom-right corner, one hue per card (teal / amber / terracotta)
+     to follow the MOSAIC graphic line. Scoped to .home-entry so other
+     ContentCard uses are untouched. */
+  .home-entry :global(.content-card) {
+    --contour: 8, 90, 117;            /* teal (default) */
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: 24px;
+    box-shadow: 0 14px 35px rgba(8, 90, 117, 0.08);
+  }
+  .home-entry :global(.content-card[data-tint="amber"])      { --contour: 201, 125, 27; }
+  .home-entry :global(.content-card[data-tint="terracotta"]) { --contour: 181, 77, 47; }
+
+  /* Keep the card content above the contour layer */
+  .home-entry :global(.content-card) > * { position: relative; z-index: 1; }
+
+  /* Contour texture lives on a masked layer so it stays in the bottom-right
+     corner and fades out before it reaches the title/body. */
+  .home-entry :global(.content-card)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(ellipse at bottom right, rgba(var(--contour), 0.12), transparent 50%),
+      repeating-radial-gradient(
+        ellipse at bottom right,
+        rgba(var(--contour), 0.14) 0,
+        rgba(var(--contour), 0.14) 1px,
+        transparent 1px,
+        transparent 14px
+      );
+    -webkit-mask-image: radial-gradient(ellipse 85% 85% at bottom right, #000 0%, transparent 58%);
+    mask-image: radial-gradient(ellipse 85% 85% at bottom right, #000 0%, transparent 58%);
   }
 
-  .section-link {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-cgiar-teal);
-    text-decoration: none;
-    white-space: nowrap;
+  .home-entry :global(.content-card--link:hover) {
+    box-shadow: 0 20px 45px rgba(8, 90, 117, 0.16);
   }
 
-  .section-link:hover {
-    color: var(--color-cgiar-teal-dark);
-  }
-
-  .section-title-center {
-    text-align: center;
-    margin-bottom: var(--space-12);
-  }
-
-  /* ── Dataset cards ──────────────────────────────────────────── */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--space-6);
-  }
-
+  /* ── Dataset cards ─────────────────────────────────────────── */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-6); }
   .dataset-card-new {
-    background: var(--color-white);
-    border: 1px solid var(--color-gray-200);
-    border-radius: var(--radius-md);
-    padding: var(--space-6);
+    position: relative;
+    overflow: hidden;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    padding: calc(var(--space-6) + 4px) var(--space-6) var(--space-6);
     display: flex;
     flex-direction: column;
     gap: var(--space-4);
     transition: border-color 0.15s, box-shadow 0.15s;
   }
-
-  .dataset-card-new:hover {
-    border-color: var(--color-cgiar-teal);
-    box-shadow: 0 4px 16px rgba(13, 92, 107, 0.12);
+  /* Gradient accent bar across the top (teal → amber), clipped to the card radius */
+  .dataset-card-new::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(90deg, var(--mosaic-teal), var(--mosaic-amber));
   }
+  .dataset-card-new:hover { border-color: var(--mosaic-teal); box-shadow: var(--shadow-card-hover); }
+  .dataset-card-badges { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+  .dataset-card-title { font-size: var(--text-lg); font-weight: 600; color: var(--color-text); line-height: 1.3; margin: 0; }
+  .dataset-card-meta { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; }
+  .dataset-card-meta div { display: flex; gap: var(--space-2); font-size: var(--text-sm); }
+  .dataset-card-meta dt { color: var(--color-muted); font-weight: 500; min-width: 56px; }
+  .dataset-card-meta dd { color: var(--color-text); margin: 0; }
+  .dataset-card-link { margin-top: auto; font-size: var(--text-sm); font-weight: 600; color: var(--mosaic-teal); text-decoration: none; }
 
-  .dataset-card-badges {
-    display: flex;
-    gap: var(--space-2);
-    flex-wrap: wrap;
+  /* ── Closing CTA — grow the network ────────────────────────── */
+  .grow-cta {
+    background-color: var(--color-surface);
+    padding: var(--space-16) 0;
   }
-
-  .dataset-card-title {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    color: var(--color-gray-900);
-    line-height: 1.3;
-    margin: 0;
-  }
-
-  .dataset-card-meta {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-    margin: 0;
-  }
-
-  .dataset-card-meta div {
-    display: flex;
-    gap: var(--space-2);
-    font-size: var(--text-sm);
-  }
-
-  .dataset-card-meta dt {
-    color: var(--color-gray-400);
-    font-weight: 500;
-    min-width: 56px;
-  }
-
-  .dataset-card-meta dd {
-    color: var(--color-gray-700);
-    margin: 0;
-  }
-
-  .dataset-card-link {
-    margin-top: auto;
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--color-cgiar-teal);
-    text-decoration: none;
-  }
-
-  .dataset-card-link:hover {
-    color: var(--color-cgiar-teal-dark);
-  }
-
-  /* ── Steps / How it works ───────────────────────────────────── */
-  .steps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: var(--space-8);
-  }
-
-  .step-item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  .step-number {
-    font-family: var(--font-title);
-    font-size: 2.25rem;
-    font-weight: 700;
-    color: var(--color-gray-200);
-    line-height: 1;
-    letter-spacing: -0.03em;
-  }
-
-  .step-item h3 {
-    font-size: var(--text-lg);
-    margin: 0;
-  }
-
-  .step-item p {
-    font-size: var(--text-base);
-    color: var(--color-gray-600);
-    margin: 0;
-    line-height: 1.6;
-  }
-
-  /* ── CTA section ────────────────────────────────────────────── */
-  .section-cta {
-    background-color: var(--mosaic-ink);
-    padding: var(--space-12) 0;
-  }
-
-  .section-cta-inner {
+  .grow-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: var(--space-8);
     flex-wrap: wrap;
+    background-color: var(--mosaic-sand);
+    border: 1px solid var(--color-border);
+    border-radius: 28px;
+    box-shadow: 0 14px 35px rgba(8, 90, 117, 0.08);
+    padding: var(--space-8) var(--space-12);
+  }
+  /* Faint dot texture on the right, fading toward the left */
+  .grow-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(8, 90, 117, 0.12) 1.4px, transparent 1.6px);
+    background-size: 18px 18px;
+    -webkit-mask-image: linear-gradient(to left, #000 0%, transparent 38%);
+    mask-image: linear-gradient(to left, #000 0%, transparent 38%);
+  }
+  .grow-art, .grow-main, .grow-btn { position: relative; z-index: 1; }
+
+  .grow-art { flex-shrink: 0; width: 280px; align-self: stretch; }
+  .grow-art img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 16px;
   }
 
-  .cta-text {
+  .grow-main {
     flex: 1;
-    min-width: 240px;
+    min-width: 280px;
+    padding-left: var(--space-8);
+    border-left: 1px solid var(--color-border);
   }
+  .grow-title { margin: 0 0 var(--space-2); color: var(--mosaic-ink); }
+  .grow-body { margin: 0 0 var(--space-6); color: #4B5563; max-width: 52ch; line-height: 1.6; }
 
-  .cta-text h2 {
-    color: var(--color-white);
-    margin-bottom: var(--space-2);
-    font-size: var(--text-2xl);
-  }
-
-  .cta-text p {
-    color: rgba(255,255,255,0.70);
-    max-width: 480px;
+  .grow-features {
+    list-style: none;
     margin: 0;
-    font-size: var(--text-base);
-  }
-
-  .section-cta .btn-primary {
-    background-color: var(--mosaic-amber);
-    border-color: var(--mosaic-amber);
-    color: var(--mosaic-ink);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .section-cta .btn-primary:hover {
-    background-color: #b06d12;
-    border-color: #b06d12;
-    color: var(--color-white);
-  }
-
-  /* ── About section ──────────────────────────────────────────── */
-  .section-about {
-    border-top: 1px solid var(--color-gray-100);
-  }
-
-  .section-about-inner {
-    max-width: 680px;
+    padding: 0;
     display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
+    gap: var(--space-6);
+    flex-wrap: wrap;
+  }
+  .grow-features li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--mosaic-ink);
+    max-width: 17ch;
+    line-height: 1.25;
+  }
+  .grow-feat-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius-full);
+    background-color: var(--tint-teal-bg);
+    color: var(--mosaic-teal);
   }
 
-  .about-label {
-    font-size: var(--text-xs);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--color-cgiar-teal);
+  .grow-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background-color: var(--color-bookend);
+    color: var(--color-white);
+    font-weight: 600;
+    padding: var(--space-3) var(--space-6);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: background-color 0.15s;
+    white-space: nowrap;
   }
+  .grow-btn:hover { background-color: var(--mosaic-teal-dark); color: var(--color-white); }
 
-  .section-about-inner h2 {
-    margin: 0;
+  @media (max-width: 900px) {
+    .grow-card { gap: var(--space-6); padding: var(--space-8); }
+    .grow-main { border-left: none; padding-left: 0; }
+    .grow-btn { width: 100%; justify-content: center; }
   }
-
-  .section-about-inner p {
-    color: var(--color-gray-600);
-    line-height: 1.7;
-    margin: 0;
-  }
-
-  /* ── Responsive ─────────────────────────────────────────────── */
   @media (max-width: 640px) {
-    .hero { padding: 4rem 0 3.5rem; }
-    .stats-grid { gap: var(--space-6); }
+    .grow-art { display: none; }
+  }
+
+  /* ── Responsive ────────────────────────────────────────────── */
+  @media (max-width: 992px) {
+    .hero-art { width: 50%; }
+    .hero-content { max-width: 460px; }
+  }
+  @media (max-width: 900px) {
+    .home-entry { grid-template-columns: 1fr; }
+    .stats-card { flex-wrap: wrap; }
+    .stat-item { flex: 1 1 40%; }
     .stat-divider { display: none; }
-    .stat-number { font-size: 2rem; }
-    .section-cta-inner { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 767px) {
+    .hero { padding: 3.5rem 0 5rem; }
+    .hero-content { max-width: none; }
+    .hero-art {
+      position: static;
+      width: 100%;
+      margin-top: var(--space-8);
+      justify-content: center;
+    }
+    .hero-art img {
+      -webkit-mask-image: none;
+      mask-image: none;
+      border-radius: var(--radius-lg);
+    }
+  }
+  @media (max-width: 640px) {
+    .stat-item { flex: 1 1 100%; }
+    .stat-number { font-size: 1.75rem; }
+    .stats-card { padding: var(--space-6); gap: var(--space-6); }
   }
 </style>

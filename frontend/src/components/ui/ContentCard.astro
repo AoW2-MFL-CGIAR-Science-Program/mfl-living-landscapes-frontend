@@ -1,0 +1,101 @@
+---
+import Icon from './Icon.astro'
+
+interface Props {
+  title: string
+  icon?: string
+  href?: string
+  tint?: 'teal' | 'amber' | 'terracotta' | 'light-teal'
+  arrow?: boolean
+  target?: string
+}
+
+const { title, icon, href, tint = 'teal', arrow = false, target } = Astro.props
+const Tag = href ? 'a' : 'div'
+const rel = target === '_blank' ? 'noopener noreferrer' : undefined
+---
+
+<Tag
+  class:list={['content-card', { 'content-card--link': !!href }]}
+  data-tint={tint}
+  href={href}
+  target={target}
+  rel={rel}
+>
+  {icon && (
+    <span class="content-card-icon" aria-hidden="true">
+      <Icon name={icon as any} size={24} />
+    </span>
+  )}
+  <h3 class="content-card-title">{title}</h3>
+  <div class="content-card-body"><slot /></div>
+  {arrow && (
+    <span class="content-card-arrow" aria-hidden="true">
+      <Icon name="arrow-right" size={18} />
+    </span>
+  )}
+</Tag>
+
+<style>
+  .content-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+
+    --chip-bg: var(--tint-teal-bg);
+    --chip-fg: var(--tint-teal-fg);
+  }
+  .content-card[data-tint='amber']       { --chip-bg: var(--tint-amber-bg);       --chip-fg: var(--tint-amber-fg); }
+  .content-card[data-tint='terracotta']  { --chip-bg: var(--tint-terracotta-bg);  --chip-fg: var(--tint-terracotta-fg); }
+  .content-card[data-tint='light-teal']  { --chip-bg: var(--tint-light-teal-bg);  --chip-fg: var(--tint-light-teal-fg); }
+
+  .content-card--link {
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .content-card--link:hover,
+  .content-card--link:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .content-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-full);
+    background-color: var(--chip-bg);
+    color: var(--chip-fg);
+  }
+
+  .content-card-title {
+    margin: 0;
+    font-size: var(--text-lg);
+    font-family: var(--font-title);
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .content-card-body {
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .content-card-arrow {
+    color: var(--mosaic-teal);
+    margin-top: var(--space-1);
+  }
+  .content-card[data-tint='amber'] .content-card-arrow      { color: var(--mosaic-amber); }
+  .content-card[data-tint='terracotta'] .content-card-arrow { color: var(--mosaic-terracotta); }
+</style>

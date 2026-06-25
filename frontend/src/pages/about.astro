@@ -1,74 +1,233 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
 import PageHero from '../components/ui/PageHero.astro'
+import IconChip from '../components/ui/IconChip.astro'
+import ContentCard from '../components/ui/ContentCard.astro'
+import InfoCallout from '../components/ui/InfoCallout.astro'
+import StickyNote from '../components/ui/StickyNote.astro'
+import Icon from '../components/ui/Icon.astro'
+
 const base = import.meta.env.BASE_URL
+
+const pillars = [
+  { icon: 'link', label: 'Connect', caption: 'Linking global data with local datasets across landscapes.', tint: 'teal' },
+  { icon: 'users', label: 'Collaborate', caption: 'Bringing together people, centres and data.', tint: 'amber' },
+  { icon: 'search', label: 'Discover', caption: 'Find the right data, at the right time, with confidence.', tint: 'light-teal' },
+  { icon: 'sparkles', label: 'Create impact', caption: 'Turning spatial information into better decisions for people and nature.', tint: 'terracotta' },
+] as const
+
+const notList = [
+  'Hosting or storing data files',
+  'Replacing existing data services or catalogues',
+  'Being the single source of all geospatial data in the world',
+]
 ---
 
 <BaseLayout title="About" description="About MOSAIC — what it is, who it serves, and what it is not.">
-  <PageHero title="About MOSAIC" subtitle="What MOSAIC is, who it serves, and what we are building together." />
+  <PageHero
+    variant="light"
+    title="About MOSAIC"
+    subtitle="Connecting geospatial data. Empowering impact across landscapes."
+    subtitle2="MOSAIC is the shared spatial intelligence network for the CGIAR Multifunctional Landscapes Science Programme."
+  >
+    <img slot="art" src={`${base}/illustrations/hero-home.jpg`} alt="" />
+  </PageHero>
 
-  <div class="container" style="padding-top: var(--space-12); padding-bottom: var(--space-16); max-width: 800px;">
+  <!-- Pillars -->
+  <div class="container about-pillars">
+    {pillars.map((p) => (
+      <IconChip icon={p.icon} label={p.label} caption={p.caption} tint={p.tint} align="center" />
+    ))}
+  </div>
 
-    <section style="margin-bottom: var(--space-12);">
-      <h2 style="margin-bottom: var(--space-4);">What MOSAIC is</h2>
-      <p style="margin-bottom: var(--space-4);">
-        MOSAIC is the shared spatial intelligence network for the CGIAR Multifunctional Landscapes Science Programme — a catalogue and set of connectors that give coherence to the geospatial data produced across CGIAR centres. It is the data discovery and contribution layer for Area of Work 2 — Landscape Optimization &amp; Inclusive Planning. Its guiding principle is to connect, not duplicate: linking to the global data services the world already maintains and combining them with the local datasets only CGIAR holds.
-      </p>
-      <p style="margin-bottom: var(--space-4);">
-        MOSAIC makes it possible to find out what geospatial data exists across the programme, who produced it, at what resolution and time period, and how to access it. Each dataset entry carries a readiness status that tells you how far along the quality control process it is — from first registration through to analytics-ready.
-      </p>
-      <p>
-        MOSAIC is a catalogue, not a file repository. Data files remain hosted by the contributing CGIAR centre and are linked from the catalogue entry. This keeps data ownership and maintenance with the people who know the data best.
-      </p>
+  <div class="container about-body">
+
+    <!-- What MOSAIC is -->
+    <section class="about-split">
+      <div class="about-split-text">
+        <h2 class="about-h2">What MOSAIC is<svg class="wavy" width="64" height="8" viewBox="0 0 64 8" fill="none" aria-hidden="true"><path d="M1 4 Q9 1 17 4 T33 4 T49 4 T63 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></h2>
+        <p>
+          MOSAIC is the shared spatial intelligence network for the CGIAR Multifunctional Landscapes
+          Science Programme — a catalogue and set of connectors that give coherence to the geospatial
+          data produced across CGIAR centres.
+        </p>
+        <p>
+          It is the data discovery and contribution layer for Area of Work 2 — Landscape Optimization
+          &amp; Inclusive Planning. Its guiding principle is to connect, not duplicate: linking to the
+          global data services the world already maintains and combining them with the local datasets
+          only CGIAR holds.
+        </p>
+        <p>
+          MOSAIC makes it possible to find out what geospatial data exists across the programme, who
+          produced it, at what resolution and time period, and how to access it. Each dataset entry
+          carries a readiness status that tells you how far along the quality control process it is —
+          from first registration through to analytics-ready.
+        </p>
+        <p>
+          MOSAIC is a catalogue, not a file repository. Data files remain hosted by the contributing
+          CGIAR centre and are linked from the catalogue entry. This keeps data ownership and
+          maintenance with the people who know the data best.
+        </p>
+      </div>
+      <div class="about-split-art" aria-hidden="true">
+        <img src={`${base}/illustrations/network-diagram.png`} alt="" />
+      </div>
     </section>
 
-    <section style="margin-bottom: var(--space-12);">
-      <h2 style="margin-bottom: var(--space-4);">Who it serves</h2>
-      <p style="margin-bottom: var(--space-4);">MOSAIC is built for the CGIAR research community first. In this phase it serves two main groups:</p>
-      <ul style="list-style: disc; padding-left: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); color: var(--color-gray-600);">
-        <li><strong>Data users</strong> — CGIAR researchers, GIS analysts, and programme staff who need to know what geospatial data exists for a Living Landscape, whether it is available, and how to get it.</li>
-        <li><strong>Data contributors</strong> — CGIAR data stewards and centre geospatial focal points who produce datasets for Living Landscapes and want to make them findable, properly documented, and accessible across the programme.</li>
-      </ul>
-      <p style="margin-top: var(--space-4);">As the foundations mature, the intent is to open relevant, appropriately licensed parts of MOSAIC to programme partners and to local and national government actors in the landscapes where we work — a deliberate, later phase, not a current commitment.</p>
+    <!-- Who it serves -->
+    <section class="about-serves">
+      <h2 class="about-h2">Who it serves<svg class="wavy" width="64" height="8" viewBox="0 0 64 8" fill="none" aria-hidden="true"><path d="M1 4 Q9 1 17 4 T33 4 T49 4 T63 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></h2>
+      <p class="about-lead">MOSAIC is built for the CGIAR research community first. In this phase it serves two main groups:</p>
+      <div class="about-cards">
+        <ContentCard icon="users" title="Data users" tint="teal">
+          CGIAR researchers, GIS analysts, and programme staff who need to know what geospatial data
+          exists for a Living Landscape, whether it is available, and how to get it.
+        </ContentCard>
+        <ContentCard icon="upload" title="Data contributors" tint="amber">
+          CGIAR data stewards and centre geospatial focal points who produce datasets for Living
+          Landscapes and want to make them findable, properly documented, and accessible across the programme.
+        </ContentCard>
+      </div>
     </section>
 
-    <section style="margin-bottom: var(--space-12);">
-      <h2 style="margin-bottom: var(--space-4);">What it is not</h2>
-      <p style="margin-bottom: var(--space-4);">To keep MOSAIC focused and maintainable, the following are intentionally out of scope for the current release:</p>
-      <ul style="list-style: disc; padding-left: var(--space-6); display: flex; flex-direction: column; gap: var(--space-3); color: var(--color-gray-600);">
-        <li><strong>An interactive map.</strong> Spatial browsing on a map interface is planned for a future release.</li>
-        <li><strong>A file upload system.</strong> Datasets are hosted by contributing centres; MOSAIC links to them.</li>
-        <li><strong>A centralised data repository.</strong> Data remains with the centres that produced it.</li>
-        <li><strong>A real-time data feed.</strong> The catalogue is updated by pull request and rebuilt on every merge.</li>
-        <li><strong>User accounts or login.</strong> MOSAIC is fully public and read-only for visitors.</li>
-      </ul>
+    <!-- Phased opening -->
+    <InfoCallout variant="note-teal" icon="leaf">
+      As the foundations mature, the intent is to open relevant, appropriately licensed parts of MOSAIC
+      to programme partners and to local and national government actors in the landscapes where we work —
+      a deliberate, later phase, not a current commitment.
+      <img slot="art" src={`${base}/illustrations/hand-with-sprout.png`} alt="" />
+    </InfoCallout>
+
+    <!-- What it is not -->
+    <section class="about-not">
+      <div class="about-not-art" aria-hidden="true">
+        <img src={`${base}/illustrations/signpost.png`} alt="" />
+      </div>
+      <div class="about-not-body">
+        <h2 class="about-h2 about-h2--terracotta">What it is not<svg class="wavy" width="64" height="8" viewBox="0 0 64 8" fill="none" aria-hidden="true"><path d="M1 4 Q9 1 17 4 T33 4 T49 4 T63 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></h2>
+        <ul class="about-not-list">
+          {notList.map((item) => (
+            <li>
+              <span class="about-not-icon" aria-hidden="true"><Icon name="x-circle" size={22} /></span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="about-not-closing">
+          Our goal is simple: connect what exists, make it easy to find, and help data create impact.
+          MOSAIC connects you to the source of truth — it never tries to become it.
+        </p>
+        <StickyNote tint="amber" rotate={-3}>Have ideas? Want to get involved? We'd love to hear from you!</StickyNote>
+      </div>
     </section>
 
-    <section style="margin-bottom: var(--space-12);">
-      <h2 style="margin-bottom: var(--space-4);">Programme context</h2>
-      <p style="margin-bottom: var(--space-4);">
-        The CGIAR Multifunctional Landscapes (MFL) Science Programme works to restore and sustain landscapes that are simultaneously productive, biodiverse, and resilient. The programme covers flagship Living Landscapes in Kenya, Ethiopia, India, Colombia, and the Mekong region, with a broader network of strategic landscapes.
-      </p>
-      <p style="margin-bottom: var(--space-4);">
-        Area of Work 2 (Landscape Optimization &amp; Inclusive Planning) develops spatially informed approaches to characterize ecosystem condition, identify landscape stress, and support the prioritization of action. MOSAIC is the coordination network that connects this work across centres.
-      </p>
-      <a href={`${base}/landscapes`} class="btn btn-secondary">View Living Landscapes</a>
-    </section>
+    <!-- Programme context + CoP (retained) -->
+    <div class="about-prose">
+      <section>
+        <h2>Programme context</h2>
+        <p>
+          The CGIAR Multifunctional Landscapes (MFL) Science Programme works to restore and sustain
+          landscapes that are simultaneously productive, biodiverse, and resilient, across flagship
+          Living Landscapes and a broader network of strategic landscapes. Area of Work 2 (Landscape
+          Optimization &amp; Inclusive Planning) develops spatially informed approaches to characterize
+          ecosystem condition, identify landscape stress, and support the prioritization of action.
+          MOSAIC is the coordination network that connects this work across centres.
+        </p>
+        <a href={`${base}/landscapes`} class="btn btn-secondary">View Living Landscapes</a>
+      </section>
 
-    <section style="margin-bottom: var(--space-12);">
-      <h2 style="margin-bottom: var(--space-4);">Geospatial Community of Practice</h2>
-      <p>
-        MOSAIC is maintained by the MFL Geospatial Community of Practice, a network of over 230 geospatial specialists and data stewards across CGIAR centres. Focal points in each centre are responsible for registering and validating datasets for their landscapes. If you are a centre focal point and want to contribute data, start at the <a href={`${base}/contribute`}>How to contribute</a> page.
-      </p>
-    </section>
-
-    <section>
-      <h2 style="margin-bottom: var(--space-4);">Questions or feedback</h2>
-      <p style="margin-bottom: var(--space-4);">
-        If you have a question about MOSAIC, want to report an error, or are interested in contributing data, use the <a href={`${base}/contact`}>Contact</a> page or open an issue directly on GitHub.
-      </p>
-      <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new/choose" class="btn btn-primary">Open a GitHub Issue</a>
-    </section>
+      <section>
+        <h2>Geospatial Community of Practice</h2>
+        <p>
+          MOSAIC is maintained by the MFL Geospatial Community of Practice, a network of over 230
+          geospatial specialists and data stewards across CGIAR centres. Focal points in each centre
+          register and validate datasets for their landscapes. If you are a centre focal point and want
+          to contribute data, start at the <a href={`${base}/contribute`}>How to contribute</a> page.
+        </p>
+      </section>
+    </div>
 
   </div>
 </BaseLayout>
+
+<style>
+  /* Pillars */
+  .about-pillars {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-6);
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-4);
+  }
+
+  /* Short colour line under each pillar, tinted to match its icon
+     (kept identical to the former home pillars). */
+  .about-pillars :global(.icon-chip)::after {
+    content: "";
+    width: 36px;
+    height: 3px;
+    margin-top: var(--space-4);
+    border-radius: var(--radius-full);
+    background: var(--chip-fg);
+  }
+
+  .about-body {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-16);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .about-h2 {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-4);
+  }
+  .wavy { color: var(--mosaic-teal); }
+  .about-h2--terracotta .wavy { color: var(--mosaic-terracotta); }
+
+  /* What MOSAIC is */
+  .about-split {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-8);
+    align-items: center;
+  }
+  .about-split-text p { color: var(--color-muted); line-height: 1.7; margin: 0 0 var(--space-4); }
+  .about-split-text p:last-child { margin-bottom: 0; }
+  .about-split-art img { display: block; width: 100%; height: auto; }
+
+  /* Who it serves */
+  .about-lead { color: var(--color-muted); margin: 0 0 var(--space-6); max-width: 60ch; }
+  .about-cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-6); }
+
+  /* What it is not */
+  .about-not {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: var(--space-8);
+    align-items: center;
+  }
+  .about-not-art img { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto; }
+  .about-not-list { list-style: none; margin: 0 0 var(--space-6); padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
+  .about-not-list li { display: flex; gap: var(--space-3); align-items: center; color: var(--color-text); }
+  .about-not-icon { color: var(--mosaic-terracotta); flex-shrink: 0; display: inline-flex; }
+  .about-not-closing { color: var(--color-muted); line-height: 1.7; margin: 0 0 var(--space-6); max-width: 60ch; }
+
+  /* Retained prose */
+  .about-prose { max-width: 760px; display: flex; flex-direction: column; gap: var(--space-8); }
+  .about-prose h2 { margin: 0 0 var(--space-3); }
+  .about-prose p { color: var(--color-muted); line-height: 1.7; margin: 0 0 var(--space-4); }
+  .about-prose a:not(.btn) { color: var(--mosaic-teal); }
+
+  @media (max-width: 767px) {
+    .about-pillars { grid-template-columns: 1fr 1fr; }
+    .about-split, .about-not, .about-cards { grid-template-columns: 1fr; }
+    .about-not-art { order: -1; }
+  }
+  @media (max-width: 480px) {
+    .about-pillars { grid-template-columns: 1fr; }
+  }
+</style>

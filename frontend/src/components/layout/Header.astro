@@ -7,7 +7,7 @@ const base = import.meta.env.BASE_URL
   <div class="container site-header-inner">
     <a href={base} class="site-logo" aria-label="MOSAIC — home">
       <img
-        src={`${base}/mosaic-mark.svg`}
+        src={`${base}/mosaic-mark-reverse.svg`}
         alt=""
         class="site-logo-mark"
         width="40"
@@ -25,13 +25,15 @@ const base = import.meta.env.BASE_URL
 </header>
 
 <style>
+  /* Teal header — matches the footer (var(--mosaic-teal), Ocean Teal) so the
+     two MOSAIC "bookends" of the page share the same colour, in both themes. */
   .site-header {
-    background-color: var(--color-white);
-    border-bottom: 3px solid var(--mosaic-teal);
+    background-color: var(--color-bookend);
+    border-bottom: 3px solid var(--mosaic-teal-dark);
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 12px rgba(0, 0, 0, 0.18);
   }
 
   .site-header-inner {
@@ -48,7 +50,7 @@ const base = import.meta.env.BASE_URL
     align-items: center;
     gap: var(--space-3);
     text-decoration: none;
-    color: var(--color-gray-900);
+    color: var(--color-white);
     flex-shrink: 0;
   }
 
@@ -76,12 +78,12 @@ const base = import.meta.env.BASE_URL
     font-size: var(--text-xl);
     font-weight: 700;
     letter-spacing: 0.04em;
-    color: var(--mosaic-teal);
+    color: var(--color-white);
   }
 
   .site-logo-tagline {
     font-size: 0.65rem;
-    color: var(--color-gray-500);
+    color: var(--mosaic-light-teal);
     letter-spacing: 0.07em;
     text-transform: uppercase;
     font-weight: 600;

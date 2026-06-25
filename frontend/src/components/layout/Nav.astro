@@ -1,8 +1,11 @@
 ---
+import Icon from '../ui/Icon.astro'
+
 const base = import.meta.env.BASE_URL
 const currentPath = Astro.url.pathname
 
 const navLinks = [
+  { href: `${base}/`, label: 'Home', exact: true },
   { href: `${base}/catalogue`, label: 'Catalogue' },
   { href: `${base}/landscapes`, label: 'Landscapes' },
   { href: `${base}/contribute`, label: 'Contribute' },
@@ -10,8 +13,12 @@ const navLinks = [
   { href: `${base}/contact`, label: 'Contact' },
 ]
 
-function isActive(href: string) {
-  return currentPath === href || currentPath.startsWith(href + '/')
+// Home must match exactly, otherwise it would light up on every page
+// (every path starts with the base path).
+function isActive(href: string, exact = false) {
+  const path = currentPath.replace(/\/$/, '') || '/'
+  const target = href.replace(/\/$/, '') || '/'
+  return exact ? path === target : path === target || path.startsWith(target + '/')
 }
 ---
 
@@ -26,11 +33,20 @@ function isActive(href: string) {
         <a
           href={link.href}
           class="nav-link"
-          aria-current={isActive(link.href) ? 'page' : undefined}
+          aria-current={isActive(link.href, link.exact) ? 'page' : undefined}
         >{link.label}</a>
       </li>
     ))}
   </ul>
+  <button
+    type="button"
+    class="theme-toggle js-theme-toggle"
+    aria-label="Switch to dark theme"
+    aria-pressed="false"
+  >
+    <Icon name="sun" size={20} aria-hidden="true" />
+    <Icon name="moon" size={20} aria-hidden="true" />
+  </button>
 </nav>
 
 <!-- Mobile hamburger -->
@@ -61,11 +77,21 @@ function isActive(href: string) {
         <a
           href={link.href}
           class="mobile-nav-link"
-          aria-current={isActive(link.href) ? 'page' : undefined}
+          aria-current={isActive(link.href, link.exact) ? 'page' : undefined}
         >{link.label}</a>
       </li>
     ))}
   </ul>
+  <button
+    type="button"
+    class="theme-toggle theme-toggle-mobile js-theme-toggle"
+    aria-label="Switch to dark theme"
+    aria-pressed="false"
+  >
+    <Icon name="sun" size={20} aria-hidden="true" />
+    <Icon name="moon" size={20} aria-hidden="true" />
+    <span class="theme-toggle-label">Switch theme</span>
+  </button>
 </nav>
 
 <style>
@@ -89,7 +115,65 @@ function isActive(href: string) {
   }
 
   /* ── Desktop nav ────────────────────────────────────── */
-  .main-nav { display: flex; }
+  .main-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  /* ── Theme toggle ───────────────────────────────────── */
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-width: 44px;
+    min-height: 44px;
+    padding: var(--space-2);
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    color: rgba(255, 255, 255, 0.82);
+    cursor: pointer;
+    transition: color 0.15s, background-color 0.15s;
+  }
+
+  .theme-toggle:hover {
+    color: var(--mosaic-light-teal);
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .theme-toggle:focus-visible {
+    outline: 2px solid var(--mosaic-teal);
+    outline-offset: 2px;
+  }
+
+  /* Icon swap: show sun in light theme, moon in dark theme.
+     Rules are global because [data-theme] lives on <html> and the
+     <svg> glyphs are rendered by the Icon child component. */
+  :global(.theme-toggle .icon-moon) { display: none; }
+  :global([data-theme="dark"] .theme-toggle .icon-sun) { display: none; }
+  :global([data-theme="dark"] .theme-toggle .icon-moon) { display: block; }
+
+  .theme-toggle-label { display: none; }
+
+  .theme-toggle-mobile {
+    width: 100%;
+    justify-content: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-6);
+    border-radius: 0;
+    color: var(--color-gray-700);
+    font-size: var(--text-base);
+    font-weight: 500;
+  }
+
+  .theme-toggle-mobile .theme-toggle-label { display: inline; }
+
+  .theme-toggle-mobile:hover {
+    background-color: var(--color-gray-50);
+    color: var(--color-cgiar-teal);
+  }
 
   .nav-list {
     list-style: none;
@@ -101,7 +185,7 @@ function isActive(href: string) {
   }
 
   .nav-link {
-    color: var(--color-gray-700);
+    color: rgba(255, 255, 255, 0.82);
     text-decoration: none;
     font-size: var(--text-sm);
     font-weight: 500;
@@ -119,13 +203,13 @@ function isActive(href: string) {
 
   .nav-link:hover,
   .nav-link:focus-visible {
-    color: var(--color-cgiar-teal);
+    color: var(--mosaic-light-teal);
     outline: none;
   }
 
   .nav-link[aria-current="page"] {
-    color: var(--color-gray-900);
-    border-bottom-color: var(--color-cgiar-teal);
+    color: var(--color-white);
+    border-bottom-color: var(--mosaic-light-teal);
     font-weight: 600;
   }
 
@@ -135,7 +219,7 @@ function isActive(href: string) {
     background: none;
     border: none;
     cursor: pointer;
-    color: var(--color-gray-700);
+    color: var(--color-white);
     padding: var(--space-2);
     min-width: 44px;
     min-height: 44px;

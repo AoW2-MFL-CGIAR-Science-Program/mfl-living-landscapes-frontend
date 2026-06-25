@@ -1,16 +1,24 @@
 ---
 /**
- * LandscapeLocatorMap — self-contained inline-SVG locator.
+ * LandscapeLocatorMap — self-contained inline-SVG world locator.
  *
  * Plots APPROXIMATE living-landscape centroids (from MOSAIC bbox_lookup.json,
- * joined to dataset counts at build time). No runtime fetch, no external map
- * tiles, no extra dependencies — builds and previews fully offline.
+ * joined to dataset counts at build time) over a real land silhouette.
+ *
+ * The land silhouette is Natural Earth 110m land, decoded offline from a
+ * TopoJSON into a single equirectangular SVG path (data/world_land_path.json,
+ * projection: x = lon + 180, y = 90 − lat). No runtime fetch, no map tiles,
+ * no extra dependencies — builds and previews fully offline.
+ *
+ * Labels are placed with a small greedy de-collision pass (fans crowded codes
+ * outward and draws a thin leader line back to the dot).
  *
  * Coordinates are coarse locator points, NOT authoritative delineations; this
  * is labelled visibly in the UI. Real delineated boundaries are a 2026 MOSAIC
  * objective and will replace these.
  */
 import centroidData from '../../../data/landscape_centroids.json'
+import world from '../../../data/world_land_path.json'
 
 interface LandscapePoint {
   code: string
@@ -25,23 +33,124 @@ interface LandscapePoint {
 const points = centroidData.landscapes as LandscapePoint[]
 const base = import.meta.env.BASE_URL
 
-// ── Equirectangular projection over a 360 x 180 viewBox ──────────────
-// We crop to the latitude band that contains the programme's landscapes
-// (roughly 40°N to 25°S) so the dots are not lost in a full-globe view.
-const W = 360
-const LAT_TOP = 42
-const LAT_BOTTOM = -28
-const H = LAT_TOP - LAT_BOTTOM // 70
+// ── Equirectangular projection (must match world_land_path.json) ─────
+const projX = (lon: number) => lon + 180
+const projY = (lat: number) => 90 - lat
 
-const projX = (lon: number) => ((lon + 180) / 360) * W
-const projY = (lat: number) => LAT_TOP - lat // because viewBox y grows downward
+// Crop window — a wide world strip framing every landscape with context.
+const LON_LEFT = -128
+const LON_RIGHT = 162
+const LAT_TOP = 60
+const LAT_BOTTOM = -54
+const VB_X = projX(LON_LEFT)
+const VB_Y = projY(LAT_TOP)
+const VB_W = projX(LON_RIGHT) - projX(LON_LEFT)
+const VB_H = projY(LAT_BOTTOM) - projY(LAT_TOP)
 
 // Radius scales gently with dataset count.
-const rOf = (count: number) => 1.4 + Math.min(count, 20) * 0.18
+const rOf = (count: number) => 1.6 + Math.min(count, 20) * 0.2
 
-// Meridian / parallel lines for orientation.
-const meridians = [-150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150]
-const parallels = [40, 20, 0, -20]
+// Graticule (faint dashed orientation lines).
+const meridians = [-120, -90, -60, -30, 0, 30, 60, 90, 120, 150]
+const parallels = [40, 20, 0, -20, -40]
+
+// ── Label layout: fan crowded codes outward, add leader lines ────────
+const FS = 2.9 // label font size, viewBox units
+const CW = 1.62 // approximate glyph width
+const LH = 3.0 // label box height
+
+type Box = { x0: number; y0: number; x1: number; y1: number }
+const overlaps = (a: Box, b: Box) =>
+  a.x0 < b.x1 && b.x0 < a.x1 && a.y0 < b.y1 && b.y0 < a.y1
+
+// Where the label box meets the line back to the dot (leader anchor on box edge).
+const edgePoint = (box: Box, tx: number, ty: number) => {
+  const bx = (box.x0 + box.x1) / 2
+  const by = (box.y0 + box.y1) / 2
+  const dx = tx - bx
+  const dy = ty - by
+  if (dx === 0 && dy === 0) return { x: bx, y: by }
+  const hw = (box.x1 - box.x0) / 2
+  const hh = (box.y1 - box.y0) / 2
+  const s = Math.min(
+    dx !== 0 ? hw / Math.abs(dx) : Infinity,
+    dy !== 0 ? hh / Math.abs(dy) : Infinity,
+  )
+  return { x: bx + dx * s, y: by + dy * s }
+}
+
+// Candidate directions (deg, screen space: −90 = up) and push distances.
+const ANGLES = [-90, -52, 52, -128, 128, 0, 180, -28, 28, 90]
+const margin = 1
+
+type Placed = {
+  p: LandscapePoint
+  cx: number
+  cy: number
+  r: number
+  lx: number
+  ly: number
+  line: { x1: number; y1: number; x2: number; y2: number } | null
+}
+
+// All dot halos are obstacles for every label.
+const dotBoxes: Box[] = points.map((p) => {
+  const x = projX(p.lon)
+  const y = projY(p.lat)
+  const r = rOf(p.count) + 1.6
+  return { x0: x - r, y0: y - r, x1: x + r, y1: y + r }
+})
+
+const labelBoxes: Box[] = []
+const layout: Placed[] = []
+
+for (const p of [...points].sort((a, b) => b.count - a.count)) {
+  const cx = projX(p.lon)
+  const cy = projY(p.lat)
+  const r = rOf(p.count)
+  const w = p.code.length * CW
+  const base0 = r + 1.4 + LH / 2
+  const dists = [base0, base0 + 2, base0 + 4.5, base0 + 7.5, base0 + 11]
+
+  let best: { lx: number; ly: number; box: Box } | null = null
+  for (const d of dists) {
+    for (const a of ANGLES) {
+      const rad = (a * Math.PI) / 180
+      const lx = cx + d * Math.cos(rad)
+      const ly = cy + d * Math.sin(rad)
+      const box: Box = { x0: lx - w / 2, y0: ly - LH / 2, x1: lx + w / 2, y1: ly + LH / 2 }
+      if (box.x0 < VB_X + margin || box.x1 > VB_X + VB_W - margin) continue
+      if (box.y0 < VB_Y + margin || box.y1 > VB_Y + VB_H - margin) continue
+      if (dotBoxes.some((b) => overlaps(box, b))) continue
+      if (labelBoxes.some((b) => overlaps(box, b))) continue
+      best = { lx, ly, box }
+      break
+    }
+    if (best) break
+  }
+  // Fallback: place above, ignoring collisions, so every code still shows.
+  if (!best) {
+    const lx = cx
+    const ly = cy - base0
+    best = { lx, ly, box: { x0: lx - w / 2, y0: ly - LH / 2, x1: lx + w / 2, y1: ly + LH / 2 } }
+  }
+
+  labelBoxes.push(best.box)
+
+  // Leader line: dot edge → label box edge, only when the label was pushed out.
+  const dx = best.lx - cx
+  const dy = best.ly - cy
+  const dist = Math.hypot(dx, dy) || 1
+  const dotEdge = { x: cx + (dx / dist) * (r + 1.4), y: cy + (dy / dist) * (r + 1.4) }
+  const labelEdge = edgePoint(best.box, cx, cy)
+  const leaderLen = Math.hypot(labelEdge.x - dotEdge.x, labelEdge.y - dotEdge.y)
+  const line =
+    leaderLen > 1.1
+      ? { x1: dotEdge.x, y1: dotEdge.y, x2: labelEdge.x, y2: labelEdge.y }
+      : null
+
+  layout.push({ p, cx, cy, r, lx: best.lx, ly: best.ly, line })
+}
 ---
 
 <section class="locator" aria-labelledby="locator-heading">
@@ -51,140 +160,163 @@ const parallels = [40, 20, 0, -20]
       Approximate locations of the Living Landscapes connected through MOSAIC.
       Dot size reflects how many datasets are registered for each landscape.
     </p>
-    <p class="locator-approx" role="note">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
-      </svg>
-      Locations are <strong>approximate</strong> locator points, not authoritative
-      boundaries. Delineated landscape maps are a 2026 MOSAIC objective.
-    </p>
-  </div>
-
-  <div class="locator-figure">
-    <svg
-      class="locator-svg"
-      viewBox={`0 0 ${W} ${H}`}
-      role="img"
-      aria-label="Locator map of MOSAIC Living Landscapes with one dot per landscape."
-      preserveAspectRatio="xMidYMid meet"
-    >
-      <defs>
-        <linearGradient id="locator-sea" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#D6EEF2" />
-          <stop offset="100%" stop-color="#BFE2E8" />
-        </linearGradient>
-      </defs>
-
-      <!-- Sea / backdrop -->
-      <rect x="0" y="0" width={W} height={H} fill="url(#locator-sea)" />
-
-      <!-- Graticule -->
-      <g stroke="#9CC6CE" stroke-width="0.2" opacity="0.7">
-        {meridians.map((lon) => (
-          <line x1={projX(lon)} y1="0" x2={projX(lon)} y2={H} />
-        ))}
-        {parallels.map((lat) => (
-          <line x1="0" y1={projY(lat)} x2={W} y2={projY(lat)} />
-        ))}
-      </g>
-
-      <!-- Equator emphasised -->
-      <line x1="0" y1={projY(0)} x2={W} y2={projY(0)} stroke="#0D5C6B" stroke-width="0.3" opacity="0.4" />
-
-      <!-- Landscape dots -->
-      {points.map((p) => {
-        const x = projX(p.lon)
-        const y = projY(p.lat)
-        const r = rOf(p.count)
-        const fill = p.fallback ? '#C97D1B' : '#0D5C6B'
-        return (
-          <a href={`${base}/catalogue?landscape=${p.code}`} class="locator-dot">
-            <title>{`${p.name} (${p.code}) — ${p.count} dataset${p.count === 1 ? '' : 's'}${p.fallback ? ' · approximate, country-level point' : ''}`}</title>
-            <circle cx={x} cy={y} r={r + 1.1} fill="#FFFFFF" opacity="0.85" />
-            <circle cx={x} cy={y} r={r} fill={fill} stroke="#1C2B3A" stroke-width="0.25" />
-            <text x={x} y={y - r - 1} class="locator-label" text-anchor="middle">{p.code}</text>
-          </a>
-        )
-      })}
-    </svg>
 
     <ul class="locator-legend" aria-hidden="false">
       <li><span class="locator-key locator-key--landscape"></span> Landscape locator point</li>
       <li><span class="locator-key locator-key--fallback"></span> Country-level point (landscape not yet delineated)</li>
     </ul>
   </div>
+
+  <div class="locator-figure">
+    <svg
+      class="locator-svg"
+      viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
+      role="img"
+      aria-label="World locator map of MOSAIC Living Landscapes with one dot per landscape."
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <defs>
+        <linearGradient id="locator-sea" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#F0F6F6" />
+          <stop offset="100%" stop-color="#E4EFEF" />
+        </linearGradient>
+        <linearGradient id="locator-land" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#AAC8C0" />
+          <stop offset="100%" stop-color="#9ABBB3" />
+        </linearGradient>
+      </defs>
+
+      <!-- Sea / backdrop -->
+      <rect x={VB_X} y={VB_Y} width={VB_W} height={VB_H} fill="url(#locator-sea)" />
+
+      <!-- Graticule -->
+      <g stroke="#C6DCDC" stroke-width="0.18" stroke-dasharray="1.4 1.6" opacity="0.9">
+        {meridians.map((lon) => (
+          <line x1={projX(lon)} y1={VB_Y} x2={projX(lon)} y2={VB_Y + VB_H} />
+        ))}
+        {parallels.map((lat) => (
+          <line x1={VB_X} y1={projY(lat)} x2={VB_X + VB_W} y2={projY(lat)} />
+        ))}
+      </g>
+
+      <!-- Land silhouette -->
+      <path d={world.d} fill="url(#locator-land)" stroke="#85ABA3" stroke-width="0.18" stroke-linejoin="round" />
+
+      <!-- Leader lines (under the dots) -->
+      <g stroke="#5F8079" stroke-width="0.28" opacity="0.85">
+        {layout.map((m) => m.line && (
+          <line x1={m.line.x1} y1={m.line.y1} x2={m.line.x2} y2={m.line.y2} />
+        ))}
+      </g>
+
+      <!-- Landscape dots + labels -->
+      {layout.map((m) => {
+        const fill = m.p.fallback ? '#C97D1B' : '#0D5C6B'
+        return (
+          <a href={`${base}/catalogue?landscape=${m.p.code}`} class="locator-dot">
+            <title>{`${m.p.name} (${m.p.code}) — ${m.p.count} dataset${m.p.count === 1 ? '' : 's'}${m.p.fallback ? ' · approximate, country-level point' : ''}`}</title>
+            <circle cx={m.cx} cy={m.cy} r={m.r + 1.3} fill="#FFFFFF" opacity="0.92" />
+            <circle cx={m.cx} cy={m.cy} r={m.r} fill={fill} stroke="#FFFFFF" stroke-width="0.5" />
+            <text x={m.lx} y={m.ly + 1.02} class="locator-label" text-anchor="middle">{m.p.code}</text>
+          </a>
+        )
+      })}
+    </svg>
+  </div>
+
+  <p class="locator-approx" role="note">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+    <span>
+      Locations are <strong>approximate</strong> locator points, not authoritative boundaries.
+      Delineated landscape maps are a 2026 MOSAIC objective.
+    </span>
+  </p>
 </section>
 
 <style>
   .locator {
-    background: var(--mosaic-sand, #F7F4EF);
-    border: 1px solid #E4DACB;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-lg, 14px);
-    padding: 1.25rem 1.25rem 1.5rem;
+    padding: 1.5rem;
     margin: 0 0 1.75rem;
+    display: grid;
+    grid-template-columns: 0.82fr 1.18fr;
+    gap: 1.25rem 1.75rem;
+    align-items: center;
   }
-  .locator-head { max-width: 60ch; }
+  .locator-head { max-width: none; align-self: center; }
   .locator-title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 1.25rem;
-    color: var(--mosaic-ink, #1C2B3A);
+    color: var(--color-text);
     margin: 0 0 0.35rem;
   }
   .locator-sub {
     font-size: 0.92rem;
-    color: #44525E;
-    margin: 0 0 0.5rem;
-  }
-  .locator-approx {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.4rem;
-    font-size: 0.8rem;
-    color: #8A540F;
-    background: #F6E6CE;
-    border-radius: 8px;
-    padding: 0.45rem 0.6rem;
+    color: var(--color-muted);
     margin: 0 0 1rem;
   }
-  .locator-approx svg { flex: 0 0 auto; margin-top: 0.1rem; }
   .locator-figure { margin: 0; }
   .locator-svg {
     width: 100%;
     height: auto;
     display: block;
-    border-radius: 10px;
-    border: 1px solid #C9DEE3;
-    background: #D6EEF2;
+    border-radius: 12px;
+    border: 1px solid #D4E6E7;
+    background: #EEF5F5;
   }
   .locator-label {
-    font-size: 2.4px;
+    font-size: 2.9px;
     font-weight: 700;
-    fill: #1C2B3A;
+    letter-spacing: 0.02px;
+    fill: #14323C;
     paint-order: stroke;
     stroke: #FFFFFF;
-    stroke-width: 0.6px;
+    stroke-width: 0.7px;
+    stroke-linejoin: round;
     pointer-events: none;
   }
   .locator-dot { cursor: pointer; }
   .locator-dot:hover circle:nth-of-type(2),
   .locator-dot:focus circle:nth-of-type(2) {
     stroke: #B54D2F;
-    stroke-width: 0.6px;
+    stroke-width: 0.8px;
   }
   .locator-dot:focus { outline: none; }
   .locator-dot:focus-visible circle:nth-of-type(1) {
     stroke: #0D5C6B;
     stroke-width: 0.8px;
   }
+
+  /* Full-width approximate note under both columns so it reads in clean lines */
+  .locator-approx {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: #8A540F;
+    background: #F6E6CE;
+    border-radius: 8px;
+    padding: 0.6rem 0.85rem;
+    margin: 0.25rem 0 0;
+  }
+  .locator-approx svg { flex: 0 0 auto; }
+  .locator-approx strong { font-weight: 700; }
+
   .locator-legend {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.5rem 1rem;
     list-style: none;
     padding: 0;
-    margin: 0.75rem 0 0;
+    margin: 0;
     font-size: 0.8rem;
-    color: #44525E;
+    color: var(--color-muted);
   }
   .locator-legend li { display: flex; align-items: center; gap: 0.4rem; }
   .locator-key {
@@ -197,7 +329,11 @@ const parallels = [40, 20, 0, -20]
   .locator-key--landscape { background: #0D5C6B; }
   .locator-key--fallback { background: #C97D1B; }
 
+  @media (max-width: 860px) {
+    .locator { grid-template-columns: 1fr; gap: 1.25rem; }
+  }
   @media (max-width: 640px) {
     .locator { padding: 1rem; }
+    .locator-label { font-size: 3.3px; }
   }
 </style>

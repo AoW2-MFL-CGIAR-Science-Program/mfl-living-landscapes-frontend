@@ -4,3 +4,6 @@ node_modules/
 .env
 .env.*
 !.env.example
+
+# Full-resolution image originals (web-optimized copies live in public/illustrations)
+.image-originals/

@@ -1,0 +1,125 @@
+---
+import Icon from '../ui/Icon.astro'
+
+interface Props {
+  code: string
+  name: string
+  country: string
+  count: number
+  href: string
+}
+
+const { code, name, country, count, href } = Astro.props
+---
+
+<a class="landscape-card" href={href}>
+  <div class="landscape-card-head">
+    <span class="landscape-code">{code}</span>
+    <span class="landscape-count">{count} {count === 1 ? 'dataset' : 'datasets'}</span>
+  </div>
+
+  <h3 class="landscape-name">{name}</h3>
+  <p class="landscape-country">{country}</p>
+
+  <span class="landscape-browse">
+    Browse datasets
+    <Icon name="arrow-right" size={16} />
+  </span>
+
+  <svg class="landscape-hills" viewBox="0 0 400 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 120 V70 Q70 40 150 60 T300 50 T400 64 V120 Z" fill="currentColor" opacity="0.10" />
+    <path d="M0 120 V86 Q90 60 190 78 T400 76 V120 Z" fill="currentColor" opacity="0.16" />
+  </svg>
+</a>
+
+<style>
+  .landscape-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    padding: var(--space-6);
+    min-height: 200px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .landscape-card:hover,
+  .landscape-card:focus-visible {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-card-hover);
+  }
+
+  .landscape-card-head {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    margin-bottom: var(--space-2);
+  }
+
+  .landscape-code {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--mosaic-teal);
+    background-color: var(--mosaic-light-teal);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-sm);
+  }
+
+  .landscape-count {
+    font-size: var(--text-xs);
+    color: var(--color-muted);
+  }
+
+  .landscape-name {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: var(--text-xl);
+    font-family: var(--font-title);
+    color: var(--color-text);
+    line-height: 1.25;
+  }
+
+  .landscape-country {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-muted);
+  }
+
+  .landscape-browse {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    padding-top: var(--space-3);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--mosaic-teal);
+  }
+
+  .landscape-hills {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 90px;
+    color: var(--mosaic-teal);
+    pointer-events: none;
+  }
+</style>

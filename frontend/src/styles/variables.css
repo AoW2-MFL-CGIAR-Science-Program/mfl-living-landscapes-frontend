@@ -30,6 +30,10 @@
   --mosaic-ink:         #1C2B3A;   /* Near-black  — body text, dark sections    */
   --mosaic-grey:        #6B7A85;   /* Muted Grey  — captions, secondary text    */
 
+  /* Header & footer "bookend" colour — deeper Ocean Teal (brand request).
+     Defined once so the two MOSAIC bookends always match; change here only. */
+  --color-bookend:      #085A75;
+
   /* MOSAIC tile-mark colours (logo) */
   --mosaic-tile-teal:        #0D5C6B;
   --mosaic-tile-amber:       #C97D1B;
@@ -97,6 +101,14 @@
   --access-restricted:  #B45309;
   --access-internal:    #6B7280;
 
+  /* ── Tints (pale circle/band backgrounds + matching icon colour) ────────
+     Shared by IconChip, ContentCard, StatCard, StepTimeline, CtaBand, etc.
+     Select via data-tint="teal|amber|terracotta|light-teal". */
+  --tint-teal-bg:        #D6EEF2;  --tint-teal-fg:        #0D5C6B;
+  --tint-amber-bg:       #F6E7CE;  --tint-amber-fg:       #C97D1B;
+  --tint-terracotta-bg:  #F1DED6;  --tint-terracotta-fg:  #B54D2F;
+  --tint-light-teal-bg:  #E6F3F6;  --tint-light-teal-fg:  #0D5C6B;
+
   /* ── Typography — MOSAIC brand fonts ────────────────────────────────────
      Georgia (serif) for titles; Calibri (sans) for body, with robust
      cross-platform fallbacks. */
@@ -136,4 +148,42 @@
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* ── Dark theme ───────────────────────────────────────────────────────────
+   Toggled by `data-theme="dark"` on <html> (see BaseLayout). Overrides ONLY
+   the semantic surface/neutral aliases — never the brand --mosaic-* accents
+   (they are the cartographic identity) and never --color-white (the CGIAR/MFL
+   endorsement panel must stay white in both themes, per the brand rules).
+
+   NOTE (Phase 0 scaffolding): most shared surfaces funnel through these
+   aliases, so they flip for free. A full per-page audit of any remaining
+   hardcoded white/ink in the inline-style pages happens in Phase 3, once
+   their markup has migrated to classes. */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Semantic surfaces */
+  --color-bg:       #0F1A24;   /* page background          */
+  --color-surface:  #16242F;   /* cards, header, panels    */
+  --color-text:     #EAF2F4;   /* body text                */
+  --color-muted:    #9DB0B8;   /* captions, secondary text */
+  --color-border:   #26414C;   /* hairlines, dividers      */
+
+  /* Neutral ramp remap (gray-50/100/200 become dark surfaces; the higher
+     greys, used for text, become light). --color-white is intentionally NOT
+     remapped. */
+  --color-gray-50:   #1B2B37;
+  --color-gray-100:  #20323F;
+  --color-gray-200:  #26414C;
+  --color-gray-400:  #93A6AE;
+  --color-gray-500:  #9DB0B8;
+  --color-gray-600:  #B6C6CD;
+  --color-gray-700:  #D2DEE2;
+  --color-gray-800:  #E1EAED;
+  --color-gray-900:  #EAF2F4;
+
+  /* Deeper shadows read better on dark surfaces */
+  --shadow-card:        0 10px 30px rgba(0, 0, 0, 0.45);
+  --shadow-card-hover:  0 16px 40px rgba(0, 0, 0, 0.55);
 }
