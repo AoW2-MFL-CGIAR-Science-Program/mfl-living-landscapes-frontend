@@ -19,21 +19,22 @@ const featured = datasets.slice(0, 3)
   <section class="hero">
     <div class="container hero-inner">
       <div class="hero-content">
-        <p class="hero-eyebrow">CGIAR MFL Science Programme · Area of Work 2</p>
-        <h1 class="hero-headline">Connecting Spatial Intelligence for Living Landscapes</h1>
+        <p class="hero-eyebrow">Open geospatial data for living landscapes</p>
+        <h1 class="hero-headline">Find and share geospatial data for living landscapes</h1>
         <p class="hero-sub">
-          No single dataset can explain a landscape. MOSAIC brings together geospatial resources,
-          shared standards, and collaborative expertise into one connected network, making it easier
-          to discover trusted information, combine local and global knowledge, and support
-          evidence-based decisions across CGIAR Living Landscapes. Together, we connect knowledge
-          instead of duplicating it, creating a shared foundation for landscape innovation.
+          MOSAIC connects datasets, institutions and local knowledge to make landscape
+          information easier to discover, compare and use.
+        </p>
+        <p class="hero-support">
+          Use MOSAIC to explore trusted geospatial datasets, understand where they apply, and
+          contribute data from your institution, project or landscape initiative.
         </p>
         <div class="hero-actions">
           <a href={`${base}/catalogue`} class="btn btn-hero-primary">
-            <Icon name="search" size={18} aria-hidden="true" /> Browse datasets
+            <Icon name="search" size={18} aria-hidden="true" /> Explore datasets
           </a>
           <a href={`${base}/contribute`} class="btn btn-hero-ghost">
-            <Icon name="database" size={18} aria-hidden="true" /> Contribute data
+            <Icon name="database" size={18} aria-hidden="true" /> Contribute a dataset
           </a>
         </div>
       </div>
@@ -86,28 +87,49 @@ const featured = datasets.slice(0, 3)
   <section class="section-subtle">
     <div class="container">
       <div class="section-head">
-        <p class="section-eyebrow">Get started</p>
-        <h2 class="section-title-center">Find your way in</h2>
+        <p class="section-eyebrow">Three ways in</p>
+        <h2 class="section-title-center">Choose what you need</h2>
         <svg class="section-wavy" width="72" height="9" viewBox="0 0 64 8" fill="none" aria-hidden="true">
           <path d="M1 4 Q9 1 17 4 T33 4 T49 4 T63 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
         </svg>
       </div>
       <div class="home-entry">
-        <ContentCard icon="database" title="Browse the catalogue" href={`${base}/catalogue`} tint="teal" arrow>
-          Explore geospatial datasets across the MFL Living Landscapes — filter by country, theme, and readiness status.
+        <ContentCard icon="search" title="Find data" href={`${base}/catalogue`} tint="teal" arrow>
+          Search datasets by place, theme, source or readiness status.
         </ContentCard>
-        <ContentCard icon="map-pin" title="Explore Living Landscapes" href={`${base}/landscapes`} tint="amber" arrow>
-          See the flagship landscapes where CGIAR centres work together, and the data registered for each.
+        <ContentCard icon="upload" title="Share data" href={`${base}/contribute`} tint="amber" arrow>
+          Register a dataset so others can discover, cite or request access to it.
         </ContentCard>
-        <ContentCard icon="upload" title="Contribute data" href={`${base}/contribute`} tint="terracotta" arrow>
-          Are you a CGIAR data steward or focal point? Register your dataset in five simple steps.
+        <ContentCard icon="map-pin" title="Use data for decisions" href={`${base}/landscapes`} tint="terracotta" arrow>
+          Explore landscape evidence for planning, restoration, monitoring and research.
         </ContentCard>
       </div>
     </div>
   </section>
 
-  <!-- ── Featured datasets ─────────────────────────────────────────── -->
+  <!-- ── Who is MOSAIC for? ────────────────────────────────────────── -->
   <section class="section-white">
+    <div class="container">
+      <div class="section-head">
+        <p class="section-eyebrow section-eyebrow--amber">Open to all</p>
+        <h2 class="section-title-center">Who is MOSAIC for?</h2>
+        <svg class="section-wavy" width="72" height="9" viewBox="0 0 64 8" fill="none" aria-hidden="true">
+          <path d="M1 4 Q9 1 17 4 T33 4 T49 4 T63 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <ul class="who-grid">
+        <li class="who-item"><span class="who-ico" data-tint="teal" aria-hidden="true"><Icon name="search" size={20} /></span><span><strong>Researchers</strong> looking for landscape datasets</span></li>
+        <li class="who-item"><span class="who-ico" data-tint="amber" aria-hidden="true"><Icon name="upload" size={20} /></span><span><strong>Institutions</strong> sharing geospatial evidence</span></li>
+        <li class="who-item"><span class="who-ico" data-tint="terracotta" aria-hidden="true"><Icon name="map-pin" size={20} /></span><span><strong>Landscape teams</strong> coordinating data across places</span></li>
+        <li class="who-item"><span class="who-ico" data-tint="teal" aria-hidden="true"><Icon name="sparkles" size={20} /></span><span><strong>Decision-makers</strong> comparing environmental and social information</span></li>
+        <li class="who-item"><span class="who-ico" data-tint="amber" aria-hidden="true"><Icon name="database" size={20} /></span><span><strong>Data stewards</strong> improving discoverability and reuse</span></li>
+        <li class="who-item"><span class="who-ico" data-tint="terracotta" aria-hidden="true"><Icon name="users" size={20} /></span><span><strong>Funders and partners</strong> tracking evidence across initiatives</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Featured datasets ─────────────────────────────────────────── -->
+  <section class="section-subtle">
     <div class="container">
       <div class="section-header">
         <div class="section-header-text">
@@ -115,7 +137,7 @@ const featured = datasets.slice(0, 3)
           <h2>Featured datasets</h2>
           <p class="section-subtitle">Recently added and validated datasets from across the network.</p>
         </div>
-        <a href={`${base}/catalogue`} class="section-link">View all datasets &rarr;</a>
+        <a href={`${base}/catalogue`} class="section-link">Browse all {totalDatasets} datasets &rarr;</a>
       </div>
       <div class="cards-grid">
         {featured.map((d) => (
@@ -153,7 +175,7 @@ const featured = datasets.slice(0, 3)
           </ul>
         </div>
         <a class="grow-btn" href={`${base}/contribute`}>
-          Contribute your data
+          Contribute a dataset
           <Icon name="arrow-right" size={18} aria-hidden="true" />
         </a>
       </div>
@@ -224,7 +246,14 @@ const featured = datasets.slice(0, 3)
     color: #4B5563;
     line-height: 1.7;
     max-width: 470px;
-    margin-bottom: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+  .hero-support {
+    font-size: var(--text-base);
+    color: #5B6B72;
+    line-height: 1.65;
+    max-width: 470px;
+    margin: 0 0 var(--space-8);
   }
   .hero-actions { display: flex; gap: var(--space-4); flex-wrap: wrap; }
   .hero-actions .btn { display: inline-flex; align-items: center; gap: var(--space-2); }
@@ -342,6 +371,38 @@ const featured = datasets.slice(0, 3)
   .section-link { font-size: var(--text-sm); font-weight: 600; color: var(--mosaic-teal); text-decoration: none; white-space: nowrap; }
 
   .home-entry { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+
+  /* ── "Who is MOSAIC for?" audience grid ─────────────────────── */
+  .who-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6) var(--space-8);
+  }
+  .who-item {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    color: var(--color-text);
+    line-height: 1.45;
+  }
+  .who-item strong { font-weight: 700; }
+  .who-ico {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .who-ico[data-tint="teal"]      { background: #D6EEF2; color: var(--mosaic-teal); }
+  .who-ico[data-tint="amber"]     { background: #F6E6CE; color: var(--mosaic-amber); }
+  .who-ico[data-tint="terracotta"]{ background: #F3DED6; color: var(--mosaic-terracotta); }
+  @media (max-width: 900px) { .who-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .who-grid { grid-template-columns: 1fr; } }
 
   /* ── "Find your way in" action cards ───────────────────────────
      Rounded card with a topographic contour texture rising from the

@@ -163,7 +163,7 @@
     "formats": [
       "GeoTIFF"
     ],
-    "description": "Dsitric level solar Irrigation Suitability Map",
+    "description": "District-level solar irrigation suitability map.",
     "download_url": "https://solaready.iwmi.org/india/",
     "metadata_url": "https://aow2-mfl-cgiar-science-program.github.io/MOSAIC_catalog/stac/collections/IND-CH/items/MFL-2026-007.json"
   },

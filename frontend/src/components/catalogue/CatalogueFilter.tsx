@@ -264,7 +264,7 @@ export function CatalogueFilter({ datasets, base }: Props) {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
           </svg>
-          {mobileFiltersOpen ? 'Hide filters' : 'Show filters'}
+          {mobileFiltersOpen ? 'Hide filters' : 'Filter datasets'}
           {activeChips.length > 0 && <span className="filter-count-badge">{activeChips.length}</span>}
         </button>
 
@@ -384,6 +384,15 @@ export function CatalogueFilter({ datasets, base }: Props) {
         <p className="results-count">
           Showing <strong>{pageItems.length}</strong> of {filtered.length} datasets
         </p>
+
+        <details className="readiness-legend">
+          <summary>What do “Raw”, “Processed” and “Validated” mean?</summary>
+          <ul>
+            <li><span className="badge badge-raw">Raw</span> Metadata registered; dataset not yet reviewed.</li>
+            <li><span className="badge badge-processed">Processed</span> Dataset prepared, harmonized or structured for use.</li>
+            <li><span className="badge badge-validated">Validated</span> Metadata and spatial information checked by the MOSAIC team.</li>
+          </ul>
+        </details>
 
         <DatasetGrid datasets={pageItems} base={base} viewMode={viewMode} onClearAll={hasActiveFilters ? clearAll : undefined} />
 

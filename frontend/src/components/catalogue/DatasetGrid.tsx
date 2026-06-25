@@ -13,7 +13,7 @@ export function DatasetGrid({ datasets, base, viewMode = 'list', onClearAll }: P
     return (
       <div className="empty-state">
         <h3>No datasets match your filters</h3>
-        <p>Try removing some filters to see more datasets.</p>
+        <p>Try removing one filter, or search by country.</p>
         {onClearAll && (
           <button type="button" className="empty-state-clear" onClick={onClearAll}>
             Clear all filters

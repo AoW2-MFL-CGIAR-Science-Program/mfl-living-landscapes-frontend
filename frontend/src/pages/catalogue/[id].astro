@@ -60,8 +60,48 @@ const readinessDescriptions: Record<string, string> = {
 
     <!-- Description -->
     {dataset.description && (
-      <p style="font-size: var(--text-lg); color: var(--color-gray-600); margin-bottom: var(--space-8); max-width: 680px;">{dataset.description}</p>
+      <p style="font-size: var(--text-lg); color: var(--color-gray-600); margin-bottom: var(--space-6); max-width: 680px;">{dataset.description}</p>
     )}
+
+    <!-- Trust signals — dataset at a glance -->
+    <section class="ds-facts" aria-label="Dataset at a glance">
+      <div class="ds-fact">
+        <span class="ds-fact-label">Source organization</span>
+        <span class="ds-fact-value">{dataset.source ?? 'Not specified'}</span>
+      </div>
+      <div class="ds-fact">
+        <span class="ds-fact-label">Time period</span>
+        <span class="ds-fact-value">{dataset.temporal_coverage ?? 'Not specified'}</span>
+      </div>
+      <div class="ds-fact">
+        <span class="ds-fact-label">License</span>
+        <span class="ds-fact-value">{dataset.license ?? 'Not specified'}</span>
+      </div>
+      <div class="ds-fact">
+        <span class="ds-fact-label">Access level</span>
+        <span class="ds-fact-value">{dataset.access_level ?? 'Not specified'}</span>
+      </div>
+      <div class="ds-fact">
+        <span class="ds-fact-label">Readiness status</span>
+        <span class="ds-fact-value">{dataset.readiness_status}</span>
+      </div>
+      <div class="ds-fact">
+        <span class="ds-fact-label">Contact</span>
+        <span class="ds-fact-value">
+          {dataset.contact
+            ? <a href={`mailto:${dataset.contact}`}>{dataset.contact}</a>
+            : 'Via the MOSAIC team'}
+        </span>
+      </div>
+      {dataset.download_url && (
+        <div class="ds-fact">
+          <span class="ds-fact-label">Source link</span>
+          <span class="ds-fact-value">
+            <a href={dataset.download_url} target="_blank" rel="noopener noreferrer">Go to source ↗</a>
+          </span>
+        </div>
+      )}
+    </section>
 
     <!-- Metadata table -->
     <section style="margin-bottom: var(--space-8);">

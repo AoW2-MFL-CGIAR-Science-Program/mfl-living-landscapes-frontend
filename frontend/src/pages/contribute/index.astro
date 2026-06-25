@@ -20,7 +20,7 @@ const checklist = [
 ]
 
 const steps = [
-  { num: '01', icon: 'upload', title: 'Register', body: 'Open a Dataset Catalogue Update issue on GitHub using our template and fill in the required fields.' },
+  { num: '01', icon: 'upload', title: 'Register', body: 'Start a dataset submission and fill in the basics — title, landscape, theme and contact. You can begin with partial metadata.' },
   { num: '02', icon: 'file-text', title: 'Submit metadata', body: 'We prepare a draft entry in datasets.json using your registration information.' },
   { num: '03', icon: 'eye', title: 'Review & refine', body: 'You review the draft and complete any missing optional fields.' },
   { num: '04', icon: 'check-circle', title: 'Validation', body: 'Our team checks the metadata and validates the information.' },
@@ -36,19 +36,34 @@ const faqs = [
 ]
 ---
 
-<BaseLayout title="How to contribute" description="How to register and contribute a geospatial dataset to MOSAIC.">
+<BaseLayout title="Contribute a dataset" description="Share a geospatial dataset with MOSAIC — open to institutions, researchers and landscape initiatives.">
   <PageHero
     variant="light"
-    title="How to contribute"
-    subtitle="Add your geospatial dataset to the catalogue in five simple steps."
-    subtitle2="Your data can help others make better decisions and drive real impact on people and landscapes."
+    title="Contribute a dataset"
+    subtitle="Share geospatial data so researchers, institutions and landscape teams can discover and use it."
+    subtitle2="You can start with partial metadata and complete it later — the MOSAIC team will help review and prepare the catalogue entry."
   >
     <img slot="art" src={`${base}/illustrations/hero-home.jpg`} alt="" />
   </PageHero>
 
   <div class="container contrib-body">
 
-    <!-- Before you start — checklist -->
+    <!-- 1 & 2 · Who can contribute + What data can be added -->
+    <div class="contrib-prose contrib-intro">
+      <section>
+        <h2>Who can contribute?</h2>
+        <p>MOSAIC welcomes contributions from research institutions, universities, public agencies, NGOs, landscape initiatives, CGIAR centres, partner organizations and independent researchers working with relevant landscape data.</p>
+        <p>Some datasets may require validation, attribution, licensing checks or access restrictions before publication.</p>
+        <p>If you are not sure whether your dataset fits MOSAIC, <a href={`${base}/contact`}>contact the coordination team</a> before submitting.</p>
+      </section>
+      <section>
+        <h2>What data can be added?</h2>
+        <p>Geospatial datasets related to a living landscape — for example land cover and land use, soil and land health, water and hydrology, biodiversity, ecosystem services, agrobiodiversity, or socio-economic layers. Raster, vector and tabular data are all welcome.</p>
+        <p>MOSAIC catalogues the metadata and links to the data; your files stay wherever they are already hosted.</p>
+      </section>
+    </div>
+
+    <!-- 3 · Before you start — checklist -->
     <section class="checklist-card">
       <div class="checklist-intro">
         <span class="checklist-icon" aria-hidden="true"><Icon name="check-square" size={28} /></span>
@@ -71,25 +86,25 @@ const faqs = [
       </div>
     </section>
 
-    <!-- The contribution process -->
+    <!-- 4 · Start dataset submission -->
+    <section class="contrib-start">
+      <h2>Start dataset submission</h2>
+      <p>You can start with partial metadata and complete it later. The MOSAIC team will help review and prepare the catalogue entry.</p>
+      <div class="contrib-start-actions">
+        <a class="btn btn-primary" href={issueUrl} target="_blank" rel="noopener noreferrer">Start dataset submission</a>
+        <a class="btn btn-secondary" href={`${base}/contact`}>Ask before contributing</a>
+      </div>
+      <p class="contrib-start-note">Submissions are currently managed through GitHub. If you are not familiar with GitHub, <a href={`${base}/contact`}>contact the MOSAIC team</a> and they can guide you.</p>
+    </section>
+
+    <!-- 5 · What happens after you submit -->
     <section class="contrib-process">
-      <h2 class="contrib-h2 center">The contribution process</h2>
+      <h2 class="contrib-h2 center">What happens after you submit</h2>
       <StepTimeline steps={steps} />
     </section>
 
-    <!-- Supporting detail -->
+    <!-- 6, 7, 8 · QC, ownership, FAQ -->
     <div class="contrib-prose">
-      <section>
-        <h2>Who can contribute</h2>
-        <p>The following groups are eligible to register and contribute datasets:</p>
-        <ul class="bullets">
-          <li>Staff at CGIAR centres that are members of the MFL Science Programme</li>
-          <li>Programme partners and national partners working directly with a CGIAR centre on a Living Landscape</li>
-          <li>Postdoctoral researchers and consultants contracted to a CGIAR centre for MFL-related work</li>
-        </ul>
-        <p>If you are not sure whether you are eligible, contact the MOSAIC coordinator via the <a href={`${base}/contact`}>Contact</a> page.</p>
-      </section>
-
       <section>
         <h2>Quality control &amp; validation</h2>
         <p>
@@ -135,7 +150,7 @@ const faqs = [
     tint="sand"
     title="Your data has the power to create change."
     body="By contributing, you help build a shared resource that supports research, restoration and better outcomes for people and nature across the globe."
-    primaryCta={{ label: 'Start contributing', href: issueUrl, target: '_blank' }}
+    primaryCta={{ label: 'Start dataset submission', href: issueUrl, target: '_blank' }}
     secondaryCta={{ label: 'View metadata guide', href: `${base}/contribute/metadata-guide` }}
   >
     <img slot="art" src={`${base}/illustrations/seedling.png`} alt="" />
@@ -199,6 +214,27 @@ const faqs = [
   .checklist-tick { color: var(--mosaic-teal); flex-shrink: 0; display: inline-flex; margin-top: 1px; }
   .checklist-foot { margin: var(--space-4) 0 0; font-size: var(--text-sm); color: var(--color-muted); }
   .checklist-foot a, .contrib-prose a { color: var(--mosaic-teal); }
+
+  /* Intro prose (Who / What) */
+  .contrib-intro { margin-bottom: var(--space-16); }
+
+  /* Start dataset submission */
+  .contrib-start {
+    max-width: 760px;
+    margin: 0 auto var(--space-16);
+    text-align: center;
+  }
+  .contrib-start h2 { margin: 0 0 var(--space-3); }
+  .contrib-start > p { color: var(--color-muted); line-height: 1.7; margin: 0 auto var(--space-6); max-width: 60ch; }
+  .contrib-start-actions {
+    display: flex;
+    gap: var(--space-3);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-4);
+  }
+  .contrib-start-note { font-size: var(--text-sm); color: var(--color-muted); max-width: 56ch; margin: 0 auto; }
+  .contrib-start-note a { color: var(--mosaic-teal); }
 
   /* Process */
   .contrib-process { margin-bottom: var(--space-16); }

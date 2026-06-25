@@ -7,6 +7,12 @@ const STATUS_BADGE: Record<string, string> = {
   'Validated': 'badge badge-validated',
 }
 
+const STATUS_TOOLTIP: Record<string, string> = {
+  'Raw':       'Metadata registered; dataset not yet reviewed.',
+  'Processed': 'Dataset prepared, harmonized or structured for use.',
+  'Validated': 'Metadata and spatial information checked by the MOSAIC team.',
+}
+
 const TYPE_BADGE: Record<string, string> = {
   'Raster':  'badge badge-raster',
   'Vector':  'badge badge-vector',
@@ -73,7 +79,10 @@ export function DatasetCard({ dataset, base }: Props) {
         </h3>
 
         <div className="ds-card-badges">
-          <span className={STATUS_BADGE[dataset.readiness_status] ?? 'badge badge-raw'}>
+          <span
+            className={STATUS_BADGE[dataset.readiness_status] ?? 'badge badge-raw'}
+            title={STATUS_TOOLTIP[dataset.readiness_status]}
+          >
             {dataset.readiness_status}
           </span>
           {dataset.data_type && (
