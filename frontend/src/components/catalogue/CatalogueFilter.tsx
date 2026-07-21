@@ -127,6 +127,19 @@ function sortDatasets(datasets: Dataset[], sort: SortKey): Dataset[] {
 }
 
 export function CatalogueFilter({ datasets, base }: Props) {
+  // Filter VALUES stay landscape codes (stable, used in URLs); LABELS show the
+  // display name carried by each dataset record (e.g. "Central India Highlands").
+  const landscapeNames = useMemo(() => {
+    const names = new Map<string, string>()
+    for (const d of datasets) {
+      if (d.landscape_name && !names.has(d.living_landscape)) names.set(d.living_landscape, d.landscape_name)
+    }
+    return names
+  }, [datasets])
+
+  const displayValue = (key: FilterKey, value: string) =>
+    key === 'living_landscape' ? (landscapeNames.get(value) ?? value) : value
+
   const [filters, setFilters] = useState<FilterState>(() => readInitialState().filters)
   const [searchText, setSearchText] = useState(() => readInitialState().search)
   const [sortKey, setSortKey] = useState<SortKey>(() => readInitialState().sort)
@@ -223,7 +236,7 @@ export function CatalogueFilter({ datasets, base }: Props) {
                   onChange={() => toggle(key, opt)}
                 />
                 <label htmlFor={inputId}>
-                  <span>{opt}</span>
+                  <span>{displayValue(key, opt)}</span>
                   <span className="filter-count">({count})</span>
                 </label>
               </li>
@@ -369,8 +382,8 @@ export function CatalogueFilter({ datasets, base }: Props) {
           <div className="active-chips" role="list" aria-label="Active filters">
             {activeChips.map(({ key, value }) => (
               <span key={`${key}-${value}`} className="chip" role="listitem">
-                {value}
-                <button className="chip-remove" onClick={() => removeChip(key, value)} aria-label={`Remove filter: ${value}`}>
+                {displayValue(key, value)}
+                <button className="chip-remove" onClick={() => removeChip(key, value)} aria-label={`Remove filter: ${displayValue(key, value)}`}>
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
                     <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                   </svg>

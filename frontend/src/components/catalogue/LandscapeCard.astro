@@ -7,18 +7,24 @@ interface Props {
   country: string
   count: number
   href: string
+  /** Landscape name still pending confirmation with the country team (e.g. PER-PCL). */
+  pending?: boolean
 }
 
-const { code, name, country, count, href } = Astro.props
+const { code, name, country, count, href, pending = false } = Astro.props
 ---
 
 <a class="landscape-card" href={href}>
   <div class="landscape-card-head">
     <span class="landscape-code">{code}</span>
-    <span class="landscape-count">{count} {count === 1 ? 'dataset' : 'datasets'}</span>
+    <span class="landscape-count">
+      {count === 0 ? 'No datasets yet' : `${count} ${count === 1 ? 'dataset' : 'datasets'}`}
+    </span>
   </div>
 
-  <h3 class="landscape-name">{name}</h3>
+  <h3 class="landscape-name">
+    {name}{pending && <span class="landscape-pending">(pending confirmation)</span>}
+  </h3>
   <p class="landscape-country">{country}</p>
 
   <span class="landscape-browse">
@@ -97,6 +103,17 @@ const { code, name, country, count, href } = Astro.props
     margin: 0;
     font-size: var(--text-sm);
     color: var(--color-muted);
+  }
+
+  .landscape-pending {
+    display: inline-block;
+    margin-left: var(--space-2);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--color-muted);
+    white-space: nowrap;
   }
 
   .landscape-browse {

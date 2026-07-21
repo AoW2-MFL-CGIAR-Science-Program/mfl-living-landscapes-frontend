@@ -110,7 +110,7 @@ const readinessDescriptions: Record<string, string> = {
         <tbody>
           <tr><td><strong>Dataset ID</strong></td><td><code>{dataset.id}</code></td></tr>
           <tr><td><strong>Country</strong></td><td>{dataset.country ?? 'Not specified'}</td></tr>
-          <tr><td><strong>Living Landscape</strong></td><td>{dataset.living_landscape}</td></tr>
+          <tr><td><strong>Living Landscape</strong></td><td>{dataset.landscape_name ? `${dataset.landscape_name} (${dataset.living_landscape})` : dataset.living_landscape}</td></tr>
           <tr><td><strong>MFL Theme</strong></td><td>{dataset.mfl_theme ?? 'Not specified'}</td></tr>
           <tr><td><strong>Data Type</strong></td><td>{dataset.data_type ?? 'Not specified'}</td></tr>
           {dataset.spatial_resolution && <tr><td><strong>Spatial Resolution</strong></td><td>{dataset.spatial_resolution}</td></tr>}
@@ -212,7 +212,7 @@ const readinessDescriptions: Record<string, string> = {
             <li>
               <a href={`${base}/catalogue/${r.id}`} style="display: flex; flex-direction: column; gap: 2px; padding: var(--space-4); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); text-decoration: none; color: inherit;">
                 <span style="font-weight: 600; color: var(--color-gray-900);">{r.title}</span>
-                <span style="font-size: var(--text-sm); color: var(--color-gray-500);">{r.living_landscape}{r.mfl_theme ? ` · ${r.mfl_theme}` : ''}</span>
+                <span style="font-size: var(--text-sm); color: var(--color-gray-500);">{r.landscape_name ?? r.living_landscape}{r.mfl_theme ? ` · ${r.mfl_theme}` : ''}</span>
               </a>
             </li>
           ))}

@@ -1,7 +1,9 @@
 export type Country =
+  | 'Cambodia'
   | 'Colombia'
   | "Côte d'Ivoire"
   | 'Ethiopia'
+  | 'Global'
   | 'India'
   | 'Kenya'
   | 'Laos'
@@ -12,20 +14,26 @@ export type Country =
   | 'Vietnam'
   | 'Zimbabwe'
 
+// Canonical living-landscape codes (approved 2026-07-21).
+// 'GLB' is not a landscape: it is the special value carried by
+// global / cross-landscape datasets.
 export type Landscape =
-  | 'MEK-3S'
-  | 'IND-CH'
+  | 'COL-CUM'
+  | 'PER-PCL'
   | 'SEN-FK'
-  | 'KEN-NAT'
-  | 'ZWE-MB'
   | 'CIV-NZ'
   | 'TUN-NW'
   | 'ETH-OG'
-  | 'COL-NAT'
-  | 'PER-NAT'
-  | 'LAO-NAT'
-  | 'VNM-NAT'
-  | 'GLB-UNSPEC'
+  | 'KEN-LVB'
+  | 'KEN-LEI'
+  | 'ZWE-MB'
+  | 'IND-CH'
+  | 'MEK-3S'
+  | 'GLB'
+
+// How much of the world a dataset actually covers, relative to the
+// landscape collection it is published under.
+export type Coverage = 'landscape' | 'national' | 'global'
 
 export type MflTheme =
   | 'Boundaries / admin units'
@@ -54,6 +62,13 @@ export interface Dataset {
   title: string
   living_landscape: Landscape
   readiness_status: ReadinessStatus
+
+  // Added by the catalog pipeline (2026-07): display name for the
+  // living_landscape code, true coverage, and the landscape centroid
+  // [lon, lat] (EPSG:4326) used by the locator map.
+  landscape_name?: string
+  coverage?: Coverage
+  centroid?: number[] | null
 
   // Controlled-vocabulary fields — may be null for incomplete / flagged records
   country: Country | null

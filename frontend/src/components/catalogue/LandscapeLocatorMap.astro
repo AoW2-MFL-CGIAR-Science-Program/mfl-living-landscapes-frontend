@@ -2,8 +2,12 @@
 /**
  * LandscapeLocatorMap — self-contained inline-SVG world locator.
  *
- * Plots APPROXIMATE living-landscape centroids (from MOSAIC bbox_lookup.json,
- * joined to dataset counts at build time) over a real land silhouette.
+ * Draws the CANONICAL living-landscape delineations (approved 2026-07-21,
+ * simplified for display — data/landscape_outlines.json, built from
+ * MOSAIC_catalog/boundaries/ by scripts/build_map_outlines.py) plus one
+ * centroid dot per landscape (data/landscape_centroids.json, joined to
+ * dataset counts at build time). Most landscapes are too small to read at
+ * world scale, so the dots and code labels stay the primary markers.
  *
  * The land silhouette is Natural Earth 110m land, decoded offline from a
  * TopoJSON into a single equirectangular SVG path (data/world_land_path.json,
@@ -13,11 +17,11 @@
  * Labels are placed with a small greedy de-collision pass (fans crowded codes
  * outward and draws a thin leader line back to the dot).
  *
- * Coordinates are coarse locator points, NOT authoritative delineations; this
- * is labelled visibly in the UI. Real delineated boundaries are a 2026 MOSAIC
- * objective and will replace these.
+ * Global / cross-landscape (GLB) datasets have no meaningful point and are
+ * not plotted; the caption notes how many there are.
  */
 import centroidData from '../../../data/landscape_centroids.json'
+import outlineData from '../../../data/landscape_outlines.json'
 import world from '../../../data/world_land_path.json'
 
 interface LandscapePoint {
@@ -31,6 +35,8 @@ interface LandscapePoint {
 }
 
 const points = centroidData.landscapes as LandscapePoint[]
+const outlines = outlineData.outlines as Record<string, string>
+const globalCount = centroidData._meta.global_datasets_not_plotted ?? 0
 const base = import.meta.env.BASE_URL
 
 // ── Equirectangular projection (must match world_land_path.json) ─────
@@ -157,13 +163,14 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
   <div class="locator-head">
     <h2 id="locator-heading" class="locator-title">Where the datasets sit</h2>
     <p class="locator-sub">
-      Approximate locations of the Living Landscapes connected through MOSAIC.
-      Dot size reflects how many datasets are registered for each landscape.
+      The Living Landscapes connected through MOSAIC, shown with their delineated
+      boundaries (simplified for display). Dot size reflects how many datasets are
+      registered for each landscape.
     </p>
 
     <ul class="locator-legend" aria-hidden="false">
-      <li><span class="locator-key locator-key--landscape"></span> Landscape locator point</li>
-      <li><span class="locator-key locator-key--fallback"></span> Country-level point (landscape not yet delineated)</li>
+      <li><span class="locator-key locator-key--boundary"></span> Delineated landscape boundary (simplified)</li>
+      <li><span class="locator-key locator-key--landscape"></span> Landscape centroid, sized by dataset count</li>
     </ul>
   </div>
 
@@ -172,7 +179,7 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
       class="locator-svg"
       viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
       role="img"
-      aria-label="World locator map of MOSAIC Living Landscapes with one dot per landscape."
+      aria-label="World map of MOSAIC Living Landscapes showing each landscape's delineated boundary and a centroid dot sized by dataset count."
       preserveAspectRatio="xMidYMid meet"
     >
       <defs>
@@ -202,6 +209,20 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
       <!-- Land silhouette -->
       <path d={world.d} fill="url(#locator-land)" stroke="#85ABA3" stroke-width="0.18" stroke-linejoin="round" />
 
+      <!-- Landscape boundaries (canonical delineations, simplified for display) -->
+      <g
+        fill="var(--mosaic-teal)"
+        fill-opacity="0.25"
+        fill-rule="evenodd"
+        stroke="var(--mosaic-teal)"
+        stroke-width="0.4"
+        stroke-linejoin="round"
+      >
+        {Object.entries(outlines).map(([code, d]) => (
+          <path d={d} data-code={code} />
+        ))}
+      </g>
+
       <!-- Leader lines (under the dots) -->
       <g stroke="#5F8079" stroke-width="0.28" opacity="0.85">
         {layout.map((m) => m.line && (
@@ -224,13 +245,16 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
     </svg>
   </div>
 
-  <p class="locator-approx" role="note">
+  <p class="locator-note" role="note">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
     </svg>
     <span>
-      Locations are <strong>approximate</strong> locator points, not authoritative boundaries.
-      Delineated landscape maps are a 2026 MOSAIC objective.
+      Boundaries are the <strong>canonical Living Landscape delineations</strong>, simplified for
+      display; each dot marks the landscape centroid.
+      {globalCount > 0 && (
+        <> Plus {globalCount} global / cross-landscape dataset{globalCount === 1 ? '' : 's'} not shown on the map — <a href={`${base}/catalogue?landscape=GLB`}>browse them in the catalogue</a>.</>
+      )}
     </span>
   </p>
 </section>
@@ -291,22 +315,23 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
     stroke-width: 0.8px;
   }
 
-  /* Full-width approximate note under both columns so it reads in clean lines */
-  .locator-approx {
+  /* Full-width provenance note under both columns so it reads in clean lines */
+  .locator-note {
     grid-column: 1 / -1;
     display: flex;
     align-items: center;
     gap: 0.5rem;
     font-size: 0.82rem;
     line-height: 1.45;
-    color: #8A540F;
-    background: #F6E6CE;
+    color: var(--mosaic-teal);
+    background: var(--mosaic-light-teal);
     border-radius: 8px;
     padding: 0.6rem 0.85rem;
     margin: 0.25rem 0 0;
   }
-  .locator-approx svg { flex: 0 0 auto; }
-  .locator-approx strong { font-weight: 700; }
+  .locator-note svg { flex: 0 0 auto; }
+  .locator-note strong { font-weight: 700; }
+  .locator-note a { color: inherit; font-weight: 600; }
 
   .locator-legend {
     display: flex;
@@ -327,7 +352,11 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
     display: inline-block;
   }
   .locator-key--landscape { background: #0D5C6B; }
-  .locator-key--fallback { background: #C97D1B; }
+  .locator-key--boundary {
+    border-radius: 3px;
+    border: 1.5px solid var(--mosaic-teal);
+    background: rgba(13, 92, 107, 0.25);
+  }
 
   @media (max-width: 860px) {
     .locator { grid-template-columns: 1fr; gap: 1.25rem; }

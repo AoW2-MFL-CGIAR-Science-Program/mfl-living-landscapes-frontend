@@ -104,7 +104,7 @@ export function DatasetCard({ dataset, base }: Props) {
 
         <div className="ds-card-meta">
           {dataset.country && <span className="ds-meta-item"><GlobeIcon />{dataset.country}</span>}
-          <span className="ds-meta-item"><MapIcon />{dataset.living_landscape}</span>
+          <span className="ds-meta-item"><MapIcon />{dataset.landscape_name ?? dataset.living_landscape}</span>
           {dataset.mfl_theme && <span className="ds-meta-item"><LeafIcon />{dataset.mfl_theme}</span>}
           {dataset.source && <span className="ds-meta-item"><BankIcon />{dataset.source}</span>}
         </div>

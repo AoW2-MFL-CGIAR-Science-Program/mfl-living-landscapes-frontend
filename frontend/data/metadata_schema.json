@@ -15,16 +15,34 @@
     "country": {
       "type": ["string", "null"],
       "enum": [
-        "Colombia", "Côte d'Ivoire", "Ethiopia", "India", "Kenya", "Laos",
-        "Peru", "Senegal", "Tanzania", "Tunisia", "Vietnam", "Zimbabwe", null
+        "Cambodia", "Colombia", "Côte d'Ivoire", "Ethiopia", "Global", "India",
+        "Kenya", "Laos", "Peru", "Senegal", "Tanzania", "Tunisia", "Vietnam",
+        "Zimbabwe", null
       ]
     },
     "living_landscape": {
       "type": "string",
+      "description": "Canonical living-landscape code (approved 2026-07-21). GLB is the special value for global / cross-landscape datasets, not a landscape.",
       "enum": [
-        "MEK-3S", "IND-CH", "SEN-FK", "KEN-NAT", "ZWE-MB", "CIV-NZ",
-        "TUN-NW", "ETH-OG", "COL-NAT", "PER-NAT", "LAO-NAT", "VNM-NAT", "GLB-UNSPEC"
+        "COL-CUM", "PER-PCL", "SEN-FK", "CIV-NZ", "TUN-NW", "ETH-OG",
+        "KEN-LVB", "KEN-LEI", "ZWE-MB", "IND-CH", "MEK-3S", "GLB"
       ]
+    },
+    "landscape_name": {
+      "type": "string",
+      "description": "Display name for the living_landscape code (e.g. 'Central India Highlands', 'Global / cross-landscape')."
+    },
+    "coverage": {
+      "type": "string",
+      "description": "True footprint of the dataset relative to the landscape collection it is published under.",
+      "enum": ["landscape", "national", "global"]
+    },
+    "centroid": {
+      "type": ["array", "null"],
+      "description": "[lon, lat] centroid (EPSG:4326) of the landscape the record is published under; used by the locator map.",
+      "items": { "type": "number" },
+      "minItems": 2,
+      "maxItems": 2
     },
     "mfl_theme": {
       "type": ["string", "null"],

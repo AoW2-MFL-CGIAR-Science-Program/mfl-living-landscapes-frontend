@@ -17,14 +17,18 @@ REQUIRED_FIELDS = [
 # legitimately incomplete or flagged for repair, e.g. the malformed "Soil dataset" rows).
 OPTIONAL_VOCAB_FIELDS = ["country", "mfl_theme", "data_type", "access_level", "license"]
 
+# "Global" is the pseudo-country carried by global / cross-landscape records.
 VALID_COUNTRIES = [
-    "Colombia", "Côte d'Ivoire", "Ethiopia", "India", "Kenya", "Laos",
-    "Peru", "Senegal", "Tanzania", "Tunisia", "Vietnam", "Zimbabwe"
+    "Cambodia", "Colombia", "Côte d'Ivoire", "Ethiopia", "Global", "India",
+    "Kenya", "Laos", "Peru", "Senegal", "Tanzania", "Tunisia", "Vietnam",
+    "Zimbabwe"
 ]
 
+# Canonical living-landscape codes (approved 2026-07-21).
+# "GLB" is the special value for global / cross-landscape datasets.
 VALID_LANDSCAPES = [
-    "MEK-3S", "IND-CH", "SEN-FK", "KEN-NAT", "ZWE-MB", "CIV-NZ",
-    "TUN-NW", "ETH-OG", "COL-NAT", "PER-NAT", "LAO-NAT", "VNM-NAT", "GLB-UNSPEC"
+    "COL-CUM", "PER-PCL", "SEN-FK", "CIV-NZ", "TUN-NW", "ETH-OG",
+    "KEN-LVB", "KEN-LEI", "ZWE-MB", "IND-CH", "MEK-3S", "GLB"
 ]
 
 VALID_MFL_THEMES = [
@@ -45,7 +49,7 @@ VALID_MFL_THEMES = [
 
 VALID_DATA_TYPES = ["Raster", "Vector", "Tabular", "Mixed"]
 
-VALID_ACCESS = ["Open", "CGIAR-internal", "Restricted"]
+VALID_ACCESS = ["Open", "Internal", "CGIAR-internal", "Restricted"]
 
 VALID_READINESS = ["Raw", "Processed", "Validated"]
 

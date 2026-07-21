@@ -73,6 +73,7 @@ const pillars = [
             name={l.name}
             country={l.country}
             count={l.count}
+            pending={'pending' in l && l.pending === true}
             href={`${base}/catalogue?landscape=${l.code}`}
           />
         </li>

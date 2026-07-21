@@ -10,8 +10,10 @@ const datasets = await loadDatasets()
 const base = import.meta.env.BASE_URL
 
 const totalDatasets = datasets.length
-const landscapes = [...new Set(datasets.map((d) => d.living_landscape))].length
-const countries   = [...new Set(datasets.map((d) => d.country))].length
+// 'GLB' is the global / cross-landscape value, not a landscape; likewise the
+// pseudo-country 'Global' carried by those records is not a country.
+const landscapes = [...new Set(datasets.filter((d) => d.living_landscape !== 'GLB').map((d) => d.living_landscape))].length
+const countries   = [...new Set(datasets.map((d) => d.country).filter((c) => c && c !== 'Global'))].length
 ---
 
 <BaseLayout

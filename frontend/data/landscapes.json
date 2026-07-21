@@ -1,15 +1,13 @@
 [
-  { "code": "IND-CH", "name": "Central India Highlands", "country": "India" },
+  { "code": "COL-CUM", "name": "Cumbal (Nariño)", "country": "Colombia" },
+  { "code": "PER-PCL", "name": "Pucallpa – Ucayali", "country": "Peru", "pending": true },
   { "code": "SEN-FK", "name": "Fatick Department", "country": "Senegal" },
-  { "code": "ETH-OG", "name": "Omo-Gibe Basin", "country": "Ethiopia" },
-  { "code": "ZWE-MB", "name": "Mbire / Lower Zambezi", "country": "Zimbabwe" },
-  { "code": "TUN-NW", "name": "Northwestern Tunisia", "country": "Tunisia" },
   { "code": "CIV-NZ", "name": "N'Zi Watershed", "country": "Côte d'Ivoire" },
-  { "code": "MEK-3S", "name": "3S Basins (Sekong, Sesan, Srepok)", "country": "Multi-country" },
-  { "code": "KEN-NAT", "name": "Kenya (national)", "country": "Kenya" },
-  { "code": "LAO-NAT", "name": "Laos (national)", "country": "Laos" },
-  { "code": "VNM-NAT", "name": "Vietnam (national)", "country": "Vietnam" },
-  { "code": "COL-NAT", "name": "Colombia (national)", "country": "Colombia" },
-  { "code": "PER-NAT", "name": "Peru (national)", "country": "Peru" },
-  { "code": "GLB-UNSPEC", "name": "Unspecified (flagged for repair)", "country": "Unspecified" }
+  { "code": "TUN-NW", "name": "Northwestern Tunisia", "country": "Tunisia" },
+  { "code": "ETH-OG", "name": "Omo-Gibe Basin", "country": "Ethiopia" },
+  { "code": "KEN-LVB", "name": "Lake Victoria Basin (Kenya)", "country": "Kenya" },
+  { "code": "KEN-LEI", "name": "LEILA (Southern Kenya Rangelands)", "country": "Kenya" },
+  { "code": "ZWE-MB", "name": "Mbire – Lower Zambezi Valley", "country": "Zimbabwe" },
+  { "code": "IND-CH", "name": "Central India Highlands", "country": "India" },
+  { "code": "MEK-3S", "name": "3S Basins (Sekong, Sesan, Srepok)", "country": "Laos / Cambodia / Vietnam" }
 ]

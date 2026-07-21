@@ -33,7 +33,7 @@ const base = import.meta.env.BASE_URL
             <td><code>id</code></td>
             <td>String</td>
             <td>Unique identifier. Format: LANDSCAPE_THEME-CODE_YEAR_SOURCE_VERSION</td>
-            <td><code>KEN-NAT_LC_2023_ILRI_v1</code></td>
+            <td><code>KEN-LVB_LC_2023_ILRI_v1</code></td>
           </tr>
           <tr>
             <td><code>title</code></td>
@@ -51,7 +51,7 @@ const base = import.meta.env.BASE_URL
             <td><code>living_landscape</code></td>
             <td>Controlled vocabulary</td>
             <td>Living Landscape code</td>
-            <td>KEN-NAT</td>
+            <td>KEN-LVB</td>
           </tr>
           <tr>
             <td><code>mfl_theme</code></td>
@@ -151,38 +151,45 @@ const base = import.meta.env.BASE_URL
       <h3 style="margin-bottom: var(--space-3);">Country</h3>
       <p style="color: var(--color-gray-600); margin-bottom: var(--space-3); font-size: var(--text-sm);">Priority countries for 2026: Kenya, Ethiopia, India.</p>
       <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-8);">
-        {['Kenya', 'Ethiopia', 'India', 'Colombia', 'Peru', "Côte d'Ivoire", 'Senegal', 'Tanzania', 'Tunisia', 'Vietnam', 'Laos', 'Zimbabwe'].map((v) => (
+        {['Kenya', 'Ethiopia', 'India', 'Colombia', 'Peru', "Côte d'Ivoire", 'Senegal', 'Tanzania', 'Tunisia', 'Vietnam', 'Laos', 'Cambodia', 'Zimbabwe'].map((v) => (
           <code style="background-color: var(--color-gray-100); padding: var(--space-1) var(--space-2); border-radius: var(--radius-sm); font-size: var(--text-sm);">{v}</code>
         ))}
       </div>
 
       <h3 style="margin-bottom: var(--space-3);">Living Landscape</h3>
       <p style="color: var(--color-gray-600); margin-bottom: var(--space-3); font-size: var(--text-sm);">
-        Codes are <strong>provisional</strong> and pending confirmation of the canonical MFL landscape list.
-        <code>*-NAT</code> are national-level fallbacks; <code>GLB-UNSPEC</code> is a catch-all for unscoped datasets.
+        These are the <strong>canonical</strong> MFL Living Landscape codes (approved 2026-07-21),
+        matching the delineated landscape boundaries.
       </p>
-      <table class="data-table" style="margin-bottom: var(--space-8);">
+      <table class="data-table" style="margin-bottom: var(--space-4);">
         <thead><tr><th>Code</th><th>Landscape Name</th><th>Country</th></tr></thead>
         <tbody>
           {[
-            ['KEN-NAT', 'Kenya (national)', 'Kenya'],
-            ['ETH-OG', 'Omo-Gibe Basin', 'Ethiopia'],
-            ['IND-CH', 'Central India Highlands', 'India'],
-            ['COL-NAT', 'Colombia (national)', 'Colombia'],
-            ['PER-NAT', 'Peru (national)', 'Peru'],
-            ['VNM-NAT', 'Vietnam (national)', 'Vietnam'],
-            ['LAO-NAT', 'Laos (national)', 'Laos'],
-            ['MEK-3S', '3S Basins (Sekong, Sesan, Srepok)', 'Multi-country'],
-            ['CIV-NZ', "N'Zi Watershed", "Côte d'Ivoire"],
+            ['COL-CUM', 'Cumbal (Nariño)', 'Colombia'],
+            ['PER-PCL', 'Pucallpa – Ucayali', 'Peru'],
             ['SEN-FK', 'Fatick Department', 'Senegal'],
+            ['CIV-NZ', "N'Zi Watershed", "Côte d'Ivoire"],
             ['TUN-NW', 'Northwestern Tunisia', 'Tunisia'],
-            ['ZWE-MB', 'Mbire / Lower Zambezi Valley', 'Zimbabwe'],
-            ['GLB-UNSPEC', 'Unspecified (catch-all)', '—'],
+            ['ETH-OG', 'Omo-Gibe Basin', 'Ethiopia'],
+            ['KEN-LVB', 'Lake Victoria Basin (Kenya)', 'Kenya'],
+            ['KEN-LEI', 'LEILA (Southern Kenya Rangelands)', 'Kenya'],
+            ['ZWE-MB', 'Mbire – Lower Zambezi Valley', 'Zimbabwe'],
+            ['IND-CH', 'Central India Highlands', 'India'],
+            ['MEK-3S', '3S Basins (Sekong, Sesan, Srepok)', 'Laos / Cambodia / Vietnam'],
           ].map(([code, name, country]) => (
             <tr><td><code>{code}</code></td><td>{name}</td><td>{country}</td></tr>
           ))}
         </tbody>
       </table>
+      <p style="color: var(--color-gray-600); margin-bottom: var(--space-8); font-size: var(--text-sm);">
+        Datasets that are wider than a single landscape use the registry values
+        <strong>"NATIONAL — Country-wide coverage"</strong> or
+        <strong>"GLOBAL — Global / cross-landscape"</strong>. In the published catalogue these
+        resolve to the country's landscape collection or to the special value <code>GLB</code>
+        respectively, and each record carries a <code>coverage</code> field
+        (<code>landscape</code> | <code>national</code> | <code>global</code>) recording the
+        dataset's true footprint.
+      </p>
 
       <h3 style="margin-bottom: var(--space-3);">MFL Theme</h3>
       <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-8);">
