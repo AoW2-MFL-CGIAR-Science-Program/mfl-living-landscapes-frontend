@@ -92,6 +92,18 @@ function isActive(href: string, exact = false) {
     <Icon name="moon" size={20} aria-hidden="true" />
     <span class="theme-toggle-label">Switch theme</span>
   </button>
+
+  <!-- CGIAR / MFL co-branding: on mobile the lockup lives here instead of the
+       header bar. Official lockup used as supplied, on a white panel — the
+       menu panel background is --color-white, which never flips dark. -->
+  <div class="mobile-menu-cobrand">
+    <img
+      src={`${base}/cgiar-mfl-lockup.png`}
+      alt="CGIAR Multifunctional Landscapes"
+      width="2048"
+      height="687"
+    />
+  </div>
 </nav>
 
 <style>
@@ -282,7 +294,28 @@ function isActive(href: string, exact = false) {
     padding-left: calc(var(--space-6) - 3px);
   }
 
+  .mobile-menu-cobrand {
+    margin-top: var(--space-4);
+    padding: var(--space-4) var(--space-6) 0;
+    border-top: 1px solid var(--color-gray-200);
+  }
+
+  .mobile-menu-cobrand img {
+    display: block;
+    height: 34px;
+    width: auto;
+  }
+
   /* ── Responsive: show hamburger, hide desktop nav ──── */
+  /* Intermediate widths (~768–1100px): tighten the link row so the header's
+     logo + nav + toggle + lockup all fit on one line. */
+  @media (max-width: 1099px) {
+    .nav-list { gap: var(--space-4); }
+  }
+  @media (max-width: 919px) {
+    .nav-list { gap: var(--space-3); }
+    .nav-link { font-size: 0.8rem; }
+  }
   @media (max-width: 767px) {
     .main-nav { display: none; }
     .hamburger { display: flex; }

@@ -269,7 +269,9 @@ const featured = datasets.slice(0, 3)
   }
   .btn-hero-primary:hover { background-color: #b06d12; border-color: #b06d12; color: var(--color-white); }
   .btn-hero-ghost {
-    background-color: var(--color-surface);
+    /* Sits on the hero band, which stays light in BOTH themes — use the
+       never-remapped white, not --color-surface (dark-on-dark in dark mode). */
+    background-color: var(--color-white);
     color: var(--mosaic-teal);
     border: 2px solid var(--mosaic-teal);
     font-weight: 600;

@@ -16,11 +16,26 @@ const base = import.meta.env.BASE_URL
       />
       <div class="site-logo-text">
         <span class="site-logo-name">MOSAIC</span>
-        <span class="site-logo-tagline">CGIAR MFL Science Programme</span>
+        <span class="site-logo-tagline">CGIAR Multifunctional Landscapes Science&nbsp;Programme</span>
       </div>
     </a>
 
     <Nav />
+
+    <!-- CGIAR / MFL co-branding. The official lockup is used as supplied and
+         always sits on a white chip: the header bar is teal in the light theme
+         and a dark surface in the dark theme, and the lockup must never sit on
+         a dark or coloured background (CGIAR brand rule). Hidden < 768px — it
+         moves into the mobile menu panel instead (see Nav.astro). -->
+    <div class="site-cobrand">
+      <img
+        src={`${base}/cgiar-mfl-lockup.png`}
+        alt="CGIAR Multifunctional Landscapes"
+        class="site-cobrand-img"
+        width="2048"
+        height="687"
+      />
+    </div>
   </div>
 </header>
 
@@ -42,7 +57,9 @@ const base = import.meta.env.BASE_URL
     justify-content: space-between;
     padding-top: var(--space-3);
     padding-bottom: var(--space-3);
-    gap: var(--space-4);
+    /* Squeezes gently at intermediate widths so logo + nav + toggle + lockup
+       never collide (see the 768–1100px adjustments below). */
+    gap: clamp(var(--space-3), 2vw, var(--space-6));
   }
 
   .site-logo {
@@ -82,14 +99,56 @@ const base = import.meta.env.BASE_URL
   }
 
   .site-logo-tagline {
-    font-size: 0.65rem;
-    color: var(--mosaic-light-teal);
-    letter-spacing: 0.07em;
+    /* Full programme name: slightly larger and higher-contrast than the old
+       abbreviated tagline; capped width so it wraps to two tidy lines. */
+    font-size: 0.72rem;
+    color: #F2FAFC;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     font-weight: 600;
+    max-width: 26ch;
+    line-height: 1.3;
   }
 
+  /* ── CGIAR / MFL lockup chip (far right of the bar on desktop) ────── */
+  .site-cobrand {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    /* --color-white is never remapped by the dark theme, so the chip stays
+       white under the green lockup in both themes (brand rule). */
+    background-color: var(--color-white);
+    border-radius: var(--radius-md);
+    padding: 4px 10px;
+  }
+
+  .site-cobrand-img {
+    display: block;
+    height: 38px;
+    width: auto;
+  }
+
+  /* Intermediate widths (~768–1100px): shrink the lockup and tagline in two
+     steps so the row keeps fitting without wrapping or collisions. */
+  @media (max-width: 1099px) {
+    .site-cobrand-img { height: 30px; }
+    .site-logo-tagline { font-size: 0.66rem; max-width: 24ch; }
+  }
+  @media (max-width: 919px) {
+    .site-cobrand { padding: 3px 8px; }
+    .site-cobrand-img { height: 26px; }
+    .site-logo-tagline { font-size: 0.6rem; max-width: 22ch; }
+    .site-logo-mark { height: 22px; }
+  }
+
+  /* < 768px the nav collapses to the hamburger; the lockup moves into the
+     mobile menu panel (Nav.astro) so the bar never crowds. The tagline stays
+     visible at every width — it only shrinks. */
+  @media (max-width: 767px) {
+    .site-cobrand { display: none; }
+    .site-logo-tagline { font-size: 0.6rem; max-width: 24ch; }
+  }
   @media (max-width: 480px) {
-    .site-logo-tagline { display: none; }
+    .site-logo-tagline { font-size: 0.56rem; letter-spacing: 0.05em; }
   }
 </style>
