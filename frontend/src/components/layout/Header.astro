@@ -14,10 +14,7 @@ const base = import.meta.env.BASE_URL
         height="26"
         aria-hidden="true"
       />
-      <div class="site-logo-text">
-        <span class="site-logo-name">MOSAIC</span>
-        <span class="site-logo-tagline">CGIAR Multifunctional Landscapes Science&nbsp;Programme</span>
-      </div>
+      <span class="site-logo-name">MOSAIC</span>
     </a>
 
     <Nav />
@@ -83,31 +80,12 @@ const base = import.meta.env.BASE_URL
     flex-shrink: 0;
   }
 
-  .site-logo-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.15;
-    gap: 1px;
-  }
-
   .site-logo-name {
     font-family: var(--font-title);
     font-size: var(--text-xl);
     font-weight: 700;
     letter-spacing: 0.04em;
     color: var(--color-white);
-  }
-
-  .site-logo-tagline {
-    /* Full programme name: slightly larger and higher-contrast than the old
-       abbreviated tagline; capped width so it wraps to two tidy lines. */
-    font-size: 0.72rem;
-    color: #F2FAFC;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    font-weight: 600;
-    max-width: 26ch;
-    line-height: 1.3;
   }
 
   /* ── CGIAR / MFL lockup chip (far right of the bar on desktop) ────── */
@@ -132,23 +110,16 @@ const base = import.meta.env.BASE_URL
      steps so the row keeps fitting without wrapping or collisions. */
   @media (max-width: 1099px) {
     .site-cobrand-img { height: 30px; }
-    .site-logo-tagline { font-size: 0.66rem; max-width: 24ch; }
   }
   @media (max-width: 919px) {
     .site-cobrand { padding: 3px 8px; }
     .site-cobrand-img { height: 26px; }
-    .site-logo-tagline { font-size: 0.6rem; max-width: 22ch; }
     .site-logo-mark { height: 22px; }
   }
 
   /* < 768px the nav collapses to the hamburger; the lockup moves into the
-     mobile menu panel (Nav.astro) so the bar never crowds. The tagline stays
-     visible at every width — it only shrinks. */
+     mobile menu panel (Nav.astro) so the bar never crowds. */
   @media (max-width: 767px) {
     .site-cobrand { display: none; }
-    .site-logo-tagline { font-size: 0.6rem; max-width: 24ch; }
-  }
-  @media (max-width: 480px) {
-    .site-logo-tagline { font-size: 0.56rem; letter-spacing: 0.05em; }
   }
 </style>
