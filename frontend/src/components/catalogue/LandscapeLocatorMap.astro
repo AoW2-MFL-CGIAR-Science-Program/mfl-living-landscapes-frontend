@@ -1,6 +1,7 @@
 ---
 /**
- * LandscapeLocatorMap — self-contained inline-SVG world locator.
+ * LandscapeLocatorMap — self-contained inline-SVG world locator with
+ * click-to-zoom.
  *
  * Draws the CANONICAL living-landscape delineations (approved 2026-07-21,
  * simplified for display — data/landscape_outlines.json, built from
@@ -9,10 +10,19 @@
  * dataset counts at build time). Most landscapes are too small to read at
  * world scale, so the dots and code labels stay the primary markers.
  *
+ * Clicking a landscape (dot, code label or boundary) animates the SVG
+ * viewBox to that landscape's bbox (letterboxed into the map aspect, the
+ * boundary capped at ~70% of the frame). While zoomed, an HTML info chip
+ * carries the name, country, dataset count, the "View datasets" link (the
+ * navigation the dots used to do) and a "World view" reset. Escape, the
+ * reset button, or clicking outside the boundary zoom back out. The zoom
+ * logic is vanilla TS in the component <script> — no runtime deps.
+ *
  * The land silhouette is Natural Earth 110m land, decoded offline from a
  * TopoJSON into a single equirectangular SVG path (data/world_land_path.json,
- * projection: x = lon + 180, y = 90 − lat). No runtime fetch, no map tiles,
- * no extra dependencies — builds and previews fully offline.
+ * projection: x = lon + 180, y = 90 − lat). It stays 110m-coarse when
+ * zoomed — context only. No runtime fetch, no map tiles, no extra
+ * dependencies — builds and previews fully offline.
  *
  * Labels are placed with a small greedy de-collision pass (fans crowded codes
  * outward and draws a thin leader line back to the dot).
@@ -34,8 +44,13 @@ interface LandscapePoint {
   fallback: boolean
 }
 
+interface Outline {
+  d: string
+  bbox: number[] // projected [x0, y0, x1, y1]
+}
+
 const points = centroidData.landscapes as LandscapePoint[]
-const outlines = outlineData.outlines as Record<string, string>
+const outlines = outlineData.outlines as Record<string, Outline>
 const globalCount = centroidData._meta.global_datasets_not_plotted ?? 0
 const base = import.meta.env.BASE_URL
 
@@ -157,6 +172,26 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
 
   layout.push({ p, cx, cy, r, lx: best.lx, ly: best.ly, line })
 }
+
+// Human-readable count phrase, shared by tooltips / labels.
+const countPhrase = (n: number) =>
+  n === 0 ? 'no datasets yet' : `${n} dataset${n === 1 ? '' : 's'}`
+
+// ── Payload for the client-side zoom script ──────────────────────────
+const payload = {
+  base,
+  world: [VB_X, VB_Y, VB_W, VB_H],
+  landscapes: Object.fromEntries(
+    points
+      .filter((p) => outlines[p.code])
+      .map((p) => [
+        p.code,
+        { name: p.name, country: p.country, count: p.count, bbox: outlines[p.code].bbox },
+      ]),
+  ),
+}
+// <-escape so the inline JSON can never close its own <script> tag.
+const payloadJson = JSON.stringify(payload).replace(/</g, '\\u003c')
 ---
 
 <section class="locator" aria-labelledby="locator-heading">
@@ -165,7 +200,9 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
     <p class="locator-sub">
       The Living Landscapes connected through MOSAIC, shown with their delineated
       boundaries (simplified for display). Dot size reflects how many datasets are
-      registered for each landscape.
+      registered for each landscape. <strong>Click a landscape</strong> — its dot,
+      code or boundary — to zoom to its delineation; press Escape or choose
+      “World view” to return.
     </p>
 
     <ul class="locator-legend" aria-hidden="false">
@@ -179,7 +216,7 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
       class="locator-svg"
       viewBox={`${VB_X} ${VB_Y} ${VB_W} ${VB_H}`}
       role="img"
-      aria-label="World map of MOSAIC Living Landscapes showing each landscape's delineated boundary and a centroid dot sized by dataset count."
+      aria-label="World map of MOSAIC Living Landscapes. Click a landscape to zoom to its delineated boundary; each dot marks a landscape centroid sized by dataset count."
       preserveAspectRatio="xMidYMid meet"
     >
       <defs>
@@ -197,7 +234,7 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
       <rect x={VB_X} y={VB_Y} width={VB_W} height={VB_H} fill="url(#locator-sea)" />
 
       <!-- Graticule -->
-      <g stroke="#C6DCDC" stroke-width="0.18" stroke-dasharray="1.4 1.6" opacity="0.9">
+      <g class="locator-graticule" stroke="#C6DCDC" stroke-width="0.18" stroke-dasharray="1.4 1.6" opacity="0.9">
         {meridians.map((lon) => (
           <line x1={projX(lon)} y1={VB_Y} x2={projX(lon)} y2={VB_Y + VB_H} />
         ))}
@@ -206,43 +243,70 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
         ))}
       </g>
 
-      <!-- Land silhouette -->
-      <path d={world.d} fill="url(#locator-land)" stroke="#85ABA3" stroke-width="0.18" stroke-linejoin="round" />
+      <!-- Land silhouette (kept as context when zoomed) -->
+      <path d={world.d} fill="url(#locator-land)" stroke="#85ABA3" stroke-width="0.18" stroke-linejoin="round" vector-effect="non-scaling-stroke" />
 
       <!-- Landscape boundaries (canonical delineations, simplified for display) -->
       <g
+        class="locator-outlines"
         fill="var(--mosaic-teal)"
         fill-opacity="0.25"
         fill-rule="evenodd"
         stroke="var(--mosaic-teal)"
-        stroke-width="0.4"
         stroke-linejoin="round"
       >
-        {Object.entries(outlines).map(([code, d]) => (
-          <path d={d} data-code={code} />
+        {Object.entries(outlines).map(([code, o]) => (
+          <path class="locator-outline" d={o.d} data-code={code} vector-effect="non-scaling-stroke" />
         ))}
       </g>
 
-      <!-- Leader lines (under the dots) -->
-      <g stroke="#5F8079" stroke-width="0.28" opacity="0.85">
+      <!-- Leader lines (under the labels) -->
+      <g class="locator-leaders" stroke="#5F8079" stroke-width="0.28" opacity="0.85">
         {layout.map((m) => m.line && (
           <line x1={m.line.x1} y1={m.line.y1} x2={m.line.x2} y2={m.line.y2} />
         ))}
       </g>
 
-      <!-- Landscape dots + labels -->
-      {layout.map((m) => {
-        const fill = m.p.fallback ? '#C97D1B' : '#0D5C6B'
-        return (
-          <a href={`${base}/catalogue?landscape=${m.p.code}`} class="locator-dot">
-            <title>{`${m.p.name} (${m.p.code}) — ${m.p.count} dataset${m.p.count === 1 ? '' : 's'}${m.p.fallback ? ' · approximate, country-level point' : ''}`}</title>
-            <circle cx={m.cx} cy={m.cy} r={m.r + 1.3} fill="#FFFFFF" opacity="0.92" />
-            <circle cx={m.cx} cy={m.cy} r={m.r} fill={fill} stroke="#FFFFFF" stroke-width="0.5" />
-            <text x={m.lx} y={m.ly + 1.02} class="locator-label" text-anchor="middle">{m.p.code}</text>
-          </a>
-        )
-      })}
+      <!-- Code labels (click targets too; the HTML dot buttons carry a11y) -->
+      <g class="locator-labels">
+        {layout.map((m) => (
+          <text x={m.lx} y={m.ly + 1.02} class="locator-label" text-anchor="middle" data-code={m.p.code}>{m.p.code}</text>
+        ))}
+      </g>
     </svg>
+
+    <!-- Centroid dots: real HTML buttons overlaid on the SVG (positioned in %
+         of the world view, so they track the responsive map). Hidden while
+         zoomed — the info chip takes over. -->
+    <div class="locator-dots">
+      {layout.map((m) => (
+        <button
+          type="button"
+          class="locator-dot"
+          data-code={m.p.code}
+          title={`${m.p.name} (${m.p.code}) — ${countPhrase(m.p.count)}. Click to zoom to its boundary.`}
+          aria-label={`${m.p.name}, ${countPhrase(m.p.count)} — zoom to boundary`}
+          style={`left:${(((m.cx - VB_X) / VB_W) * 100).toFixed(3)}%;top:${(((m.cy - VB_Y) / VB_H) * 100).toFixed(3)}%;--dot:${(((2 * m.r) / VB_W) * 100).toFixed(3)}%;`}
+        ></button>
+      ))}
+    </div>
+
+    <!-- Info chip shown while zoomed (HTML overlay, semantic tokens) -->
+    <div class="locator-chip" hidden>
+      <p class="locator-chip-head">
+        <strong class="locator-chip-name"></strong>
+        <span class="locator-chip-meta"></span>
+      </p>
+      <div class="locator-chip-actions">
+        <a class="locator-chip-link" href="#"></a>
+        <span class="locator-chip-empty" hidden>No datasets yet</span>
+        <button type="button" class="locator-chip-reset">&larr; World view</button>
+      </div>
+    </div>
+
+    <p class="locator-live" role="status" aria-live="polite"></p>
+
+    <script type="application/json" class="locator-payload" is:inline set:html={payloadJson} />
   </div>
 
   <p class="locator-note" role="note">
@@ -258,6 +322,161 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
     </span>
   </p>
 </section>
+
+<script>
+  // Click-to-zoom for the locator map. Vanilla TS — no runtime dependencies.
+  type View = [number, number, number, number]
+
+  interface LandscapeInfo {
+    name: string
+    country: string | null
+    count: number
+    bbox: View
+  }
+
+  interface Payload {
+    base: string
+    world: View
+    landscapes: Record<string, LandscapeInfo>
+  }
+
+  const ZOOM_MS = 600
+  const MAX_FILL = 0.7 // boundary occupies at most 70% of the frame
+
+  function initLocator(figure: HTMLElement) {
+    const svg = figure.querySelector<SVGSVGElement>('.locator-svg')
+    const payloadEl = figure.querySelector('.locator-payload')
+    const chip = figure.querySelector<HTMLElement>('.locator-chip')
+    const chipName = figure.querySelector<HTMLElement>('.locator-chip-name')
+    const chipMeta = figure.querySelector<HTMLElement>('.locator-chip-meta')
+    const chipLink = figure.querySelector<HTMLAnchorElement>('.locator-chip-link')
+    const chipEmpty = figure.querySelector<HTMLElement>('.locator-chip-empty')
+    const chipReset = figure.querySelector<HTMLButtonElement>('.locator-chip-reset')
+    const live = figure.querySelector<HTMLElement>('.locator-live')
+    if (!svg || !payloadEl?.textContent || !chip || !chipName || !chipMeta || !chipLink || !chipEmpty || !chipReset || !live) return
+
+    const payload = JSON.parse(payloadEl.textContent) as Payload
+    const WORLD = payload.world
+    const ASPECT = WORLD[2] / WORLD[3]
+    const dots = Array.from(figure.querySelectorAll<HTMLButtonElement>('.locator-dot'))
+    const outlinePaths = Array.from(svg.querySelectorAll<SVGPathElement>('.locator-outline'))
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+
+    let selected: string | null = null
+    let raf = 0
+
+    const setView = (v: View) => svg.setAttribute('viewBox', v.map((n) => n.toFixed(3)).join(' '))
+    const currentView = (): View =>
+      (svg.getAttribute('viewBox') ?? WORLD.join(' ')).split(/\s+/).map(Number) as View
+
+    // Letterbox the landscape bbox into the map's fixed aspect ratio:
+    // grow both dimensions so the boundary fills at most MAX_FILL of the
+    // frame (≈ 21% padding per side), then widen the short axis until the
+    // view matches ASPECT (VB_W / VB_H), centred on the bbox centre.
+    const viewFor = (bbox: View): View => {
+      const cx = (bbox[0] + bbox[2]) / 2
+      const cy = (bbox[1] + bbox[3]) / 2
+      let w = Math.max(bbox[2] - bbox[0], 0.02) / MAX_FILL
+      let h = Math.max(bbox[3] - bbox[1], 0.02) / MAX_FILL
+      if (w / h < ASPECT) w = h * ASPECT
+      else h = w / ASPECT
+      return [cx - w / 2, cy - h / 2, w, h]
+    }
+
+    const easeInOutCubic = (t: number) =>
+      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+
+    const animateTo = (target: View) => {
+      cancelAnimationFrame(raf)
+      // Hidden documents never fire rAF — jump straight to the target so the
+      // map is never left mid-flight (e.g. user switches tabs mid-zoom).
+      if (reduceMotion.matches || document.hidden) {
+        setView(target)
+        return
+      }
+      const from = currentView()
+      const t0 = performance.now()
+      const step = (now: number) => {
+        const k = easeInOutCubic(Math.min((now - t0) / ZOOM_MS, 1))
+        setView([
+          from[0] + (target[0] - from[0]) * k,
+          from[1] + (target[1] - from[1]) * k,
+          from[2] + (target[2] - from[2]) * k,
+          from[3] + (target[3] - from[3]) * k,
+        ])
+        if (now - t0 < ZOOM_MS) raf = requestAnimationFrame(step)
+      }
+      raf = requestAnimationFrame(step)
+    }
+
+    const countPhrase = (n: number) => (n === 0 ? 'no datasets yet' : `${n} dataset${n === 1 ? '' : 's'}`)
+
+    const zoomTo = (code: string) => {
+      const info = payload.landscapes[code]
+      if (!info || selected === code) return
+      selected = code
+      figure.classList.add('is-zoomed')
+      for (const p of outlinePaths) p.classList.toggle('is-selected', p.getAttribute('data-code') === code)
+
+      chipName.textContent = info.name
+      chipMeta.textContent = `${info.country ? `${info.country} · ` : ''}${countPhrase(info.count)}`
+      if (info.count > 0) {
+        chipLink.hidden = false
+        chipEmpty.hidden = true
+        chipLink.href = `${payload.base}/catalogue?landscape=${code}`
+        chipLink.textContent = `View ${info.count} dataset${info.count === 1 ? '' : 's'} →`
+      } else {
+        chipLink.hidden = true
+        chipEmpty.hidden = false
+      }
+      chip.hidden = false
+      live.textContent = `Zoomed to ${info.name} — ${countPhrase(info.count)}. Press Escape to return to the world view.`
+      animateTo(viewFor(info.bbox))
+      // The clicked dot is being hidden; keep focus inside the map.
+      chipReset.focus({ preventScroll: true })
+    }
+
+    const resetView = () => {
+      if (!selected) return
+      const code = selected
+      selected = null
+      chip.hidden = true
+      figure.classList.remove('is-zoomed')
+      for (const p of outlinePaths) p.classList.remove('is-selected')
+      live.textContent = 'World view restored.'
+      animateTo(WORLD)
+      const dot = dots.find((d) => d.getAttribute('data-code') === code)
+      requestAnimationFrame(() => dot?.focus({ preventScroll: true }))
+    }
+
+    for (const dot of dots) {
+      dot.addEventListener('click', () => {
+        const code = dot.getAttribute('data-code')
+        if (code) zoomTo(code)
+      })
+    }
+
+    chipReset.addEventListener('click', resetView)
+
+    // Delegated SVG clicks: outlines/labels zoom in; while zoomed, anything
+    // that is not the selected boundary (sea, land, faded marks) zooms out.
+    svg.addEventListener('click', (e) => {
+      const hit = (e.target as Element).closest('[data-code]')
+      const code = hit?.getAttribute('data-code') ?? null
+      if (!selected) {
+        if (code) zoomTo(code)
+      } else if (code !== selected) {
+        resetView()
+      }
+    })
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && selected) resetView()
+    })
+  }
+
+  document.querySelectorAll<HTMLElement>('.locator-figure').forEach(initLocator)
+</script>
 
 <style>
   .locator {
@@ -283,7 +502,7 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
     color: var(--color-muted);
     margin: 0 0 1rem;
   }
-  .locator-figure { margin: 0; }
+  .locator-figure { position: relative; margin: 0; }
   .locator-svg {
     width: 100%;
     height: auto;
@@ -292,6 +511,20 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
     border: 1px solid #D4E6E7;
     background: #EEF5F5;
   }
+
+  /* Boundaries: hairline strokes at any zoom via non-scaling-stroke
+     (stroke-width is in screen px, not viewBox units). */
+  .locator-outline {
+    stroke-width: 1;
+    cursor: pointer;
+    transition: opacity 0.3s ease, fill-opacity 0.3s ease;
+  }
+  .locator-outline.is-selected {
+    fill-opacity: 0.4;
+    stroke-width: 1.6;
+    cursor: default;
+  }
+
   .locator-label {
     font-size: 2.9px;
     font-weight: 700;
@@ -301,18 +534,129 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
     stroke: #FFFFFF;
     stroke-width: 0.7px;
     stroke-linejoin: round;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* ── Centroid dot buttons (HTML overlay) ─────────────────────────── */
+  .locator-dots {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  .locator-dot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: max(11px, var(--dot));
+    aspect-ratio: 1;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--mosaic-teal);
+    border: 1px solid #FFFFFF;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.92);
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  .locator-dot:hover {
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.92), 0 0 0 3.5px var(--mosaic-terracotta);
+  }
+  .locator-dot:focus-visible {
+    outline: 2px solid var(--mosaic-teal);
+    outline-offset: 3px;
+  }
+
+  /* ── Zoomed state: only the selected boundary + land context remain ── */
+  .locator-graticule,
+  .locator-leaders,
+  .locator-labels {
+    transition: opacity 0.3s ease;
+  }
+  .is-zoomed .locator-graticule,
+  .is-zoomed .locator-leaders,
+  .is-zoomed .locator-labels {
+    opacity: 0;
     pointer-events: none;
   }
-  .locator-dot { cursor: pointer; }
-  .locator-dot:hover circle:nth-of-type(2),
-  .locator-dot:focus circle:nth-of-type(2) {
-    stroke: #B54D2F;
-    stroke-width: 0.8px;
+  .is-zoomed .locator-dots {
+    opacity: 0;
+    visibility: hidden;
   }
-  .locator-dot:focus { outline: none; }
-  .locator-dot:focus-visible circle:nth-of-type(1) {
-    stroke: #0D5C6B;
-    stroke-width: 0.8px;
+  .is-zoomed .locator-outline:not(.is-selected) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ── Info chip (HTML overlay, semantic tokens → dark-mode aware) ──── */
+  .locator-chip {
+    --chip-link: var(--mosaic-teal);
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    z-index: 2;
+    max-width: min(78%, 320px);
+    display: grid;
+    gap: 0.4rem;
+    padding: 0.6rem 0.75rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    box-shadow: var(--shadow-card);
+    color: var(--color-text);
+    font-size: 0.85rem;
+    line-height: 1.35;
+  }
+  .locator-chip[hidden] { display: none; }
+  :global([data-theme='dark']) .locator-chip { --chip-link: var(--mosaic-light-teal); }
+  .locator-chip-head { margin: 0; display: grid; gap: 0.1rem; }
+  .locator-chip-name {
+    font-family: var(--font-title, Georgia, serif);
+    font-size: 0.95rem;
+    color: var(--color-text);
+  }
+  .locator-chip-meta { color: var(--color-muted); }
+  .locator-chip-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .locator-chip-link {
+    color: var(--chip-link);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .locator-chip-link:hover,
+  .locator-chip-link:focus-visible { text-decoration: underline; }
+  .locator-chip-empty { color: var(--color-muted); font-style: italic; }
+  .locator-chip-reset {
+    margin-left: auto;
+    padding: 0.25rem 0.6rem;
+    font: inherit;
+    font-size: 0.8rem;
+    color: var(--color-text);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .locator-chip-reset:hover { border-color: var(--chip-link); color: var(--chip-link); }
+  .locator-chip-reset:focus-visible {
+    outline: 2px solid var(--chip-link);
+    outline-offset: 2px;
+  }
+
+  /* Visually-hidden live region for screen-reader zoom announcements */
+  .locator-live {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   /* Full-width provenance note under both columns so it reads in clean lines */
@@ -364,5 +708,6 @@ for (const p of [...points].sort((a, b) => b.count - a.count)) {
   @media (max-width: 640px) {
     .locator { padding: 1rem; }
     .locator-label { font-size: 3.3px; }
+    .locator-chip { left: 6px; bottom: 6px; max-width: calc(100% - 12px); }
   }
 </style>

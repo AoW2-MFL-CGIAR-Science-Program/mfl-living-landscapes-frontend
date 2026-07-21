@@ -11,9 +11,11 @@ string per code in the locator map's equirectangular projection:
 
 All rings of all polygons are concatenated into a single path with M/L/Z
 subpaths (render with fill-rule="evenodd" so interior rings read as holes).
-Rings are subsampled to at most MAX_RING_POINTS vertices — the locator map
-is small, so the fidelity loss is invisible — keeping the JSON well under
-the ~150 KB budget for a build-time import.
+Rings are subsampled to at most MAX_RING_POINTS vertices — enough fidelity
+for the click-to-zoom view — keeping the JSON well under the ~120 KB budget
+for a build-time import. Each outline also carries its PROJECTED bbox
+[x0, y0, x1, y1] (computed from the full-resolution geometry) so the map
+can letterbox the zoom target without re-parsing the path.
 
 Usage:
     python3 scripts/build_map_outlines.py [path/to/MOSAIC_catalog]
@@ -31,12 +33,13 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CATALOG = REPO_ROOT.parent.parent / "MOSAIC_catalog"
 OUT_PATH = REPO_ROOT / "frontend" / "data" / "landscape_outlines.json"
 
-MAX_RING_POINTS = 150  # per ring, after subsampling
+MAX_RING_POINTS = 500  # per ring, after subsampling
+PRECISION = 3  # decimals kept per projected coordinate
 
 
 def project(lon: float, lat: float) -> tuple[float, float]:
     """Equirectangular projection matching data/world_land_path.json."""
-    return round(lon + 180, 2), round(90 - lat, 2)
+    return round(lon + 180, PRECISION), round(90 - lat, PRECISION)
 
 
 def subsample(ring: list) -> list:
@@ -68,7 +71,7 @@ def ring_to_path(ring: list) -> str:
     return head + body + "Z"
 
 
-def geometry_to_path(geometry: dict) -> str:
+def geometry_rings(geometry: dict) -> list:
     gtype = geometry["type"]
     if gtype == "Polygon":
         polygons = [geometry["coordinates"]]
@@ -76,9 +79,19 @@ def geometry_to_path(geometry: dict) -> str:
         polygons = geometry["coordinates"]
     else:
         raise ValueError(f"Unsupported geometry type: {gtype}")
-    return "".join(
-        ring_to_path(ring) for polygon in polygons for ring in polygon
-    )
+    return [ring for polygon in polygons for ring in polygon]
+
+
+def geometry_to_path(geometry: dict) -> str:
+    return "".join(ring_to_path(ring) for ring in geometry_rings(geometry))
+
+
+def geometry_bbox(geometry: dict) -> list[float]:
+    """Projected [x0, y0, x1, y1] from the full-resolution geometry."""
+    pts = [project(lon, lat) for ring in geometry_rings(geometry) for lon, lat in ring]
+    xs = [p[0] for p in pts]
+    ys = [p[1] for p in pts]
+    return [min(xs), min(ys), max(xs), max(ys)]
 
 
 def main() -> int:
@@ -88,7 +101,7 @@ def main() -> int:
         print(f"Boundaries folder not found: {boundaries}")
         return 1
 
-    outlines: dict[str, str] = {}
+    outlines: dict[str, dict] = {}
     for path in sorted(boundaries.glob("*.geojson")):
         if path.name == "landscapes.geojson":  # combined file — skip
             continue
@@ -100,22 +113,25 @@ def main() -> int:
         if not d:
             print(f"Warning: empty path for {code}, skipped")
             continue
-        outlines[code] = d
+        outlines[code] = {"d": d, "bbox": geometry_bbox(feature["geometry"])}
 
     out = {
         "_meta": {
             "note": (
                 "Canonical MOSAIC living-landscape boundaries, simplified for the "
-                "catalogue locator map. Derived from MOSAIC_catalog/boundaries/"
-                "<CODE>.geojson (approved delineations, 2026-07-21; EPSG:4326). "
-                "Each value is an SVG path in the locator projection "
-                "x = lon + 180, y = 90 - lat, rounded to 2 decimals; rings "
-                f"subsampled to <= {MAX_RING_POINTS} vertices. Render with "
+                "catalogue locator map (world view + click-to-zoom). Derived from "
+                "MOSAIC_catalog/boundaries/<CODE>.geojson (approved delineations, "
+                "2026-07-21; EPSG:4326). Per code: 'd' is an SVG path in the "
+                "locator projection x = lon + 180, y = 90 - lat, rounded to "
+                f"{PRECISION} decimals, rings subsampled to <= {MAX_RING_POINTS} "
+                "vertices; 'bbox' is the projected [x0, y0, x1, y1] of the "
+                "full-resolution geometry (the zoom target). Render with "
                 "fill-rule='evenodd'. Regenerate with "
                 "scripts/build_map_outlines.py."
             ),
             "projection": "equirectangular: x = lon + 180, y = 90 - lat",
             "max_ring_points": MAX_RING_POINTS,
+            "precision": PRECISION,
         },
         "outlines": outlines,
     }
