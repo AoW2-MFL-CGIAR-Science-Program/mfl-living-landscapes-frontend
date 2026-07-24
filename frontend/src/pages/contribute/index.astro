@@ -7,32 +7,36 @@ import StepTimeline from '../../components/ui/StepTimeline.astro'
 import CtaBand from '../../components/ui/CtaBand.astro'
 
 const base = import.meta.env.BASE_URL
-const issueUrl = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=dataset_update.yml'
+// The catalogue's submission form (MOSAIC_catalog repo — records/<ID>.yaml is
+// the source of truth; submissions become validated record files via PR).
+const newDatasetUrl = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/MOSAIC_catalog/issues/new?template=new_dataset.yml'
+const updateIssueUrl = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/MOSAIC_catalog/issues/new'
+const howToUrl = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/MOSAIC_catalog/blob/main/docs/HOW_TO_REGISTER_DATASETS.md'
 
 const checklist = [
-  'A dataset that is related to a Living Landscape (see landscape codes)',
-  'A dataset title and short description (1–3 sentences)',
-  'The country, Living Landscape code, MFL theme, and data type',
+  'Required: a dataset title, the Living Landscape it covers (or country-wide / global), the country, and a contact person',
+  'A working download or source URL — the single biggest boost to reusability',
+  'Spatial resolution with units (e.g. "30 m", "0.05°") and the coordinate reference system (e.g. EPSG:4326)',
+  'Temporal coverage (e.g. 2017–2025), a license (e.g. CC BY 4.0) and file format(s)',
   'An access level decision (Open, Restricted, or Internal)',
-  'A license for the dataset (e.g. CC BY 4.0)',
-  'For Open datasets: a download URL',
-  'A contact email for access requests (Restricted or Internal datasets)',
+  'A short description covering method, caveats and related datasets',
 ]
 
 const steps = [
-  { num: '01', icon: 'upload', title: 'Register', body: 'Start a dataset submission and fill in the basics — title, landscape, theme and contact. You can begin with partial metadata.' },
-  { num: '02', icon: 'file-text', title: 'Submit metadata', body: 'We prepare a draft entry in datasets.json using your registration information.' },
-  { num: '03', icon: 'eye', title: 'Review & refine', body: 'You review the draft and complete any missing optional fields.' },
-  { num: '04', icon: 'check-circle', title: 'Validation', body: 'Our team checks the metadata and validates the information.' },
-  { num: '05', icon: 'globe', title: 'Published', body: 'Your dataset is published in the catalogue and becomes discoverable by everyone.' },
+  { num: '01', icon: 'upload', title: 'Register', body: 'Submit the form — only title, landscape, country and contact are required. Partial metadata is fine; the rest can be completed later.' },
+  { num: '02', icon: 'file-text', title: 'Record drafted', body: 'The MOSAIC team turns your submission into a validated record file — one per dataset, version-controlled with a permanent ID.' },
+  { num: '03', icon: 'eye', title: 'Review & refine', body: 'You are tagged on the pull request to confirm the details and fill any gaps.' },
+  { num: '04', icon: 'check-circle', title: 'Validation', body: 'Automated checks run on every change — nothing invalid can be published.' },
+  { num: '05', icon: 'globe', title: 'Published', body: 'On merge, the catalogue and the STAC endpoint republish automatically (about 2 minutes) and your dataset gets a stable, citable metadata URL.' },
 ]
 
 const faqs = [
-  { q: 'Do I need to upload my data files to GitHub?', a: 'No. MOSAIC is a catalogue, not a file repository. Your data files stay wherever they are hosted (e.g. a CGIAR data portal, Google Drive, institutional server). You only need to provide a link to where the data can be accessed.' },
+  { q: 'Do I need to upload my data files to GitHub?', a: 'No. MOSAIC is a catalogue, not a file repository. Your data files stay wherever they are hosted (e.g. a CGIAR data portal, Google Drive, institutional server). The record describes your dataset and points to where it lives.' },
   { q: 'Can I register a dataset before the data is publicly available?', a: 'Yes. You can register a dataset with Internal or Restricted access. This makes the dataset discoverable in the catalogue while access is managed through your centre\'s normal procedures.' },
   { q: 'What if my dataset doesn\'t fit the controlled vocabulary?', a: 'Contact the MOSAIC team via the Contact page. The controlled vocabularies are reviewed periodically and new values can be proposed.' },
-  { q: 'How long does the review process take?', a: 'Metadata review typically takes 5–10 working days. Spatial QC (for Validated status) may take longer depending on the dataset and the QC team\'s capacity.' },
-  { q: 'Can I update a dataset entry after it is published?', a: 'Yes. Open a Dataset Catalogue Update issue on GitHub and describe what needs to change. The MOSAIC team will prepare a pull request and ask you to review it before it goes live.' },
+  { q: 'What if I don\'t know a field?', a: 'Leave it empty. An incomplete-but-honest record is far more useful than nothing — the catalogue flags gaps rather than hiding them, and you can fill them in later.' },
+  { q: 'How long does the review process take?', a: 'Metadata review typically takes 5–10 working days. Spatial QC (for Validated status) may take longer depending on the dataset and the QC team\'s capacity. Once a record is merged, publication itself is automatic — about 2 minutes.' },
+  { q: 'Can I update a dataset entry after it is published?', a: 'Yes. Open an issue on the MOSAIC catalogue repository describing what needs to change — or, if you are comfortable with Git, edit the dataset\'s record file and open a pull request. Every change is reviewed and validated before it goes live, and each dataset\'s full history stays visible; records are never silently changed.' },
 ]
 ---
 
@@ -68,7 +72,7 @@ const faqs = [
       <div class="checklist-intro">
         <span class="checklist-icon" aria-hidden="true"><Icon name="check-square" size={28} /></span>
         <h2>Before you start — quick checklist</h2>
-        <p>To register a dataset you will need:</p>
+        <p>Only the first item is strictly required — the rest make your record far more findable and reusable:</p>
         <StickyNote tint="teal" rotate={-2}>Don't worry if you're not sure about everything. You can always come back and edit later!</StickyNote>
       </div>
       <div class="checklist-list">
@@ -89,12 +93,16 @@ const faqs = [
     <!-- 4 · Start dataset submission -->
     <section class="contrib-start">
       <h2>Start dataset submission</h2>
-      <p>You can start with partial metadata and complete it later. The MOSAIC team will help review and prepare the catalogue entry.</p>
+      <p>You can start with partial metadata and complete it later. The MOSAIC team turns your submission into a validated catalogue record and reviews it with you.</p>
       <div class="contrib-start-actions">
-        <a class="btn btn-primary" href={issueUrl} target="_blank" rel="noopener noreferrer">Start dataset submission</a>
+        <a class="btn btn-primary" href={newDatasetUrl} target="_blank" rel="noopener noreferrer">Register a new dataset</a>
         <a class="btn btn-secondary" href={`${base}/contact`}>Ask before contributing</a>
       </div>
-      <p class="contrib-start-note">Submissions are currently managed through GitHub. If you are not familiar with GitHub, <a href={`${base}/contact`}>contact the MOSAIC team</a> and they can guide you.</p>
+      <p class="contrib-start-note">
+        Submissions are managed through GitHub — a free account is the only prerequisite. If you are not
+        familiar with GitHub, <a href={`${base}/contact`}>contact the MOSAIC team</a> and they can guide you.
+        Updating an existing dataset instead? <a href={updateIssueUrl} target="_blank" rel="noopener noreferrer">Open an update issue</a>.
+      </p>
     </section>
 
     <!-- 5 · What happens after you submit -->
@@ -103,8 +111,29 @@ const faqs = [
       <StepTimeline steps={steps} />
     </section>
 
-    <!-- 6, 7, 8 · QC, ownership, FAQ -->
+    <!-- 6, 7, 8, 9 · Other ways, QC, ownership, FAQ -->
     <div class="contrib-prose">
+      <section>
+        <h2>Other ways to contribute</h2>
+        <p>The submission form above is the recommended route, but it is not the only one:</p>
+        <ul class="bullets">
+          <li>
+            <strong>Comfortable with Git?</strong> Every dataset is one version-controlled record file in the
+            MOSAIC catalogue repository — copy an existing record, edit the fields and open a pull request.
+            Every change is validated automatically, so you can't break the catalogue.
+          </li>
+          <li>
+            <strong>Many datasets at once?</strong> Don't type them one by one — send your centre's inventory
+            (a spreadsheet, an internal catalogue) to the <a href={`${base}/contact`}>MOSAIC coordinator</a> and
+            we'll run a scripted import and return the draft records for your review.
+          </li>
+        </ul>
+        <p>
+          Full instructions for all three routes:
+          <a href={howToUrl} target="_blank" rel="noopener noreferrer">How to register a dataset (GitHub)</a>.
+        </p>
+      </section>
+
       <section>
         <h2>Quality control &amp; validation</h2>
         <p>
@@ -150,7 +179,7 @@ const faqs = [
     tint="sand"
     title="Your data has the power to create change."
     body="By contributing, you help build a shared resource that supports research, restoration and better outcomes for people and nature across the globe."
-    primaryCta={{ label: 'Start dataset submission', href: issueUrl, target: '_blank' }}
+    primaryCta={{ label: 'Register a new dataset', href: newDatasetUrl, target: '_blank' }}
     secondaryCta={{ label: 'View metadata guide', href: `${base}/contribute/metadata-guide` }}
   >
     <img slot="art" src={`${base}/illustrations/seedling.png`} alt="" />

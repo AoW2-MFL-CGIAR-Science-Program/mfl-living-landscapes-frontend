@@ -10,6 +10,8 @@ import StickyNote from '../components/ui/StickyNote.astro'
 
 const base = import.meta.env.BASE_URL
 const ghBase = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new'
+// Dataset records live in the MOSAIC_catalog repo — dataset corrections go there.
+const catalogIssueUrl = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/MOSAIC_catalog/issues/new'
 const siteUrl = 'https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/'
 
 // Show the photo only if the file is actually present; otherwise CoordinatorCard
@@ -18,7 +20,7 @@ const hasPhoto = existsSync(fileURLToPath(new URL('../../public/illustrations/li
 
 const issueCards = [
   { icon: 'alert-circle', title: 'Report a broken page or incorrect data', tint: 'teal', href: `${ghBase}?template=bug_report.yml`, body: "Let us know if you found something that's not working or looks wrong." },
-  { icon: 'file-text', title: 'Request a dataset update or correction', tint: 'amber', href: `${ghBase}?template=dataset_update.yml`, body: 'Suggest changes to improve existing dataset information.' },
+  { icon: 'file-text', title: 'Request a dataset update or correction', tint: 'amber', href: catalogIssueUrl, body: 'Suggest changes to improve existing dataset information.' },
   { icon: 'file', title: 'Suggest a content or documentation fix', tint: 'light-teal', href: `${ghBase}?template=content_fix.yml`, body: 'Help us improve guides, descriptions, or any content on the site.' },
   { icon: 'sparkles', title: 'Propose a new feature or improvement', tint: 'terracotta', href: `${ghBase}?template=feature_request.yml`, body: "Have an idea to make MOSAIC even better? We'd love to hear it!" },
 ] as const
