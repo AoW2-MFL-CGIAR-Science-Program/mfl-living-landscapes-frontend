@@ -39,6 +39,7 @@ const hasArt = Astro.slots.has('art')
       <h1 class="page-hero-title">{title}</h1>
       {subtitle && <p class="page-hero-subtitle">{subtitle}</p>}
       {subtitle2 && <p class="page-hero-subtitle page-hero-subtitle2">{subtitle2}</p>}
+      <slot />
     </div>
   </div>
 
