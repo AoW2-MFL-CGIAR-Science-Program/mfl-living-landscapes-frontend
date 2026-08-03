@@ -184,7 +184,9 @@ const readinessDescriptions: Record<string, string> = {
     <section style="margin-bottom: var(--space-8); padding: var(--space-6); background-color: var(--color-gray-50); border-left: 4px solid var(--mosaic-teal); border-radius: 0 var(--radius-md) var(--radius-md) 0;">
       <h2 style="font-size: var(--text-lg); margin-bottom: var(--space-3);">Suggested citation</h2>
       <p style="font-size: var(--text-sm); font-family: var(--font-mono); color: var(--color-gray-600); line-height: 1.7;">
-        {dataset.source ?? 'CGIAR'} ({dataset.temporal_coverage ?? new Date().getFullYear()}). {dataset.title}. MOSAIC — CGIAR MFL Science Programme. Retrieved from https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/catalogue/{dataset.id}
+        {dataset.citation?.trim()
+          ? dataset.citation
+          : `${dataset.source ?? 'CGIAR'} (${dataset.temporal_coverage ?? new Date().getFullYear()}). ${dataset.title}. MOSAIC — CGIAR MFL Science Programme. Retrieved from https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/catalogue/${dataset.id}`}
       </p>
     </section>
 

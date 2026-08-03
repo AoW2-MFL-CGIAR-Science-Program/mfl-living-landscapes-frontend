@@ -86,4 +86,5 @@ export interface Dataset {
   temporal_coverage?: string | null
   download_url?: string | null
   metadata_url?: string | null
+  citation?: string | null
 }
