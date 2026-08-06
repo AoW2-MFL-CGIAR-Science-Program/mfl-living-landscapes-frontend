@@ -4,8 +4,6 @@ import PageHero from '../components/ui/PageHero.astro'
 import IconChip from '../components/ui/IconChip.astro'
 import ContentCard from '../components/ui/ContentCard.astro'
 import InfoCallout from '../components/ui/InfoCallout.astro'
-import StickyNote from '../components/ui/StickyNote.astro'
-import Icon from '../components/ui/Icon.astro'
 
 const base = import.meta.env.BASE_URL
 
@@ -44,14 +42,9 @@ const acknowledgements = [
   },
 ] as const
 
-const notList = [
-  'Hosting or storing data files',
-  'Replacing existing data services or catalogues',
-  'Being the single source of all geospatial data in the world',
-]
 ---
 
-<BaseLayout title="About" description="About MOSAIC — what it is, who it serves, and what it is not.">
+<BaseLayout title="About" description="About MOSAIC — what it is and who it serves.">
   <PageHero
     variant="light"
     title="About MOSAIC"
@@ -129,55 +122,6 @@ const notList = [
       <img slot="art" src={`${base}/illustrations/hand-with-sprout.png`} alt="" />
     </InfoCallout>
 
-    <!-- What it is not -->
-    <section class="about-not">
-      <div class="about-not-art" aria-hidden="true">
-        <img src={`${base}/illustrations/signpost.png`} alt="" />
-      </div>
-      <div class="about-not-body">
-        <h2 class="about-h2 about-h2--terracotta">What it is not<svg class="wavy" width="64" height="8" viewBox="0 0 64 8" fill="none" aria-hidden="true"><path d="M1 4 Q9 1 17 4 T33 4 T49 4 T63 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></h2>
-        <ul class="about-not-list">
-          {notList.map((item) => (
-            <li>
-              <span class="about-not-icon" aria-hidden="true"><Icon name="x-circle" size={22} /></span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
-        <p class="about-not-closing">
-          Our goal is simple: connect what exists, make it easy to find, and help data create impact.
-          MOSAIC connects you to the source of truth — it never tries to become it.
-        </p>
-        <StickyNote tint="amber" rotate={-3}>Have ideas? Want to get involved? We'd love to hear from you!</StickyNote>
-      </div>
-    </section>
-
-    <!-- Programme context + CoP (retained) -->
-    <div class="about-prose">
-      <section>
-        <h2>Programme context</h2>
-        <p>
-          The CGIAR Multifunctional Landscapes (MFL) Science Programme works to restore and sustain
-          landscapes that are simultaneously productive, biodiverse, and resilient, across flagship
-          Living Landscapes and a broader network of strategic landscapes. The programme develops
-          spatially informed approaches to characterize ecosystem condition, identify landscape
-          stress, and support the prioritization of action.
-          MOSAIC is the coordination network that connects this work across centres.
-        </p>
-        <a href={`${base}/landscapes`} class="btn btn-secondary">View Living Landscapes</a>
-      </section>
-
-      <section>
-        <h2>Geospatial Community of Practice</h2>
-        <p>
-          MOSAIC is maintained by the MFL Geospatial Community of Practice, a network of over 230
-          geospatial specialists and data stewards across CGIAR centres. Focal points in each centre
-          register and validate datasets for their landscapes. If you are a centre focal point and want
-          to contribute data, start at the <a href={`${base}/contribute`}>How to contribute</a> page.
-        </p>
-      </section>
-    </div>
-
     <!-- Acknowledgements -->
     <section class="about-ack" id="acknowledgements">
       <h2 class="about-h2">Acknowledgements<svg class="wavy" width="64" height="8" viewBox="0 0 64 8" fill="none" aria-hidden="true"><path d="M1 4 Q9 1 17 4 T33 4 T49 4 T63 4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></h2>
@@ -240,7 +184,6 @@ const notList = [
     margin: 0 0 var(--space-4);
   }
   .wavy { color: var(--mosaic-teal); }
-  .about-h2--terracotta .wavy { color: var(--mosaic-terracotta); }
 
   /* What MOSAIC is */
   .about-split {
@@ -301,25 +244,6 @@ const notList = [
      the same brand colour there (the accent itself is never restyled). */
   :global([data-theme="dark"]) .about-ack-note a { color: var(--mosaic-light-teal); }
 
-  /* What it is not */
-  .about-not {
-    display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: var(--space-8);
-    align-items: center;
-  }
-  .about-not-art img { display: block; width: 100%; max-width: 360px; height: auto; margin: 0 auto; }
-  .about-not-list { list-style: none; margin: 0 0 var(--space-6); padding: 0; display: flex; flex-direction: column; gap: var(--space-3); }
-  .about-not-list li { display: flex; gap: var(--space-3); align-items: center; color: var(--color-text); }
-  .about-not-icon { color: var(--mosaic-terracotta); flex-shrink: 0; display: inline-flex; }
-  .about-not-closing { color: var(--color-muted); line-height: 1.7; margin: 0 0 var(--space-6); max-width: 60ch; }
-
-  /* Retained prose */
-  .about-prose { max-width: 760px; display: flex; flex-direction: column; gap: var(--space-8); }
-  .about-prose h2 { margin: 0 0 var(--space-3); }
-  .about-prose p { color: var(--color-muted); line-height: 1.7; margin: 0 0 var(--space-4); }
-  .about-prose a:not(.btn) { color: var(--mosaic-teal); }
-
   @media (max-width: 1023px) {
     .ack-cards { grid-template-columns: 1fr 1fr; }
   }
@@ -327,8 +251,7 @@ const notList = [
   @media (max-width: 767px) {
     .about-pillars { grid-template-columns: 1fr 1fr; }
     .ack-cards { grid-template-columns: 1fr; }
-    .about-split, .about-not, .about-cards { grid-template-columns: 1fr; }
-    .about-not-art { order: -1; }
+    .about-split, .about-cards { grid-template-columns: 1fr; }
   }
   @media (max-width: 480px) {
     .about-pillars { grid-template-columns: 1fr; }
