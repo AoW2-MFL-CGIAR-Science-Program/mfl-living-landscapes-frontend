@@ -18,7 +18,7 @@
  * carries the name, country, dataset count, the "View datasets" link (the
  * navigation the dots used to do) and a "World view" reset. Escape, the
  * reset button, or clicking outside the boundary zoom back out. The zoom
- * logic is vanilla TS in the component <script> — no runtime deps.
+ * logic is vanilla TS in the component script — no runtime deps.
  *
  * The land silhouette is Natural Earth 110m land, decoded offline from a
  * TopoJSON into a single equirectangular SVG path (data/world_land_path.json,
@@ -197,7 +197,7 @@ const payload = {
       ]),
   ),
 }
-// <-escape so the inline JSON can never close its own <script> tag.
+// <-escape so the inline JSON can never close its own script tag.
 const payloadJson = JSON.stringify(payload).replace(/</g, '\\u003c')
 ---
 

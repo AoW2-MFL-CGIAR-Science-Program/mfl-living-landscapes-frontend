@@ -144,9 +144,13 @@ export function CatalogueFilter({ datasets, base }: Props) {
   const displayValue = (key: FilterKey, value: string) =>
     key === 'living_landscape' ? (landscapeNames.get(value) ?? value) : value
 
-  const [filters, setFilters] = useState<FilterState>(() => readInitialState(datasets).filters)
-  const [searchText, setSearchText] = useState(() => readInitialState(datasets).search)
-  const [sortKey, setSortKey] = useState<SortKey>(() => readInitialState(datasets).sort)
+  // The static HTML is built with no filters, so the first client render must
+  // start empty as well (otherwise hydration fails); the URL state is applied
+  // right after, in an effect.
+  const [filters, setFilters] = useState<FilterState>(emptyFilters)
+  const [searchText, setSearchText] = useState('')
+  const [sortKey, setSortKey] = useState<SortKey>('recent')
+  const [urlApplied, setUrlApplied] = useState(false)
   const [viewMode, setViewMode] = useState<ViewMode>('list')
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [showMore, setShowMore] = useState(false)
@@ -172,10 +176,19 @@ export function CatalogueFilter({ datasets, base }: Props) {
   // Reset to first page whenever the result set changes.
   useEffect(() => { setPage(1) }, [filters, searchText, sortKey, pageSize])
 
+  useEffect(() => {
+    const initial = readInitialState(datasets)
+    setFilters(initial.filters)
+    setSearchText(initial.search)
+    setSortKey(initial.sort)
+    setUrlApplied(true)
+  }, [datasets])
+
   // Mirror filter/search/sort state into the URL so the browser Back button
   // (and the detail page's "Back to catalogue" link) restore the same view.
+  // Not before the URL state is applied, or the first run would wipe it.
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (!urlApplied) return
     const params = new URLSearchParams()
     for (const key of FILTER_KEYS) {
       for (const v of filters[key] as string[]) params.append(key, v)
@@ -185,7 +198,7 @@ export function CatalogueFilter({ datasets, base }: Props) {
     const qs = params.toString()
     window.history.replaceState(null, '', qs ? `${window.location.pathname}?${qs}` : window.location.pathname)
     try { sessionStorage.setItem(QS_STORAGE_KEY, qs) } catch { /* storage unavailable */ }
-  }, [filters, searchText, sortKey])
+  }, [filters, searchText, sortKey, urlApplied])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const pageItems = filtered.slice((page - 1) * pageSize, page * pageSize)
