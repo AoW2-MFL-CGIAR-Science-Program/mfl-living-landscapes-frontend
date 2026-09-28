@@ -1,11 +1,11 @@
-# MFL Living Landscapes Geospatial Data Hub
+# MOSAIC website
 
-A publicly accessible catalogue of spatial datasets from CGIAR centres working across the Multifunctional Landscapes (MFL) Science Programme Living Landscapes.
+The public website of MOSAIC, the open geospatial data network for living landscapes: a catalogue of spatial datasets from CGIAR centres working across the Multifunctional Landscapes (MFL) Science Programme Living Landscapes.
 
-**Live site:** https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/
+**Live site:** https://mosaic-mfl.github.io/website/
 
-[![Deploy to GitHub Pages](https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/actions/workflows/deploy-pages.yml)
-[![Validate Dataset Metadata](https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/actions/workflows/validate-data.yml/badge.svg)](https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/actions/workflows/validate-data.yml)
+[![Deploy to GitHub Pages](https://github.com/MOSAIC-mfl/website/actions/workflows/deploy-pages.yml/badge.svg)](https://github.com/MOSAIC-mfl/website/actions/workflows/deploy-pages.yml)
+[![Validate Dataset Metadata](https://github.com/MOSAIC-mfl/website/actions/workflows/validate-data.yml/badge.svg)](https://github.com/MOSAIC-mfl/website/actions/workflows/validate-data.yml)
 
 ---
 
@@ -27,8 +27,8 @@ A publicly accessible catalogue of spatial datasets from CGIAR centres working a
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend.git
-cd mfl-living-landscapes-frontend
+git clone https://github.com/MOSAIC-mfl/website.git
+cd website
 
 # 2. Install dependencies
 cd frontend
@@ -36,7 +36,7 @@ npm install
 
 # 3. Start the development server
 npm run dev
-# → http://localhost:4321/mfl-living-landscapes-frontend
+# → http://localhost:4321/website
 
 # 4. Build for production
 npm run build
@@ -56,7 +56,7 @@ Use `nvm use` in the repository root to switch to the pinned Node version (20).
 ## Repository structure
 
 ```
-mfl-living-landscapes-frontend/
+website/
 ├── .github/
 │   ├── workflows/          # CI/CD workflows (deploy, lint, validate)
 │   ├── ISSUE_TEMPLATE/     # Bug, feature, dataset, content issue templates
@@ -94,7 +94,7 @@ The catalogue is driven by `frontend/data/datasets.json`. To add or update a dat
 4. Open a pull request — the `validate-data.yml` workflow runs automatically
 5. If validation passes, merge — the site rebuilds and deploys within ~5 minutes
 
-For non-technical contributors, open a [Dataset Catalogue Update issue](https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new?template=dataset_update.yml) and the hub team will handle the pull request.
+For non-technical contributors, open a [Dataset Catalogue Update issue](https://github.com/MOSAIC-mfl/website/issues/new?template=dataset_update.yml) and the MOSAIC team will handle the pull request.
 
 ### Dataset ID format
 
@@ -112,7 +112,7 @@ For code or content changes:
 3. Ensure `npm run build`, `npm run lint`, and `npm run typecheck` all pass
 4. Open a pull request using the PR template
 
-All PRs require at least one review before merging to `main`. See the [Upload Guidelines](https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/contribute) for how to add a dataset.
+All PRs require at least one review before merging to `main`. See the [Upload Guidelines](https://mosaic-mfl.github.io/website/contribute) for how to add a dataset.
 
 ---
 

@@ -9,10 +9,10 @@ import CoordinatorCard from '../components/ui/CoordinatorCard.astro'
 import StickyNote from '../components/ui/StickyNote.astro'
 
 const base = import.meta.env.BASE_URL
-const ghBase = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/mfl-living-landscapes-frontend/issues/new'
-// Dataset records live in the MOSAIC_catalog repo — dataset corrections go there.
-const catalogIssueUrl = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/MOSAIC_catalog/issues/new'
-const siteUrl = 'https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/'
+const ghBase = 'https://github.com/MOSAIC-mfl/website/issues/new'
+// Dataset records live in the catalog repo — dataset corrections go there.
+const catalogIssueUrl = 'https://github.com/MOSAIC-mfl/catalog/issues/new'
+const siteUrl = 'https://mosaic-mfl.github.io/website/'
 
 // Show the photo only if the file is actually present; otherwise CoordinatorCard
 // renders the "LL" initials fallback. (Lizeth can drop lizeth-llanos.jpg in later.)
@@ -28,7 +28,7 @@ const issueCards = [
 const contactRows = [
   // Email intentionally a clearly-marked placeholder — do not invent an address.
   { icon: 'mail', label: 'Email', value: 'Contact email — to be confirmed' },
-  { icon: 'globe', label: 'Website', value: 'aow2-mfl-cgiar-science-program.github.io', href: siteUrl },
+  { icon: 'globe', label: 'Website', value: 'mosaic-mfl.github.io/website', href: siteUrl },
   { icon: 'map-pin', label: 'Location', value: 'Global' },
 ]
 ---

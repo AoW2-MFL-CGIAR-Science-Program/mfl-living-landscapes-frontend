@@ -6,11 +6,11 @@ import StepTimeline from '../../components/ui/StepTimeline.astro'
 import CtaBand from '../../components/ui/CtaBand.astro'
 
 const base = import.meta.env.BASE_URL
-// The catalogue's submission form (MOSAIC_catalog repo — records/<ID>.yaml is
+// The catalogue's submission form (catalog repo — records/<ID>.yaml is
 // the source of truth; submissions become validated record files via PR).
-const newDatasetUrl = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/MOSAIC_catalog/issues/new?template=new_dataset.yml'
-const updateIssueUrl = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/MOSAIC_catalog/issues/new'
-const howToUrl = 'https://github.com/AoW2-MFL-CGIAR-Science-Program/MOSAIC_catalog/blob/main/docs/HOW_TO_REGISTER_DATASETS.md'
+const newDatasetUrl = 'https://github.com/MOSAIC-mfl/catalog/issues/new?template=new_dataset.yml'
+const updateIssueUrl = 'https://github.com/MOSAIC-mfl/catalog/issues/new'
+const howToUrl = 'https://github.com/MOSAIC-mfl/catalog/blob/main/docs/HOW_TO_REGISTER_DATASETS.md'
 
 const steps = [
   { num: '01', icon: 'upload', title: 'Register', body: 'Fill the form: title, living landscape, country, contact. Everything else is optional — empty is a valid answer.' },
@@ -108,7 +108,7 @@ const faqs = [
         </li>
         <li>
           <strong>Comfortable with Git?</strong> Each dataset is one record file in the
-          <a href="https://github.com/AoW2-MFL-CGIAR-Science-Program/MOSAIC_catalog" target="_blank" rel="noopener noreferrer">catalogue repository</a> —
+          <a href="https://github.com/MOSAIC-mfl/catalog" target="_blank" rel="noopener noreferrer">catalogue repository</a> —
           copy one, edit it, open a pull request. Validation runs automatically, so you can't break the catalogue.
         </li>
         <li>

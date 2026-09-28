@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://aow2-mfl-cgiar-science-program.github.io/mfl-living-landscapes-frontend/schema/dataset.json",
+  "$id": "https://mosaic-mfl.github.io/website/schema/dataset.json",
   "title": "MFL Dataset Metadata Record",
   "description": "Schema for a single dataset entry in frontend/data/datasets.json. Aligned with MOSAIC vocab_reconciliation.md v1. Only id, title, living_landscape and readiness_status are strictly required; remaining controlled-vocabulary fields may be null for records whose source metadata is incomplete or flagged for repair.",
   "type": "object",

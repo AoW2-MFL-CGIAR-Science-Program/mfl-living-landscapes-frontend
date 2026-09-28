@@ -7,7 +7,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('/mfl-living-landscapes-frontend/fonts/IBMPlexMono-Regular.woff2') format('woff2');
+  src: url('/website/fonts/IBMPlexMono-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -15,7 +15,7 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('/mfl-living-landscapes-frontend/fonts/IBMPlexMono-Medium.woff2') format('woff2');
+  src: url('/website/fonts/IBMPlexMono-Medium.woff2') format('woff2');
 }
 
 :root {
