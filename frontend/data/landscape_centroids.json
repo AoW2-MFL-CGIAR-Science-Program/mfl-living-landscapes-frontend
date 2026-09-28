@@ -1,15 +1,13 @@
 {
   "_meta": {
-    "note": "CANONICAL living-landscape centroids for the catalogue locator map, derived from the approved landscape delineations (bbox_lookup.json, built from the delineation shapefiles on 2026-07-21). No longer approximate: fallback=false for all 11 delineated landscapes. Joined to datasets.json for per-landscape counts at build time. EPSG:4326 [lon,lat]. GLB (global / cross-landscape) datasets have no meaningful point and are NOT plotted; their count is recorded below for the map caption.",
-    "crs": "EPSG:4326",
-    "global_datasets_not_plotted": 2
+    "note": "CANONICAL living-landscape centroids for the catalogue locator map, derived from the approved landscape delineations (bbox_lookup.json, built from the delineation shapefiles on 2026-07-21). No longer approximate: fallback=false for all 11 delineated landscapes. EPSG:4326 [lon,lat]. Holds positions only: LandscapeLocatorMap.astro computes the dataset counts from datasets.json at build time (per living_landscape code, and the GLB count for the map caption). GLB (global / cross-landscape) datasets have no meaningful point and are NOT plotted.",
+    "crs": "EPSG:4326"
   },
   "landscapes": [
     {
       "code": "IND-CH",
       "name": "Central India Highlands",
       "country": "India",
-      "count": 18,
       "lon": 79.6362,
       "lat": 24.134,
       "fallback": false
@@ -18,7 +16,6 @@
       "code": "MEK-3S",
       "name": "3S Basins (Sekong, Sesan, Srepok)",
       "country": "Laos / Cambodia / Vietnam",
-      "count": 13,
       "lon": 107.3023,
       "lat": 13.9935,
       "fallback": false
@@ -27,7 +24,6 @@
       "code": "SEN-FK",
       "name": "Fatick Department",
       "country": "Senegal",
-      "count": 8,
       "lon": -16.4833,
       "lat": 14.3286,
       "fallback": false
@@ -36,7 +32,6 @@
       "code": "ETH-OG",
       "name": "Omo-Gibe Basin",
       "country": "Ethiopia",
-      "count": 7,
       "lon": 36.7199,
       "lat": 6.8439,
       "fallback": false
@@ -45,7 +40,6 @@
       "code": "TUN-NW",
       "name": "Northwestern Tunisia",
       "country": "Tunisia",
-      "count": 6,
       "lon": 9.1526,
       "lat": 36.0885,
       "fallback": false
@@ -54,7 +48,6 @@
       "code": "ZWE-MB",
       "name": "Mbire – Lower Zambezi Valley",
       "country": "Zimbabwe",
-      "count": 6,
       "lon": 30.1731,
       "lat": -16.4096,
       "fallback": false
@@ -63,7 +56,6 @@
       "code": "CIV-NZ",
       "name": "N'Zi Watershed",
       "country": "Côte d'Ivoire",
-      "count": 4,
       "lon": -4.7151,
       "lat": 7.5534,
       "fallback": false
@@ -72,7 +64,6 @@
       "code": "KEN-LVB",
       "name": "Lake Victoria Basin (Kenya)",
       "country": "Kenya",
-      "count": 2,
       "lon": 34.5623,
       "lat": 0.0264,
       "fallback": false
@@ -81,7 +72,6 @@
       "code": "COL-CUM",
       "name": "Cumbal (Nariño)",
       "country": "Colombia",
-      "count": 1,
       "lon": -77.9096,
       "lat": 0.9702,
       "fallback": false
@@ -90,7 +80,6 @@
       "code": "PER-PCL",
       "name": "Pucallpa – Ucayali",
       "country": "Peru",
-      "count": 1,
       "lon": -75.2342,
       "lat": -8.635,
       "fallback": false
@@ -99,7 +88,6 @@
       "code": "KEN-LEI",
       "name": "LEILA (Southern Kenya Rangelands)",
       "country": "Kenya",
-      "count": 0,
       "lon": 37.1654,
       "lat": -1.9256,
       "fallback": false

@@ -6,9 +6,11 @@
  * Draws the CANONICAL living-landscape delineations (approved 2026-07-21,
  * simplified for display — data/landscape_outlines.json, built from
  * MOSAIC_catalog/boundaries/ by scripts/build_map_outlines.py) plus one
- * centroid dot per landscape (data/landscape_centroids.json, joined to
- * dataset counts at build time). Most landscapes are too small to read at
- * world scale, so the dots and code labels stay the primary markers.
+ * centroid dot per landscape (positions from data/landscape_centroids.json;
+ * dataset counts computed from datasets.json at build time, grouped by
+ * living_landscape code as the catalogue filter does). Most landscapes are
+ * too small to read at world scale, so the dots and code labels stay the
+ * primary markers.
  *
  * Clicking a landscape (dot, code label or boundary) animates the SVG
  * viewBox to that landscape's bbox (letterboxed into the map aspect, the
@@ -33,6 +35,7 @@
 import centroidData from '../../../data/landscape_centroids.json'
 import outlineData from '../../../data/landscape_outlines.json'
 import world from '../../../data/world_land_path.json'
+import { loadDatasets } from '../../utils/loadDatasets'
 
 interface LandscapePoint {
   code: string
@@ -49,9 +52,13 @@ interface Outline {
   bbox: number[] // projected [x0, y0, x1, y1]
 }
 
-const points = centroidData.landscapes as LandscapePoint[]
+// Counts come from datasets.json on every build, never from a stored number.
+const datasets = await loadDatasets()
+const countOf = (code: string) => datasets.filter((d) => d.living_landscape === code).length
+
+const points: LandscapePoint[] = centroidData.landscapes.map((l) => ({ ...l, count: countOf(l.code) }))
 const outlines = outlineData.outlines as Record<string, Outline>
-const globalCount = centroidData._meta.global_datasets_not_plotted ?? 0
+const globalCount = countOf('GLB')
 const base = import.meta.env.BASE_URL
 
 // ── Equirectangular projection (must match world_land_path.json) ─────

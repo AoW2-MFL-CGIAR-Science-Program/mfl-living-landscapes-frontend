@@ -4,6 +4,7 @@ import StatusBadge from '../../components/ui/StatusBadge.astro'
 import AccessBadge from '../../components/ui/AccessBadge.astro'
 import Breadcrumb from '../../components/ui/Breadcrumb.astro'
 import { loadDatasets } from '../../utils/loadDatasets'
+import { isSpdxLicense } from '../../utils/license'
 
 export async function getStaticPaths() {
   const datasets = await loadDatasets()
@@ -15,6 +16,10 @@ export async function getStaticPaths() {
 
 const { dataset } = Astro.props
 const base = import.meta.env.BASE_URL
+
+// An SPDX id reads as a license name; any other value is the source's own
+// wording, shown verbatim as its terms of use.
+const spdxLicense = isSpdxLicense(dataset.license)
 
 // Related datasets: same landscape and/or theme, best matches first, excluding self.
 const allDatasets = await loadDatasets()
@@ -146,9 +151,12 @@ const readinessDescriptions: Record<string, string> = {
       {dataset.access_level === 'Open' ? (
         <div>
           <p style="margin-bottom: var(--space-4);">
-            This dataset is openly available{dataset.license ? ` under the ${dataset.license} license` : ''}.
+            This dataset is openly available{spdxLicense ? ` under the ${dataset.license} license` : ''}.
             MOSAIC connects to the source rather than re-hosting the data.
           </p>
+          {dataset.license && !spdxLicense && (
+            <p style="margin-bottom: var(--space-4);"><strong>Terms of use at the source:</strong> {dataset.license}</p>
+          )}
           {dataset.download_url
             ? <a href={dataset.download_url} class="btn btn-primary" target="_blank" rel="noopener noreferrer">Go to source</a>
             : <p style="margin-bottom: var(--space-2);">No direct source link has been registered yet. See the contact below or the STAC metadata record above.</p>}
