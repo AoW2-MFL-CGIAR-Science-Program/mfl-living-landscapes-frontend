@@ -82,15 +82,19 @@ const PARAM_ALIASES: Record<string, FilterKey> = {
 const QS_STORAGE_KEY = 'mosaic:catalogue:qs'
 
 /** Read filter/search/sort state from the current URL (canonical keys + legacy aliases). */
-function readInitialState(): { filters: FilterState; search: string; sort: SortKey } {
+function readInitialState(datasets: Dataset[]): { filters: FilterState; search: string; sort: SortKey } {
   const filters = emptyFilters()
   let search = ''
   let sort: SortKey = 'recent'
   if (typeof window !== 'undefined') {
     const params = new URLSearchParams(window.location.search)
     for (const key of FILTER_KEYS) {
-      const raw = params.get(key)
-      if (raw) filters[key] = raw.split(',').map((v) => v.trim()).filter(Boolean)
+      // One param per value: license texts can contain commas. Older URLs
+      // joined values with ',', so split a param unless it is a whole value.
+      const known = new Set(getOptions(datasets, key))
+      const values = params.getAll(key).flatMap((raw) =>
+        known.has(raw) ? [raw] : raw.split(',').map((v) => v.trim()).filter(Boolean))
+      filters[key] = [...new Set(values)]
     }
     for (const [alias, key] of Object.entries(PARAM_ALIASES)) {
       const v = params.get(alias)
@@ -140,9 +144,9 @@ export function CatalogueFilter({ datasets, base }: Props) {
   const displayValue = (key: FilterKey, value: string) =>
     key === 'living_landscape' ? (landscapeNames.get(value) ?? value) : value
 
-  const [filters, setFilters] = useState<FilterState>(() => readInitialState().filters)
-  const [searchText, setSearchText] = useState(() => readInitialState().search)
-  const [sortKey, setSortKey] = useState<SortKey>(() => readInitialState().sort)
+  const [filters, setFilters] = useState<FilterState>(() => readInitialState(datasets).filters)
+  const [searchText, setSearchText] = useState(() => readInitialState(datasets).search)
+  const [sortKey, setSortKey] = useState<SortKey>(() => readInitialState(datasets).sort)
   const [viewMode, setViewMode] = useState<ViewMode>('list')
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [showMore, setShowMore] = useState(false)
@@ -174,8 +178,7 @@ export function CatalogueFilter({ datasets, base }: Props) {
     if (typeof window === 'undefined') return
     const params = new URLSearchParams()
     for (const key of FILTER_KEYS) {
-      const vals = filters[key] as string[]
-      if (vals.length) params.set(key, vals.join(','))
+      for (const v of filters[key] as string[]) params.append(key, v)
     }
     if (searchText.trim()) params.set('q', searchText.trim())
     if (sortKey !== 'recent') params.set('sort', sortKey)
