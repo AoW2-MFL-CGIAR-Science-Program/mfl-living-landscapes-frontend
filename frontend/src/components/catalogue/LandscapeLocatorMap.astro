@@ -328,6 +328,17 @@ const payloadJson = JSON.stringify(payload).replace(/</g, '\\u003c')
       )}
     </span>
   </p>
+
+  <!-- Credits mirror MOSAIC_catalog/spec/boundary_provenance.json; update both together. -->
+  <p class="locator-credit">
+    Boundary sources: GADM 4.1 (KEN-LVB, KEN-LEI, ZWE-MB, SEN-FK; IND-CH with Survey of India) ·
+    HydroSHEDS v1 © World Wildlife Fund, Inc. (CIV-NZ) · © Mekong River Commission (MEK-3S) ·
+    COD-AB Tunisia, INS / UN OCHA, CC BY-IGO 3.0 (TUN-NW) · World Bank Ethiopia River Basins,
+    CC BY 4.0 (ETH-OG) · INEI referential census limits (PER-PCL) · J. Ochoa, CIP (COL-CUM).
+    Outlines simplified by MOSAIC; full attribution and licence in each landscape's
+    <a href="https://mosaic-mfl.github.io/catalog/stac/catalog.json">STAC boundary asset</a>.
+    Land: Natural Earth.
+  </p>
 </section>
 
 <script>
@@ -683,6 +694,15 @@ const payloadJson = JSON.stringify(payload).replace(/</g, '\\u003c')
   .locator-note svg { flex: 0 0 auto; }
   .locator-note strong { font-weight: 700; }
   .locator-note a { color: inherit; font-weight: 600; }
+
+  .locator-credit {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.72rem;
+    line-height: 1.45;
+    color: var(--color-muted);
+  }
+  .locator-credit a { color: inherit; text-decoration: underline; }
 
   .locator-legend {
     display: flex;
